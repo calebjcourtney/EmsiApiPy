@@ -117,7 +117,7 @@ class CoreLMIConnection(object):
 
         return response.json()
 
-    def get_dimension_hierarchy_df(self, dataset: str, dimension: str, datarun: str = "latest"):
+    def get_dimension_hierarchy_df(self, dataset: str, dimension: str, datarun: str = "latest") -> pd.DataFrame:
         """Summary
 
         Args:
@@ -126,7 +126,7 @@ class CoreLMIConnection(object):
             datarun (str, optional): Description
 
         Returns:
-            TYPE: Description
+            pd.DataFrame: Description
         """
         data = self.get_meta_dataset_dimension(dataset, dimension, datarun)
         df = pd.DataFrame(data['hierarchy'])
@@ -144,7 +144,7 @@ class CoreLMIConnection(object):
         Returns:
             pd.DataFrame: Description
         """
-        data = self.post_retrieve_data(dataset, payload, datarun)
-        df = pd.DataFrame({column['name']: column['rows']} for column in data['data'])
+        response = self.post_retrieve_data(dataset, payload, datarun)
+        df = pd.DataFrame({column['name']: column['rows']} for column in response['data'])
 
         return df
