@@ -8,34 +8,24 @@ from base import EmsiBaseConnection
 class AutomationIndexConnection(EmsiBaseConnection):
     """docstring for AutomationIndexConnection
 
-    Deleted Attributes:
-        password (TYPE): Description
-        username (TYPE): Description
+    Attributes:
+        base_url (str): Description
+        scope (str): Description
+        token (TYPE): Description
     """
 
-    def get_new_token(self):
+    def __init__(self, username: str, password: str) -> None:
         """Summary
 
-        Returns:
-            TYPE: Description
-
-        Raises:
-            ValueError: Description
+        Args:
+            username (str): Description
+            password (str): Description
         """
-        url = "https://auth.emsicloud.com/connect/token"
+        super().__init__(username, password)
+        self.base_url = "https://emsiservices.com/automation-index/"
+        self.scope = "automation-index"
 
-        payload = "grant_type=client_credentials&client_id={}&client_secret={}&scope=automation-index".format(self.username, self.password)
-        headers = {'content-type': 'application/x-www-form-urlencoded'}
-
-        response = requests.request("POST", url, data=payload, headers=headers)
-
-        if response.status_code != 200:
-            print(response.text)
-            print(response.status_code)
-
-            raise ValueError("Looks like you don't have access to this dataset with those credentials")
-
-        return response.json()['access_token']
+        self.token = self.get_new_token()
 
     def download_data(self, api_endpoint, payload = None):
         """Summary
@@ -47,7 +37,7 @@ class AutomationIndexConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        url = "https://emsiservices.com/automation-index/" + api_endpoint
+        url = self.base_url + api_endpoint
         if payload is None:
             return self.get_data(url)
 
@@ -167,6 +157,8 @@ class AutomationIndexConnection(EmsiBaseConnection):
 
 ###### TESTS ######
 def test_automation_conn():
+    """Summary
+    """
     import configparser
     config = configparser.ConfigParser()
     config.read('permissions.ini')

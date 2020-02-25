@@ -8,34 +8,24 @@ from base import EmsiBaseConnection
 class AggregateProfilesConnection(EmsiBaseConnection):
     """docstring for AggregateProfilesConnection
 
-    Deleted Attributes:
-        password (TYPE): Description
-        username (TYPE): Description
+    Attributes:
+        base_url (str): Description
+        scope (str): Description
+        token (TYPE): Description
     """
 
-    def get_new_token(self):
+    def __init__(self, username: str, password: str) -> None:
         """Summary
 
-        Returns:
-            TYPE: Description
-
-        Raises:
-            ValueError: Description
+        Args:
+            username (str): Description
+            password (str): Description
         """
-        url = "https://auth.emsicloud.com/connect/token"
+        super().__init__(username, password)
+        self.base_url = "https://emsiservices.com/profiles/"
+        self.scope = "profiles:us"
 
-        payload = "grant_type=client_credentials&client_id={}&client_secret={}&scope=profiles:us".format(self.username, self.password)
-        headers = {'content-type': 'application/x-www-form-urlencoded'}
-
-        response = requests.request("POST", url, data=payload, headers=headers)
-
-        if response.status_code != 200:
-            print(response.text)
-            print(response.status_code)
-
-            raise ValueError("Looks like you don't have access to this dataset with those credentials")
-
-        return response.json()['access_token']
+        self.token = self.get_new_token()
 
     def download_data(self, api_endpoint, payload = None):
         """Summary
@@ -47,7 +37,7 @@ class AggregateProfilesConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        url = "https://emsiservices.com/profiles/" + api_endpoint
+        url = self.base_url + api_endpoint
         if payload is None:
             return self.get_data(url)
 
@@ -59,12 +49,15 @@ class AggregateProfilesConnection(EmsiBaseConnection):
 
         Args:
             api_endpoint (TYPE): Description
-            payload (None, optional): Description
+            querystring (TYPE): Description
 
         Returns:
             TYPE: Description
+
+        Deleted Parameters:
+            payload (None, optional): Description
         """
-        url = "https://emsiservices.com/profiles/" + api_endpoint
+        url = self.base_url + api_endpoint
 
         headers = {
             'content-type': "application/json",
@@ -78,17 +71,6 @@ class AggregateProfilesConnection(EmsiBaseConnection):
 
         return response
 
-    def get_available_endpoints(self):
-        """
-        List available endpoints.
-
-        Returns:
-            TYPE: Description
-        """
-        response = self.download_data("")
-
-        return response.json()['data']['endpoints']
-
     def get_status(self):
         """
         Summary
@@ -96,7 +78,7 @@ class AggregateProfilesConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        url = "https://emsiservices.com/profiles/status"
+        url = self.base_url + "status"
         response = requests.request("GET", url)
 
         return response.json()['data']['message']
@@ -117,38 +99,76 @@ class AggregateProfilesConnection(EmsiBaseConnection):
         """
         Summary
 
-        Args:
-            nation (str, optional): Description
-
         Returns:
             TYPE: Description
+
+        Deleted Parameters:
+            nation (str, optional): Description
         """
-        api_endpoint = "/meta"
-        response = self.download_data(api_endpoint)
+        response = self.download_data("meta")
 
         return response.json()['data']
 
     def post_totals(self, payload):
+        """Summary
+
+        Args:
+            payload (TYPE): Description
+
+        Returns:
+            TYPE: Description
+        """
         response = self.download_data('totals', payload)
 
         return response.json()['data']['totals']
 
     def post_recency(self, payload):
+        """Summary
+
+        Args:
+            payload (TYPE): Description
+
+        Returns:
+            TYPE: Description
+        """
         response = self.download_data('recency', payload)
 
         return response.json()['data']['recency']
 
     def get_rankings(self):
+        """Summary
+
+        Returns:
+            TYPE: Description
+        """
         response = self.download_data('rankings')
 
         return response.json()['data']
 
     def post_rankings(self, facet, payload):
+        """Summary
+
+        Args:
+            facet (TYPE): Description
+            payload (TYPE): Description
+
+        Returns:
+            TYPE: Description
+        """
         response = self.download_data("rankings/{}".format(facet), payload)
 
         return response.json()
 
     def get_taxonomies(self, facet = None, q = None):
+        """Summary
+
+        Args:
+            facet (None, optional): Description
+            q (None, optional): Description
+
+        Returns:
+            TYPE: Description
+        """
         if facet is None:
             response = self.download_data("taxonomies")
         else:
@@ -159,6 +179,15 @@ class AggregateProfilesConnection(EmsiBaseConnection):
         return response.json()['data']
 
     def post_taxonomies(self, facet, payload):
+        """Summary
+
+        Args:
+            facet (TYPE): Description
+            payload (TYPE): Description
+
+        Returns:
+            TYPE: Description
+        """
         response = self.download_data("taxonomies/{}/lookup".format(facet), payload)
 
         return response.json()['data']
@@ -166,6 +195,8 @@ class AggregateProfilesConnection(EmsiBaseConnection):
 
 ###### TESTS ######
 def test_profiles_conn():
+    """Summary
+    """
     import configparser
     config = configparser.ConfigParser()
     config.read('permissions.ini')
