@@ -14,14 +14,10 @@ class CanadaPostingsConnection(EmsiBaseConnection):
         token (str): Description
     """
 
-    def __init__(self, username: str, password: str) -> None:
+    def __init__(self) -> None:
         """Summary
-
-        Args:
-            username (str): Description
-            password (str): Description
         """
-        super().__init__(username, password)
+        super().__init__()
         self.base_url = "https://emsiservices.com/ca-jpa/"
         self.scope = "postings:ca"
 
@@ -258,14 +254,7 @@ class CanadaPostingsConnection(EmsiBaseConnection):
 def test_ca_jpa_conn():
     """Summary
     """
-    import configparser
-    config = configparser.ConfigParser()
-    config.read('permissions.ini')
-
-    if 'CanadaPostingsConnection' in config.sections():
-        conn = CanadaPostingsConnection(config['CanadaPostingsConnection']['username'], config['CanadaPostingsConnection']['password'])
-    else:
-        conn = CanadaPostingsConnection(config['DEFAULT']['username'], config['DEFAULT']['password'])
+    conn = CanadaPostingsConnection()
 
     response = conn.get_metadata()
 

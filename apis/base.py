@@ -1,6 +1,7 @@
 """Summary
 """
 import requests
+import configparser
 
 
 class EmsiBaseConnection(object):
@@ -12,16 +13,13 @@ class EmsiBaseConnection(object):
         username (TYPE): Description
     """
 
-    def __init__(self, username: str, password: str) -> None:
+    def __init__(self) -> None:
         """Summary
-
-        Args:
-            username (str): Description
-            password (str): Description
         """
-        super(EmsiBaseConnection, self).__init__()
-        self.username = username
-        self.password = password
+        config = configparser.ConfigParser()
+        config.read('permissions.ini')
+
+        self.username, self.password = config['DEFAULT']['username'], config['DEFAULT']['password']
 
     def get_new_token(self) -> None:
         """Summary

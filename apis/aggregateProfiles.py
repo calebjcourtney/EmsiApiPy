@@ -14,14 +14,11 @@ class AggregateProfilesConnection(EmsiBaseConnection):
         token (TYPE): Description
     """
 
-    def __init__(self, username: str, password: str) -> None:
+    def __init__(self) -> None:
         """Summary
 
-        Args:
-            username (str): Description
-            password (str): Description
         """
-        super().__init__(username, password)
+        super().__init__()
         self.base_url = "https://emsiservices.com/profiles/"
         self.scope = "profiles:us"
 
@@ -197,14 +194,7 @@ class AggregateProfilesConnection(EmsiBaseConnection):
 def test_profiles_conn():
     """Summary
     """
-    import configparser
-    config = configparser.ConfigParser()
-    config.read('permissions.ini')
-
-    if 'AggregateProfilesConnection' in config.sections():
-        conn = AggregateProfilesConnection(config['AggregateProfilesConnection']['username'], config['AggregateProfilesConnection']['password'])
-    else:
-        conn = AggregateProfilesConnection(config['DEFAULT']['username'], config['DEFAULT']['password'])
+    conn = AggregateProfilesConnection()
 
     response = conn.get_metadata()
 
