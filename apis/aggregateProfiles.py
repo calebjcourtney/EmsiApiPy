@@ -1,12 +1,18 @@
 """Summary
 """
 import requests
+import pandas as pd
 
 from base import EmsiBaseConnection
 
 
 class AggregateProfilesConnection(EmsiBaseConnection):
-    """docstring for AggregateProfilesConnection
+    """
+    Use case
+    This is an interface for retrieving aggregated Emsi profile data that is filtered, sorted and ranked by various properties of the profiles.
+
+    About the data
+    Profiles are collected from various sources and processed/enriched to provide information such as standardized company name, occupation, skills, and geography.
 
     Attributes:
         base_url (str): Description
@@ -24,18 +30,15 @@ class AggregateProfilesConnection(EmsiBaseConnection):
 
         self.token = self.get_new_token()
 
-    def querystring_endpoint(self, api_endpoint, querystring):
+    def querystring_endpoint(self, api_endpoint: str, querystring: str) -> requests.Response:
         """Summary
 
         Args:
-            api_endpoint (TYPE): Description
-            querystring (TYPE): Description
+            api_endpoint (str): Description
+            querystring (str): Description
 
         Returns:
-            TYPE: Description
-
-        Deleted Parameters:
-            payload (None, optional): Description
+            requests.Response: Description
         """
         url = self.base_url + api_endpoint
 
@@ -51,103 +54,101 @@ class AggregateProfilesConnection(EmsiBaseConnection):
 
         return response
 
-    def get_status(self):
+    def get_status(self) -> str:
         """
-        Summary
+        Get the health of the service. Be sure to check the `healthy` attribute of the response, not just the status code. Caching not recommended.
 
         Returns:
-            TYPE: Description
+            str: Description
         """
-        url = self.base_url + "status"
-        response = requests.request("GET", url)
-
+        response = self.download_data("status")
         return response.json()['data']['message']
 
-    def is_healthy(self):
+    def is_healthy(self) -> bool:
         """
-        Summary
+        Get the health of the service. Be sure to check the `healthy` attribute of the response, not just the status code. Caching not recommended.
 
         Returns:
-            TYPE: Description
+            bool: Description
         """
-        url = "https://emsiservices.com/profiles/status"
-        response = requests.request("GET", url)
-
+        response = self.download_data("status")
         return response.json()['data']['healthy']
 
-    def get_metadata(self):
+    def get_metadata(self) -> dict:
         """
-        Summary
+        Get service metadata, including taxonomies, available years of data (first and last year in which any available profiles were updated), and attribution text. Caching is encouraged, but the metadata may change weekly.
 
         Returns:
-            TYPE: Description
+            dict: Description
 
         Deleted Parameters:
             nation (str, optional): Description
         """
         response = self.download_data("meta")
-
         return response.json()['data']
 
-    def post_totals(self, payload):
-        """Summary
+    def post_totals(self, payload: dict) -> dict:
+        """Get summary metrics on all profiles matching the filters.
 
         Args:
-            payload (TYPE): Description
+            payload (dict): Description
 
         Returns:
-            TYPE: Description
+            dict: Description
         """
         response = self.download_data('totals', payload)
 
         return response.json()['data']['totals']
 
-    def post_recency(self, payload):
-        """Summary
+    def post_recency(self, payload: dict) -> dict:
+        """Group filtered profile metrics by year, based on profile recency (when they were last updated).
 
         Args:
-            payload (TYPE): Description
+            payload (dict): Description
 
         Returns:
-            TYPE: Description
+            dict: Description
         """
         response = self.download_data('recency', payload)
 
         return response.json()['data']['recency']
 
-    def get_rankings(self):
-        """Summary
+    def get_rankings(self) -> dict:
+        """Get a list of current available ranking facets.
 
         Returns:
-            TYPE: Description
+            dict: Description
         """
         response = self.download_data('rankings')
 
         return response.json()['data']
 
-    def post_rankings(self, facet, payload):
-        """Summary
+    def post_rankings(self, facet: str, payload: dict) -> dict:
+        """Rank profiles by a given facet
 
         Args:
-            facet (TYPE): Description
-            payload (TYPE): Description
+            facet (str): Description
+            payload (dict): Description
 
         Returns:
-            TYPE: Description
+            dict: Description
         """
         response = self.download_data("rankings/{}".format(facet), payload)
 
         return response.json()
 
-    def get_taxonomies(self, facet = None, q = None):
-        """Summary
+    def get_taxonomies(self, facet: str = None, q: str = None) -> dict:
+        """
+        Search taxonomies using either whole keywords (relevance search) or partial keywords (autocomplete), or list taxonomy items.
+        Get a list of current available taxonomy facets.
+        Search taxonomies using either whole keywords (relevance search) or partial keywords (autocomplete).
 
         Args:
-            facet (None, optional): Description
-            q (None, optional): Description
+            facet (str, optional): Description
+            q (str, optional): Description
 
         Returns:
-            TYPE: Description
+            dict: Description
         """
         if facet is None:
             response = self.download_data("taxonomies")
@@ -158,19 +159,34 @@ class AggregateProfilesConnection(EmsiBaseConnection):
 
         return response.json()['data']
 
-    def post_taxonomies(self, facet, payload):
-        """Summary
+    def post_taxonomies(self, facet: str, payload: dict) -> dict:
+        """Lookup taxonomy items by ID.
 
         Args:
-            facet (TYPE): Description
-            payload (TYPE): Description
+            facet (str): Description
+            payload (dict): Description
 
         Returns:
-            TYPE: Description
+            dict: Description
         """
         response = self.download_data("taxonomies/{}/lookup".format(facet), payload)
 
         return response.json()['data']
+
+    def post_rankings_df(self, facet: str, payload: dict) -> pd.DataFrame:
+        """Summary
+
+        Args:
+            facet (str): Description
+            payload (dict): Description
+
+        Returns:
+            pd.DataFrame: Description
+        """
+        response = self.post_rankings(facet, payload)
+        df = pd.DataFrame(response['ranking']['buckets'])
+
+        return df
 
 
 ###### TESTS ######

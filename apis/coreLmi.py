@@ -6,8 +6,10 @@ from dateutil import parser
 import datetime
 import pandas as pd
 
+from base import EmsiBaseConnection
 
-class CoreLMIConnection(object):
+
+class CoreLMIConnection(EmsiBaseConnection):
     """Summary
 
     Attributes:
