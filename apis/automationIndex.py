@@ -165,7 +165,7 @@ class AutomationIndexConnection(EmsiBaseConnection):
         return output
 
 
-# Let's add tests here
+###### TESTS ######
 def test_automation_conn():
     import configparser
     config = configparser.ConfigParser()
