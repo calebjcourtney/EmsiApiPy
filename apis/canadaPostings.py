@@ -23,47 +23,6 @@ class CanadaPostingsConnection(EmsiBaseConnection):
 
         self.token = self.get_new_token()
 
-    def get_new_token(self) -> str:
-        """Summary
-
-        Returns:
-            None: Description
-
-        Raises:
-            ValueError: Description
-        """
-        url = "https://auth.emsicloud.com/connect/token"
-
-        payload = "grant_type=client_credentials&client_id={}&client_secret={}&scope={}".format(self.username, self.password, self.scope)
-        headers = {'content-type': 'application/x-www-form-urlencoded'}
-
-        response = requests.request("POST", url, data=payload, headers=headers)
-
-        if response.status_code != 200:
-            print(response.text)
-            print(response.status_code)
-
-            raise ValueError("Looks like you don't have access to this dataset with those credentials")
-
-        return response.json()['access_token']
-
-    def download_data(self, api_endpoint: str, payload: dict = None) -> requests.Response:
-        """Summary
-
-        Args:
-            api_endpoint (str): Description
-            payload (dict, optional): Description
-
-        Returns:
-            requests.Response: Description
-        """
-        url = self.base_url + api_endpoint
-        if payload is None:
-            return self.get_data(url)
-
-        else:
-            return self.post_data(url, payload)
-
     def querystring_endpoint(self, api_endpoint: str, querystring: str) -> requests.Response:
         """Summary
 

@@ -24,23 +24,6 @@ class AggregateProfilesConnection(EmsiBaseConnection):
 
         self.token = self.get_new_token()
 
-    def download_data(self, api_endpoint, payload = None):
-        """Summary
-
-        Args:
-            api_endpoint (TYPE): Description
-            payload (None, optional): Description
-
-        Returns:
-            TYPE: Description
-        """
-        url = self.base_url + api_endpoint
-        if payload is None:
-            return self.get_data(url)
-
-        else:
-            return self.post_data(url, payload)
-
     def querystring_endpoint(self, api_endpoint, querystring):
         """Summary
 
