@@ -3,12 +3,21 @@ This library is designed as a helpful resource for connecting to [Emsi's APIs](h
 
 
 # Installation
-Install the required packages in `requirements.txt`:
+Clone the repository. Install the required packages in `requirements.txt`:
 ```
 virtualenv -p python3 venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
+
+# Setup .ini File
+There is a file in the repository named `permissions.ini.sample`. When the repo is cloned, it will look like this:
+```
+[DEFAULT]
+username = foo
+password = bar
+```
+You will need to change the `foo` and `bar` values to what was provided by the Emsi API support team, and rename the file to `permissions.ini`.
 
 
 # Usage
