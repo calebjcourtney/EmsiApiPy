@@ -5,6 +5,7 @@ import time
 from dateutil import parser
 import datetime
 import pandas as pd
+import unittest
 
 from .base import EmsiBaseConnection
 
@@ -153,3 +154,20 @@ class CoreLMIConnection(EmsiBaseConnection):
             df[column['name']] = column['rows']
 
         return df
+
+
+class TestCoreLmiConnection(unittest.TestCase):
+    """
+    Our basic test class
+    """
+
+    def test_metadata(self):
+        """
+        The actual test.
+        Any method which starts with ``test_`` will considered as a test case.
+        """
+        conn = CoreLMIConnection()
+        response = conn.get_metadata()
+
+        assert response is not None, "No index data returned"
+        assert response != [], "No index data returned"

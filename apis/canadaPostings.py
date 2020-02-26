@@ -1,7 +1,6 @@
 """Summary
 """
-import requests
-import pandas as pd
+import unittest
 
 from .base import JobPostingsConnection
 
@@ -26,16 +25,22 @@ class CanadaPostingsConnection(JobPostingsConnection):
 
 
 ###### TESTS ######
-def test_ca_jpa_conn():
-    """Summary
+class TestCanadaPostingsConnection(unittest.TestCase):
     """
-    conn = CanadaPostingsConnection()
+    Our basic test class
+    """
 
-    response = conn.get_metadata()
+    def test_metadata(self):
+        """
+        The actual test.
+        Any method which starts with ``test_`` will considered as a test case.
+        """
+        conn = CanadaPostingsConnection()
+        response = conn.get_metadata()
 
-    assert response is not None, "No index data returned"
-    assert response != [], "No index data returned"
+        assert response is not None, "No index data returned"
+        assert response != [], "No index data returned"
 
 
 if __name__ == '__main__':
-    test_ca_jpa_conn()
+    unittest.main()

@@ -1,6 +1,7 @@
 """Summary
 """
 import requests
+import unittest
 
 from .base import EmsiBaseConnection
 
@@ -135,16 +136,22 @@ class AutomationIndexConnection(EmsiBaseConnection):
 
 
 ###### TESTS ######
-def test_automation_conn():
-    """Summary
+class TestAutomationIndexConnection(unittest.TestCase):
     """
-    conn = AutomationIndexConnection()
+    Our basic test class
+    """
 
-    response = conn.get_index()
+    def test_metadata(self):
+        """
+        The actual test.
+        Any method which starts with ``test_`` will considered as a test case.
+        """
+        conn = AutomationIndexConnection()
+        response = conn.get_metadata()
 
-    assert response is not None, "No index data returned"
-    assert response != [], "No index data returned"
+        assert response is not None, "No index data returned"
+        assert response != [], "No index data returned"
 
 
 if __name__ == '__main__':
-    test_automation_conn()
+    unittest.main()
