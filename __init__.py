@@ -15,7 +15,9 @@ if missing_dependencies:
     )
 del hard_dependencies, dependency, missing_dependencies
 
+# import all of the apis that we have connections defined for up to this point
 from .apis.automationIndex import AutomationIndexConnection
 from .apis.aggregateProfiles import AggregateProfilesConnection
 from .apis.canadaPostings import CanadaPostingsConnection
 from .apis.coreLmi import CoreLMIConnection
+from .apis.usPostings import UnitedStatesPostingsConnection
