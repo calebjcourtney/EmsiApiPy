@@ -10,7 +10,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-# Setup .ini File
+# Setup
 There is a file in the repository named `permissions.py.sample`. When the repo is cloned, it will look like this:
 ```
 DEFAULT = {
