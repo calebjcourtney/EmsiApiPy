@@ -1,0 +1,4 @@
+DEFAULT = {
+    "username": "foo",
+    "password": "bar"
+}

@@ -6,7 +6,7 @@ from dateutil import parser
 import datetime
 import pandas as pd
 
-from base import EmsiBaseConnection
+from .base import EmsiBaseConnection
 
 
 class CoreLMIConnection(EmsiBaseConnection):
@@ -54,6 +54,7 @@ class CoreLMIConnection(EmsiBaseConnection):
 
         else:
             response = self.post_data(url, payload)
+            print(response.text)
             if response.headers['X-Rate-Limit-Remaining'] == 0 or response.status_code == 502:
                 self.limit_remaining = response.headers['X-Rate-Limit-Remaining']
                 self.limit_reset = parser.parse(response.headers['X-Rate-Limit-Reset'])
@@ -147,6 +148,8 @@ class CoreLMIConnection(EmsiBaseConnection):
             pd.DataFrame: Description
         """
         response = self.post_retrieve_data(dataset, payload, datarun)
-        df = pd.DataFrame({column['name']: column['rows']} for column in response['data'])
+        df = pd.DataFrame()
+        for column in response['data']:
+            df[column['name']] = column['rows']
 
         return df

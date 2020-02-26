@@ -3,6 +3,8 @@
 import requests
 import configparser
 
+from ..permissions import DEFAULT
+
 
 class EmsiBaseConnection(object):
     """docstring for EmsiBaseConnection
@@ -16,10 +18,8 @@ class EmsiBaseConnection(object):
     def __init__(self) -> None:
         """Summary
         """
-        config = configparser.ConfigParser()
-        config.read('permissions.ini')
 
-        self.username, self.password = config['DEFAULT']['username'], config['DEFAULT']['password']
+        self.username, self.password = DEFAULT['username'], DEFAULT['password']
 
     def get_new_token(self) -> None:
         """Summary
@@ -75,7 +75,7 @@ class EmsiBaseConnection(object):
         """
         headers = {'content-type': "application/json", 'authorization': "Bearer {}".format(self.token)}
 
-        response = requests.get(url, headers = headers, json = payload)
+        response = requests.post(url, headers = headers, json = payload)
         if response.status_code == 401:
             self.get_new_token()
             return self.post_data(url, payload)

@@ -2,7 +2,7 @@
 """
 import requests
 
-from base import EmsiBaseConnection
+from .base import EmsiBaseConnection
 
 
 class AutomationIndexConnection(EmsiBaseConnection):

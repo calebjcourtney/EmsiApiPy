@@ -1,9 +1,12 @@
 """Summary
 """
+import unittest
+
 import requests
 import pandas as pd
 
-from base import EmsiBaseConnection
+
+from .base import EmsiBaseConnection
 
 
 class AggregateProfilesConnection(EmsiBaseConnection):
@@ -189,17 +192,24 @@ class AggregateProfilesConnection(EmsiBaseConnection):
         return df
 
 
-###### TESTS ######
-def test_profiles_conn():
-    """Summary
+class TestAggregateProfilesConnection(unittest.TestCase):
     """
+    Our basic test class
+    """
+
     conn = AggregateProfilesConnection()
 
-    response = conn.get_metadata()
+    def test_metadata(self):
+        """
+        The actual test.
+        Any method which starts with ``test_`` will considered as a test case.
+        """
+        conn = AggregateProfilesConnection()
+        response = conn.get_metadata()
 
-    assert response is not None, "No index data returned"
-    assert response != [], "No index data returned"
+        assert response is not None, "No index data returned"
+        assert response != [], "No index data returned"
 
 
 if __name__ == '__main__':
-    test_profiles_conn()
+    unittest.main()
