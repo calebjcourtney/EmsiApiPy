@@ -135,3 +135,28 @@ def test_post_taxonomies():
     }
     response = conn.post_taxonomies('soc5', payload)
     assert len(response) == 1, "No exact match for Chief Execs? Seems dubious"
+
+
+def test_post_rankings_df():
+    payload = {
+        "filter": {
+            "last_updated": {
+                "start": "2001",
+                "end": "2019"
+            },
+            "state": [
+                16
+            ]
+        },
+        "rank": {
+            "by": "profiles",
+            "limit": 2
+        }
+    }
+
+    facet = 'fips'
+
+    df = conn.post_rankings_df(facet, payload)
+
+    assert not(df.empty), "No data received from the API. Seems dubious."
+    assert len(df) == 2, "DataFrame doesn't have exactly two rows, found {} instead".format(len(df))

@@ -499,6 +499,6 @@ class ProfilesConnection(EmsiBaseConnection):
             pd.DataFrame: Description
         """
         response = self.post_rankings(facet, payload)
-        df = pd.DataFrame(response['ranking']['buckets'])
+        df = pd.DataFrame(response['data']['ranking']['buckets'])
 
         return df
