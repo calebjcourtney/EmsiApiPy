@@ -3,7 +3,10 @@
 import requests
 import pandas as pd
 
-from ..permissions import DEFAULT
+try:
+    from ..permissions import DEFAULT
+except ValueError:  # need this for testing
+    from permissions import DEFAULT
 
 
 class EmsiBaseConnection(object):

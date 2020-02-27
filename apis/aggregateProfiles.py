@@ -1,7 +1,6 @@
-"""Summary
 """
-import unittest
-
+The following is taken from Emsi's documentation, available here: https://api.emsidata.com/apis/aggregate-profile-data
+"""
 from .base import ProfilesConnection
 
 
@@ -28,24 +27,3 @@ class AggregateProfilesConnection(ProfilesConnection):
         self.scope = "profiles:us"
 
         self.token = self.get_new_token()
-
-
-class TestAggregateProfilesConnection(unittest.TestCase):
-    """
-    Our basic test class
-    """
-
-    def test_metadata(self):
-        """
-        The actual test.
-        Any method which starts with ``test_`` will considered as a test case.
-        """
-        conn = AggregateProfilesConnection()
-        response = conn.get_metadata()
-
-        assert response is not None, "No index data returned"
-        assert response != [], "No index data returned"
-
-
-if __name__ == '__main__':
-    unittest.main()

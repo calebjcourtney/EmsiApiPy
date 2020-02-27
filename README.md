@@ -76,3 +76,7 @@ print(data_df.head())
 """
 
 ```
+
+
+# Testing
+Tests can be run with `pytest tests/runTests.py`. Please be aware that this is testing all of the functions as they query the API, and this may take some time to run.
