@@ -3,7 +3,7 @@ This library is designed as a helpful resource for connecting to [Emsi's APIs](h
 
 
 # Installation
-Clone the repository. Install the required packages in `requirements.txt`:
+Clone the repository. Install the required packages in `requirements.txt` into a python [virtualenvironment](https://www.geeksforgeeks.org/python-virtual-environment/). Here's an example using [virtualenv](https://virtualenv.pypa.io/en/latest/), which is what the source code has been tested in.
 ```
 virtualenv -p python3 venv
 source venv/bin/activate
