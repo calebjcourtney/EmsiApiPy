@@ -1,6 +1,13 @@
 # EmsiApiPy
 This library is designed as a helpful resource for connecting to [Emsi's APIs](https://api.emsidata.com/). It is provided as-is under no warranty by Emsi, but rather as an effort by various users to provide a centralized, coordinated way to access the APIs in an effective manner.
 
+# Table of Contents
+1. [Installation](#installation)
+2. [Setup](#setup)
+3. [Testing](#testing)
+4. [Usage](#usage)
+    - [Core LMI Usage Examples](#core-lmi-usage-examples)
+
 
 # Installation
 Clone the repository. Install the required packages in `requirements.txt` into a python [virtualenvironment](https://www.geeksforgeeks.org/python-virtual-environment/). Here's an example using [virtualenv](https://virtualenv.pypa.io/en/latest/), which is what the source code has been tested in.
@@ -21,6 +28,11 @@ DEFAULT = {
 You will need to change the `foo` and `bar` values to what was provided by the Emsi API support team, and rename the file to `permissions.py`.
 
 Make sure that the EmsiApiPy folder is accessible from your [`PYTHONPATH`](https://bic-berkeley.github.io/psych-214-fall-2016/using_pythonpath.html). You will know you've set it up correctly if you can run `import EmsiApiPy` from within your python environment.
+
+
+# Testing
+Tests can be run with `pytest tests/runTests.py`. Please be aware that this is testing all of the functions as they query the API, and this may take some time to run. Additionally, if you don't have access to some APIs, not all the tests will pass. Functionality may be added in the future to skip tests for APIs that you don't have access to.
+
 
 # Usage
 ## Core LMI Usage Examples
@@ -76,7 +88,3 @@ print(data_df.head())
 """
 
 ```
-
-
-# Testing
-Tests can be run with `pytest tests/runTests.py`. Please be aware that this is testing all of the functions as they query the API, and this may take some time to run.
