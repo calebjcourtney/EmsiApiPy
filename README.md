@@ -10,7 +10,7 @@ This library is designed as a helpful resource for connecting to [Emsi's APIs](h
 
 
 # Installation
-Clone the repository. Install the required packages in `requirements.txt` into a python [virtualenvironment](https://www.geeksforgeeks.org/python-virtual-environment/). Here's an example using [virtualenv](https://virtualenv.pypa.io/en/latest/), which is what the source code has been tested in.
+Clone the repository. Install the required packages in `requirements.txt` into a [python virtual environment](https://www.geeksforgeeks.org/python-virtual-environment/). Here's an example using [virtualenv](https://virtualenv.pypa.io/en/latest/), which is what the source code has been tested in.
 ```
 virtualenv -p python3 venv
 source venv/bin/activate
@@ -61,6 +61,7 @@ print(df.head())
 # limit only to the states
 df = df.loc[df['level_name'] == '2']
 
+# get the 2019 GRP for each state in the US
 payload = {
     "metrics": [
         {
