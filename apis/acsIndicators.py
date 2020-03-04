@@ -30,7 +30,6 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
             TYPE: Description
         """
         response = self.download_data("status")
-        print(response.text)
 
         return response.json()['data']['message']
 
