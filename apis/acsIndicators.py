@@ -1,6 +1,5 @@
 """Summary
 """
-import requests
 
 from .base import EmsiBaseConnection
 
@@ -23,27 +22,6 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
 
         self.token = self.get_new_token()
 
-    def querystring_endpoint(self, api_endpoint: str, querystring: dict) -> requests.Response:
-        """Summary
-
-        Args:
-            api_endpoint (str): Description
-            querystring (dict): Description
-
-        Returns:
-            requests.Response: Description
-        """
-        url = self.base_url + api_endpoint
-
-        headers = {'content-type': "application/json", 'authorization': "Bearer {}".format(self.token)}
-
-        response = requests.get(url, headers = headers, params = querystring)
-        if response.status_code == 401:
-            self.token = self.get_new_token()
-            return self.querystring_endpoint(api_endpoint, querystring)
-
-        return response
-
     def get_status(self):
         """
         Summary
@@ -51,8 +29,8 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        url = self.base_url + "status"
-        response = requests.request("GET", url)
+        response = self.download_data("status")
+        print(response.text)
 
         return response.json()['data']['message']
 
@@ -63,10 +41,13 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        url = self.base_url + "status"
-        response = requests.request("GET", url)
+        response = self.download_data("status")
 
         return response.json()['data']['healthy']
+
+    def get_meta(self):
+        response = self.download_data("meta")
+        return response.json()
 
     def get_metrics(self, metric_name: str = None) -> dict:
         """
