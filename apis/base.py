@@ -102,21 +102,6 @@ class EmsiBaseConnection(object):
         else:
             return self.post_data(url, payload)
 
-
-class JobPostingsConnection(EmsiBaseConnection):
-    """docstring for CanadaPostingsConnection
-
-    Attributes:
-        base_url (str): Description
-        scope (str): Description
-        token (str): Description
-    """
-
-    def __init__(self) -> None:
-        """Summary
-        """
-        super().__init__()
-
     def querystring_endpoint(self, api_endpoint: str, querystring: str) -> requests.Response:
         """Summary
 
@@ -140,6 +125,21 @@ class JobPostingsConnection(EmsiBaseConnection):
             return self.querystring_endpoint(api_endpoint, querystring)
 
         return response
+
+
+class JobPostingsConnection(EmsiBaseConnection):
+    """docstring for CanadaPostingsConnection
+
+    Attributes:
+        base_url (str): Description
+        scope (str): Description
+        token (str): Description
+    """
+
+    def __init__(self) -> None:
+        """Summary
+        """
+        super().__init__()
 
     def get_status(self) -> str:
         """
@@ -344,30 +344,6 @@ class ProfilesConnection(EmsiBaseConnection):
 
         """
         super().__init__()
-
-    def querystring_endpoint(self, api_endpoint: str, querystring: str) -> requests.Response:
-        """Summary
-
-        Args:
-            api_endpoint (str): Description
-            querystring (str): Description
-
-        Returns:
-            requests.Response: Description
-        """
-        url = self.base_url + api_endpoint
-
-        headers = {
-            'content-type': "application/json",
-            'authorization': "Bearer {}".format(self.token)
-        }
-
-        response = requests.get(url, headers = headers, params = querystring)
-        if response.status_code == 401:
-            self.token = self.get_new_token()
-            return self.querystring_endpoint(api_endpoint, querystring)
-
-        return response
 
     def get_status(self) -> str:
         """

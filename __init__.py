@@ -22,3 +22,4 @@ from .apis.canadaPostings import CanadaPostingsConnection
 from .apis.coreLmi import CoreLMIConnection
 from .apis.usPostings import UnitedStatesPostingsConnection
 from .apis.acsIndicators import ACSIndicatorsConnection
+from .apis.emsiTitles import EmsiTitlesConnection

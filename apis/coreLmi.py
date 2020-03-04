@@ -5,7 +5,6 @@ import time
 from dateutil import parser
 import datetime
 import pandas as pd
-import unittest
 
 from .base import EmsiBaseConnection
 
@@ -55,7 +54,6 @@ class CoreLMIConnection(EmsiBaseConnection):
 
         else:
             response = self.post_data(url, payload)
-            print(response.text)
             if response.headers['X-Rate-Limit-Remaining'] == 0 or response.status_code == 502:
                 self.limit_remaining = response.headers['X-Rate-Limit-Remaining']
                 self.limit_reset = parser.parse(response.headers['X-Rate-Limit-Reset'])
@@ -154,20 +152,3 @@ class CoreLMIConnection(EmsiBaseConnection):
             df[column['name']] = column['rows']
 
         return df
-
-
-class TestCoreLmiConnection(unittest.TestCase):
-    """
-    Our basic test class
-    """
-
-    def test_metadata(self):
-        """
-        The actual test.
-        Any method which starts with ``test_`` will considered as a test case.
-        """
-        conn = CoreLMIConnection()
-        response = conn.get_metadata()
-
-        assert response is not None, "No index data returned"
-        assert response != [], "No index data returned"

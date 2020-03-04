@@ -51,7 +51,7 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        url = "https://emsiservices.com/automation-index/status"
+        url = self.base_url + "status"
         response = requests.request("GET", url)
 
         return response.json()['data']['message']
@@ -63,7 +63,7 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        url = "https://emsiservices.com/automation-index/status"
+        url = self.base_url + "status"
         response = requests.request("GET", url)
 
         return response.json()['data']['healthy']
