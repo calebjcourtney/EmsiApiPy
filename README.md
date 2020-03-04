@@ -31,7 +31,7 @@ Make sure that the EmsiApiPy folder is accessible from your [`PYTHONPATH`](https
 
 
 # Testing
-Tests can be run with `pytest tests/runTests.py`. Please be aware that this is testing all of the functions as they query the API, and this may take some time to run. Additionally, if you don't have access to some APIs, not all the tests will pass. Functionality may be added in the future to skip tests for APIs that you don't have access to.
+Tests can be run with `./tests/run_tests.sh`. Please be aware that this is testing all of the API connections available. If you don't have access to one of the APIs, then the tests will fail. It might be worth editing the `run_tests.sh` file to ensure that you are only running tests for the APIs that you want to access.
 
 
 # Usage
