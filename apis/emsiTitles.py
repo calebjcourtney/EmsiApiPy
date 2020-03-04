@@ -33,7 +33,7 @@ class EmsiTitlesConnection(EmsiBaseConnection):
         url = self.base_url + "status"
         response = requests.request("GET", url)
 
-        return response.json()['data']['message']
+        return response
 
     def is_healthy(self):
         """
