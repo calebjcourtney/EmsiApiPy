@@ -105,3 +105,9 @@ venv.bak/
 
 
 permissions.py
+
+
+# internal-facing apis that aren't publicly accessible (yet)
+*emsiTitles.py
+*skillClusters.py
+*test_emsi_title.py
