@@ -1,3 +1,7 @@
+"""
+Need to add testing to ensure that when the number of queries runs out (download_data) that the process in fact waits for queries to become available again.
+"""
+
 # thanks to Paolo Rovelli for this: https://stackoverflow.com/questions/11536764/how-to-fix-attempted-relative-import-in-non-package-even-with-init-py/27876800#27876800
 import sys
 from os import path

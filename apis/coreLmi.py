@@ -44,7 +44,7 @@ class CoreLMIConnection(EmsiBaseConnection):
         Returns:
             requests.Response: Description
         """
-        while self.limit_remaining == 0 and datetime.utcnow() < self.limit_reset():
+        while self.limit_remaining == 0 and datetime.datetime.utcnow() < self.limit_reset:
             print("waiting for limit to reset")
             time.sleep(1)
 
@@ -54,11 +54,10 @@ class CoreLMIConnection(EmsiBaseConnection):
 
         else:
             response = self.post_data(url, payload)
-            if response.headers['X-Rate-Limit-Remaining'] == 0 or response.status_code == 502:
-                self.limit_remaining = response.headers['X-Rate-Limit-Remaining']
-                self.limit_reset = parser.parse(response.headers['X-Rate-Limit-Reset'])
 
-                return self.download_data(api_endpoint, payload)
+        if response.status_code == 429:
+            self.limit_remaining = 0
+            return self.download_data(api_endpoint, payload)
 
         self.limit_remaining = response.headers['X-Rate-Limit-Remaining']
         self.limit_reset = parser.parse(response.headers['X-Rate-Limit-Reset'])
