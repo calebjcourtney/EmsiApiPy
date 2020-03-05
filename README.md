@@ -7,6 +7,7 @@ This library is designed as a helpful resource for connecting to [Emsi's APIs](h
 3. [Testing](  # testing)
 4. [Usage](  # usage)
     - [Core LMI Usage Examples](  # core-lmi-usage-examples)
+    - [US Profiles Usage Examples](# aggregate-social-profiles)
 
 
 # Installation
