@@ -23,10 +23,10 @@ from .apis.coreLmi import CoreLMIConnection
 from .apis.usPostings import UnitedStatesPostingsConnection
 from .apis.acsIndicators import ACSIndicatorsConnection
 from .apis.openSkills import SkillsClassificationConnection
+from .apis.emsiTitles import EmsiTitlesConnection
 
 # these are internal APIs only
 try:
-    from .apis.emsiTitles import EmsiTitlesConnection
     from .apis.skillClusters import SkillClustersConnection
 except ImportError:
     pass
