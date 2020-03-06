@@ -22,6 +22,7 @@ from .apis.canadaPostings import CanadaPostingsConnection
 from .apis.coreLmi import CoreLMIConnection
 from .apis.usPostings import UnitedStatesPostingsConnection
 from .apis.acsIndicators import ACSIndicatorsConnection
+from .apis.openSkills import SkillsClassificationConnection
 
 # these are internal APIs only
 try:
