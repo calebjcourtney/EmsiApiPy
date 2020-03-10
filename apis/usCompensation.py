@@ -27,44 +27,67 @@ class UsCompensationConnection(EmsiBaseConnection):
         self.token = ""
         self.get_new_token()
 
-    def post_estimate(self, payload):
+    def post_estimate(self, payload: dict) -> dict:
         """Summary
-        """
-        response = self.download_data("estimate", payload)
-        return response.json()
 
-    def post_estimate_by_experience(self, payload):
-        """Summary
-        """
-        response = self.download_data("estimate_by_experience", payload)
-        return response.json()
+        Args:
+            payload (dict): Description
 
-    def post_by_msa(self, payload):
-        """Summary
+        Returns:
+            dict: Description
         """
-        response = self.download_data("by_msa", payload)
-        return response.json()
+        return self.download_data("estimate", payload).json()
 
-    def get_geographies(self):
+    def post_estimate_by_experience(self, payload) -> dict:
         """Summary
-        """
-        response = self.download_data("geographies")
-        return response.json()
 
-    def get_edlevels(self):
-        """Summary
-        """
-        response = self.download_data("edlevels")
-        return response.json()
+        Args:
+            payload (TYPE): Description
 
-    def get_datarun(self):
-        """Summary
+        Returns:
+            dict: Description
         """
-        response = self.download_data("datarun")
-        return response.text
+        return self.download_data("estimate_by_experience", payload).json()
 
-    def get_soc_version(self):
+    def post_by_msa(self, payload: dict) -> dict:
         """Summary
+
+        Args:
+            payload (dict): Description
+
+        Returns:
+            dict: Description
         """
-        response = self.download_data("soc_version")
-        return response.text
+        return self.download_data("by_msa", payload).json()
+
+    def get_geographies(self) -> dict:
+        """Summary
+
+        Returns:
+            dict: Description
+        """
+        return self.download_data("geographies").json()
+
+    def get_edlevels(self) -> dict:
+        """Summary
+
+        Returns:
+            dict: Description
+        """
+        return self.download_data("edlevels").json()
+
+    def get_datarun(self) -> str:
+        """Summary
+
+        Returns:
+            str: Description
+        """
+        return self.download_data("datarun").text
+
+    def get_soc_version(self) -> str:
+        """Summary
+
+        Returns:
+            str: Description
+        """
+        return self.download_data("soc_version").text

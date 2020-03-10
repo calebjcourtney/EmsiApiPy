@@ -51,3 +51,15 @@ class SkillsClassificationConnection(EmsiBaseConnection):
             dict: Description
         """
         return self.download_data("versions/{}/extract".format(version), {"full_text": description}).json()
+
+    def extract_with_source(self, description: str, version: str = 'latest') -> dict:
+        """Summary
+
+        Args:
+            description (str): Description
+            version (str, optional): Description
+
+        Returns:
+            dict: Description
+        """
+        return self.download_data("versions/{}/extract?trace=true".format(version), {"full_text": description}).json()

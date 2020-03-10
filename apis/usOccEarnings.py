@@ -27,62 +27,65 @@ class UsOccupationEarningsConnection(EmsiBaseConnection):
         self.token = ""
         self.get_new_token()
 
-    def get_status(self):
+    def get_status(self) -> int:
+        """Summary
+
+        Returns:
+            int: Description
+        """
         return self.download_data("status").status_code
 
-    def get_versions(self):
+    def get_versions(self) -> list:
+        """Summary
+
+        Returns:
+            list: Description
+        """
         return self.download_data("v1/us/").json()
 
-    def get_datarun_years(self, datarun):
+    def get_datarun_years(self, datarun: str) -> list:
+        """Summary
+
+        Args:
+            datarun (str): Description
+
+        Returns:
+            list: Description
+        """
         return self.download_data("v1/us/{}/years".format(datarun)).json()
 
-    def post_percentile_wages(self, datarun, payload):
+    def post_percentile_wages(self, datarun: str, payload: dict) -> dict:
+        """Summary
+
+        Args:
+            datarun (str): Description
+            payload (dict): Description
+
+        Returns:
+            dict: Description
+        """
         return self.download_data("v1/us/{}/percentile_wages".format(datarun), payload).json()
 
-    def post_employment_at_wage(self, datarun, payload):
+    def post_employment_at_wage(self, datarun: str, payload: dict) -> dict:
+        """Summary
+
+        Args:
+            datarun (str): Description
+            payload (dict): Description
+
+        Returns:
+            dict: Description
+        """
         return self.download_data("v1/us/{}/employment_at_wage".format(datarun), payload).json()
 
-    def postemployment_at_wage_by_occ(self, datarun, payload):
+    def postemployment_at_wage_by_occ(self, datarun: str, payload: dict) -> dict:
+        """Summary
+
+        Args:
+            datarun (str): Description
+            payload (dict): Description
+
+        Returns:
+            dict: Description
+        """
         return self.download_data("v1/us/{}/employment_at_wage_by_occ".format(datarun), payload).json()
-
-    def post_estimate(self, payload):
-        """Summary
-        """
-        response = self.download_data("estimate", payload)
-        return response.json()
-
-    def post_estimate_by_experience(self, payload):
-        """Summary
-        """
-        response = self.download_data("estimate_by_experience", payload)
-        return response.json()
-
-    def post_by_msa(self, payload):
-        """Summary
-        """
-        response = self.download_data("by_msa", payload)
-        return response.json()
-
-    def get_geographies(self):
-        """Summary
-        """
-        response = self.download_data("geographies")
-        return response.json()
-
-    def get_edlevels(self):
-        """Summary
-        """
-        response = self.download_data("edlevels")
-        return response.json()
-
-    def get_datarun(self):
-        """Summary
-        """
-        response = self.download_data("datarun")
-        return response.text
-
-    def get_soc_version(self):
-        """Summary
-        """
-        response = self.download_data("soc_version")
-        return response.text
