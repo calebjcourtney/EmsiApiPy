@@ -24,6 +24,8 @@ from .apis.usPostings import UnitedStatesPostingsConnection
 from .apis.acsIndicators import ACSIndicatorsConnection
 from .apis.openSkills import SkillsClassificationConnection
 from .apis.emsiTitles import EmsiTitlesConnection
+from .apis.usCompensation import UsCompensationConnection
+from .apis.usOccEarnings import UsOccupationEarningsConnection
 
 # these are internal APIs only
 try:
