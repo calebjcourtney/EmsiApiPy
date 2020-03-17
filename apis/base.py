@@ -13,8 +13,10 @@ class EmsiBaseConnection(object):
     """docstring for EmsiBaseConnection
 
     Attributes:
-        password (TYPE): Description
         token (TYPE): Description
+
+    Deleted Attributes:
+        password (TYPE): Description
         username (TYPE): Description
     """
 
@@ -93,7 +95,7 @@ class EmsiBaseConnection(object):
             payload (None, optional): Description
 
         Returns:
-            TYPE: Description
+            requests.Response: Description
         """
         url = self.base_url + api_endpoint
         if payload is None:
@@ -102,12 +104,12 @@ class EmsiBaseConnection(object):
         else:
             return self.post_data(url, payload)
 
-    def querystring_endpoint(self, api_endpoint: str, querystring: str) -> requests.Response:
+    def querystring_endpoint(self, api_endpoint: str, querystring: dict) -> requests.Response:
         """Summary
 
         Args:
             api_endpoint (str): Description
-            querystring (str): Description
+            querystring (dict): Description
 
         Returns:
             requests.Response: Description
@@ -121,7 +123,7 @@ class EmsiBaseConnection(object):
 
         response = requests.get(url, headers = headers, params = querystring)
         if response.status_code == 401:
-            self.token = self.get_new_token()
+            self.get_new_token()
             return self.querystring_endpoint(api_endpoint, querystring)
 
         return response
@@ -130,7 +132,7 @@ class EmsiBaseConnection(object):
 class JobPostingsConnection(EmsiBaseConnection):
     """docstring for CanadaPostingsConnection
 
-    Attributes:
+    Deleted Attributes:
         base_url (str): Description
         scope (str): Description
         token (str): Description
@@ -181,7 +183,7 @@ class JobPostingsConnection(EmsiBaseConnection):
         """Summary
 
         Args:
-            payload (TYPE): Description
+            payload (dict): Description
 
         Returns:
             dict: Description
@@ -194,7 +196,7 @@ class JobPostingsConnection(EmsiBaseConnection):
         """Summary
 
         Args:
-            payload (TYPE): Description
+            payload (dict): Description
 
         Returns:
             dict: Description
@@ -217,8 +219,8 @@ class JobPostingsConnection(EmsiBaseConnection):
         """Summary
 
         Args:
-            facet (TYPE): Description
-            payload (TYPE): Description
+            facet (str): Description
+            payload (dict): Description
 
         Returns:
             dict: Description
@@ -231,8 +233,8 @@ class JobPostingsConnection(EmsiBaseConnection):
         """Summary
 
         Args:
-            facet (TYPE): Description
-            payload (TYPE): Description
+            facet (str): Description
+            payload (dict): Description
 
         Returns:
             dict: Description
@@ -245,9 +247,9 @@ class JobPostingsConnection(EmsiBaseConnection):
         """Summary
 
         Args:
-            facet (TYPE): Description
-            nested_facet (TYPE): Description
-            payload (TYPE): Description
+            facet (str): Description
+            nested_facet (str): Description
+            payload (dict): Description
 
         Returns:
             dict: Description
@@ -260,7 +262,7 @@ class JobPostingsConnection(EmsiBaseConnection):
         """Summary
 
         Args:
-            payload (TYPE): Description
+            payload (dict): Description
 
         Returns:
             dict: Description
@@ -273,8 +275,8 @@ class JobPostingsConnection(EmsiBaseConnection):
         """Summary
 
         Args:
-            facet (None, optional): Description
-            q (None, optional): Description
+            facet (str, optional): Description
+            q (str, optional): Description
 
         Returns:
             dict: Description
@@ -303,6 +305,15 @@ class JobPostingsConnection(EmsiBaseConnection):
         return response.json()['data']
 
     def post_rankings_df(self, facet: str, payload: dict) -> pd.DataFrame:
+        """Summary
+
+        Args:
+            facet (str): Description
+            payload (dict): Description
+
+        Returns:
+            pd.DataFrame: Description
+        """
         response = self.post_rankings(facet, payload)
 
         df = pd.DataFrame(response['data']['ranking']['buckets'])
@@ -311,6 +322,16 @@ class JobPostingsConnection(EmsiBaseConnection):
         return df
 
     def post_nested_rankings_df(self, facet: str, nested_facet: str, payload: dict) -> pd.DataFrame:
+        """Summary
+
+        Args:
+            facet (str): Description
+            nested_facet (str): Description
+            payload (dict): Description
+
+        Returns:
+            pd.DataFrame: Description
+        """
         response = self.post_nested_rankings(facet, nested_facet, payload)
 
         df = pd.DataFrame()
@@ -333,7 +354,7 @@ class ProfilesConnection(EmsiBaseConnection):
     About the data
     Profiles are collected from various sources and processed/enriched to provide information such as standardized company name, occupation, skills, and geography.
 
-    Attributes:
+    Deleted Attributes:
         base_url (str): Description
         scope (str): Description
         token (TYPE): Description
