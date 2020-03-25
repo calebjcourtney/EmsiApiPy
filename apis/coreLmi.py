@@ -5,6 +5,7 @@ import time
 from dateutil import parser
 import datetime
 import pandas as pd
+import sys
 
 from .base import EmsiBaseConnection
 
@@ -31,10 +32,10 @@ class CoreLMIConnection(EmsiBaseConnection):
         self.token = ""
         self.get_new_token()
         self.limit_remaining = 300
-        self.limit_reset = datetime.datetime.utcnow()
+        self.limit_reset = datetime.datetime.now()
         self.limit_reset += datetime.timedelta(0, 300)
 
-    def download_data(self, api_endpoint: str, payload: dict = None) -> requests.Response:
+    def download_data(self, api_endpoint: str, payload: dict = None, smart_limit: bool = True) -> requests.Response:
         """Summary
 
         Args:
@@ -44,9 +45,13 @@ class CoreLMIConnection(EmsiBaseConnection):
         Returns:
             requests.Response: Description
         """
-        while self.limit_remaining == 0 and datetime.datetime.utcnow() < self.limit_reset:
-            print("waiting for limit to reset")
-            time.sleep(1)
+        # if smart_limit:
+        #     try:
+        #         time.sleep((self.limit_reset - datetime.datetime.now()).total_seconds() / self.limit_remaining)
+        #     except ZeroDivisionError:
+        #         time.sleep((self.limit_reset - datetime.datetime.now()).total_seconds())
+        #         self.limit_remaining = 300
+        #         self.limit_reset = datetime.datetime.now() + datetime.timedelta(0, 300)
 
         url = self.base_url + api_endpoint
         if payload is None:
@@ -59,8 +64,9 @@ class CoreLMIConnection(EmsiBaseConnection):
             self.limit_remaining = 0
             return self.download_data(api_endpoint, payload)
 
-        self.limit_remaining = response.headers['X-Rate-Limit-Remaining']
+        self.limit_remaining = int(response.headers['X-Rate-Limit-Remaining'])
         self.limit_reset = parser.parse(response.headers['X-Rate-Limit-Reset'])
+        self.limit_reset = self.limit_reset.replace(tzinfo = None)
 
         return response
 
