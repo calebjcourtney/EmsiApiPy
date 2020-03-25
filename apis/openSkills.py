@@ -27,7 +27,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Summary
 
         Returns:
-            TYPE: Description
+            dict: Description
         """
         return self.download_data("status").json()
 
@@ -36,11 +36,118 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Summary
 
         Returns:
-            TYPE: Description
+            bool: Description
         """
         return self.download_data("status").json()['data']['healthy']
 
-    def extract(self, description: str, version: str = 'latest') -> dict:
+    def get_documentation(self) -> str:
+        """Summary
+
+        Returns:
+            str: Description
+        """
+        return self.download_data("docs").text
+
+    def get_changelog(self) -> str:
+        """Summary
+
+        Returns:
+            str: Description
+        """
+        return self.download_data("changelog").text
+
+    def get_versions(self) -> list:
+        """Summary
+
+        Returns:
+            list: Description
+        """
+        return self.download_data("versions").json()
+
+    def get_list_all_skills(self, version = "latest") -> list:
+        """Summary
+
+        Args:
+            version (str, optional): Description
+
+        Returns:
+            list: Description
+        """
+        return self.download_data("versions/{}/skills".format(version)).json()
+
+    def post_list_requested_skills(self, payload: dict, version: str = "latest") -> dict:
+        """Summary
+
+        Args:
+            payload (dict): Description
+            version (str, optional): Description
+
+        Returns:
+            dict: Description
+        """
+        return self.download_data("versions/{}/skills".format(version), payload).json()
+
+    def get_search_skills(self, skill_name: str, version: str = "latest") -> dict:
+        """Summary
+
+        Args:
+            skill_name (str): Description
+            version (str, optional): Description
+
+        Returns:
+            dict: Description
+        """
+        query = {"q": skill_name}
+        return self.querystring_endpoint("versions/{}/skills".format(version), query).json()
+
+    def get_skills_fields(self, fields: list, version: str = "latest") -> dict:
+        """Summary
+
+        Args:
+            fields (list): Description
+            version (str, optional): Description
+
+        Returns:
+            dict: Description
+        """
+        query = {"fields": ",".join(fields)}
+        return self.querystring_endpoint("versions/{}/skills".format(version), query).json()
+
+    def get_skill_by_id(self, skill_id: str, version: str = "latest") -> dict:
+        """Summary
+
+        Args:
+            skill_id (str): Description
+            version (str, optional): Description
+
+        Returns:
+            dict: Description
+        """
+        return self.download_data("versions/{}/skills/{}".format(version, skill_id)).json()
+
+    def get_fields(self, version: str = "latest") -> dict:
+        """Summary
+
+        Args:
+            version (str, optional): Description
+
+        Returns:
+            dict: Description
+        """
+        return self.download_data("versions/{}/fields".format(version)).json()
+
+    def get_skill_types(self, version: str = "latest") -> dict:
+        """Summary
+
+        Args:
+            version (str, optional): Description
+
+        Returns:
+            dict: Description
+        """
+        return self.download_data("versions/{}/types".format(version)).json()
+
+    def post_extract(self, description: str, version: str = 'latest') -> dict:
         """Summary
 
         Args:
@@ -52,7 +159,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         """
         return self.download_data("versions/{}/extract".format(version), {"full_text": description}).json()
 
-    def extract_with_source(self, description: str, version: str = 'latest') -> dict:
+    def post_extract_with_source(self, description: str, version: str = 'latest') -> dict:
         """Summary
 
         Args:
