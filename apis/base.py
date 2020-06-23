@@ -50,7 +50,7 @@ class EmsiBaseConnection(object):
 
         self.token = response.json()['access_token']
 
-    def get_data(self, url: str) -> requests.Response:
+    def get_data(self, url: str, querystring: dict = None) -> requests.Response:
         """Summary
 
         Args:
@@ -61,14 +61,15 @@ class EmsiBaseConnection(object):
         """
         headers = {'content-type': "application/json", 'authorization': "Bearer {}".format(self.token)}
 
-        response = requests.get(url, headers = headers)
+        response = requests.get(url, headers = headers, params = querystring)
+
         if response.status_code == 401:
             self.get_new_token()
-            return self.get_data(url)
+            return self.get_data(url, querystring)
 
         return response
 
-    def post_data(self, url: str, payload: dict) -> requests.Response:
+    def post_data(self, url: str, payload: dict, querystring: dict = None) -> requests.Response:
         """Summary
 
         Args:
@@ -79,15 +80,15 @@ class EmsiBaseConnection(object):
             requests.Response: Description
         """
         headers = {'content-type': "application/json", 'authorization': "Bearer {}".format(self.token)}
+        response = requests.post(url, headers = headers, json = payload, params = querystring)
 
-        response = requests.post(url, headers = headers, json = payload)
         if response.status_code == 401:
             self.get_new_token()
-            return self.post_data(url, payload)
+            return self.post_data(url, payload, querystring)
 
         return response
 
-    def download_data(self, api_endpoint, payload = None) -> requests.Response:
+    def download_data(self, api_endpoint: str, payload: dict = None, querystring: dict = None) -> requests.Response:
         """Summary
 
         Args:
@@ -99,38 +100,14 @@ class EmsiBaseConnection(object):
         """
         url = self.base_url + api_endpoint
         if payload is None:
-            return self.get_data(url)
+            return self.get_data(url, querystring)
 
         else:
-            return self.post_data(url, payload)
-
-    def querystring_endpoint(self, api_endpoint: str, querystring: dict) -> requests.Response:
-        """Summary
-
-        Args:
-            api_endpoint (str): Description
-            querystring (dict): Description
-
-        Returns:
-            requests.Response: Description
-
-        Deleted Parameters:
-            payload (None, optional): Description
-        """
-        url = self.base_url + api_endpoint
-
-        headers = {'content-type': "application/json", 'authorization': "Bearer {}".format(self.token)}
-
-        response = requests.get(url, headers = headers, params = querystring)
-        if response.status_code == 401:
-            self.get_new_token()
-            return self.querystring_endpoint(api_endpoint, querystring)
-
-        return response
+            return self.post_data(url, payload, querystring)
 
 
 class JobPostingsConnection(EmsiBaseConnection):
-    """docstring for CanadaPostingsConnection
+    """docstring for JobPostingsConnection
 
     Deleted Attributes:
         base_url (str): Description
@@ -202,6 +179,7 @@ class JobPostingsConnection(EmsiBaseConnection):
             dict: Description
         """
         response = self.download_data('timeseries', payload)
+        print(response.text)
 
         return response.json()['data']
 
@@ -227,9 +205,13 @@ class JobPostingsConnection(EmsiBaseConnection):
         """
         response = self.download_data('rankings/{}/timeseries'.format(facet), payload)
 
-        return response.json()['data']
+        try:
+            return response.json()['data']
+        except Exception:
+            print(response)
+            return response.json()['data']
 
-    def post_rankings(self, facet: str, payload: dict) -> dict:
+    def post_rankings(self, facet: str, payload: dict, querystring: dict = None) -> dict:
         """Summary
 
         Args:
@@ -239,7 +221,7 @@ class JobPostingsConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        response = self.download_data("rankings/{}".format(facet), payload)
+        response = self.download_data("rankings/{}".format(facet), payload, querystring)
 
         return response.json()
 
@@ -286,7 +268,7 @@ class JobPostingsConnection(EmsiBaseConnection):
         else:
             api_endpoint = "taxonomies/{}".format(facet)
             querystring = {"q": q}
-            response = self.querystring_endpoint(api_endpoint, querystring)
+            response = self.download_data(api_endpoint, querystring = querystring)
 
         return response.json()['data']
 
@@ -304,7 +286,7 @@ class JobPostingsConnection(EmsiBaseConnection):
 
         return response.json()['data']
 
-    def post_rankings_df(self, facet: str, payload: dict) -> pd.DataFrame:
+    def post_rankings_df(self, facet: str, payload: dict, querystring: dict = None) -> pd.DataFrame:
         """Summary
 
         Args:
@@ -314,7 +296,7 @@ class JobPostingsConnection(EmsiBaseConnection):
         Returns:
             pd.DataFrame: Description
         """
-        response = self.post_rankings(facet, payload)
+        response = self.post_rankings(facet, payload, querystring)
 
         df = pd.DataFrame(response['data']['ranking']['buckets'])
         df.rename(columns = {'name': facet}, inplace = True)
@@ -467,7 +449,7 @@ class ProfilesConnection(EmsiBaseConnection):
         else:
             api_endpoint = "taxonomies/{}".format(facet)
             querystring = {"q": q}
-            response = self.querystring_endpoint(api_endpoint, querystring)
+            response = self.download_data(api_endpoint, querystring = querystring)
 
         return response.json()['data']
 
@@ -497,5 +479,6 @@ class ProfilesConnection(EmsiBaseConnection):
         """
         response = self.post_rankings(facet, payload)
         df = pd.DataFrame(response['data']['ranking']['buckets'])
+        df.rename(columns = {'name': facet}, inplace = True)
 
         return df

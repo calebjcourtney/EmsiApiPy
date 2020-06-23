@@ -1,11 +1,9 @@
 """Summary
 """
 import requests
-import time
 from dateutil import parser
 import datetime
 import pandas as pd
-import sys
 
 from .base import EmsiBaseConnection
 
@@ -61,7 +59,9 @@ class CoreLMIConnection(EmsiBaseConnection):
             response = self.post_data(url, payload)
 
         if response.status_code == 429:
-            self.limit_remaining = 0
+            import time
+            time.sleep(300)
+
             return self.download_data(api_endpoint, payload)
 
         self.limit_remaining = int(response.headers['X-Rate-Limit-Remaining'])

@@ -38,7 +38,7 @@ class UsCompensationConnection(EmsiBaseConnection):
         """
         return self.download_data("estimate", payload).json()
 
-    def post_estimate_by_experience(self, payload) -> dict:
+    def post_estimate_by_experience(self, payload: dict) -> dict:
         """Summary
 
         Args:
