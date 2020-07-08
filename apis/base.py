@@ -80,7 +80,7 @@ class EmsiBaseConnection(object):
             requests.Response: Description
         """
         headers = {'content-type': "application/json", 'authorization': "Bearer {}".format(self.token)}
-        response = requests.post(url, headers = headers, json = payload, params = querystring)
+        response = requests.post(url, headers = headers, json = payload, data = payload, params = querystring)
 
         if response.status_code == 401:
             self.get_new_token()

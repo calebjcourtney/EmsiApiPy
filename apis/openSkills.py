@@ -29,7 +29,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        return self.download_data("status").json()
+        return self.download_data("status")
 
     def is_healthy(self) -> bool:
         """
@@ -54,7 +54,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             str: Description
         """
-        return self.download_data("changelog").text
+        return self.download_data("docs/changelog").text
 
     def get_versions(self) -> list:
         """Summary
@@ -75,7 +75,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         """
         return self.download_data("versions/{}/skills".format(version)).json()
 
-    def post_list_requested_skills(self, payload: dict, version: str = "latest") -> dict:
+    def post_list_requested_skills(self, payload: dict = None, querystring: dict = None, version: str = "latest") -> dict:
         """Summary
 
         Args:
@@ -85,7 +85,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        return self.download_data("versions/{}/skills".format(version), payload).json()
+        return self.download_data("versions/{}/skills".format(version), payload, querystring).json()
 
     def get_search_skills(self, skill_name: str, version: str = "latest") -> dict:
         """Summary
@@ -98,7 +98,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
             dict: Description
         """
         query = {"q": skill_name}
-        return self.querystring_endpoint("versions/{}/skills".format(version), query).json()
+        return self.download_data("versions/{}/skills".format(version), querystring = query).json()
 
     def get_skills_fields(self, fields: list, version: str = "latest") -> dict:
         """Summary
@@ -111,7 +111,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
             dict: Description
         """
         query = {"fields": ",".join(fields)}
-        return self.querystring_endpoint("versions/{}/skills".format(version), query).json()
+        return self.download_data("versions/{}/skills".format(version), querystring = query).json()
 
     def get_skill_by_id(self, skill_id: str, version: str = "latest") -> dict:
         """Summary
@@ -157,7 +157,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        return self.download_data("versions/{}/extract".format(version), {"full_text": description}).json()
+        return self.download_data("versions/{}/extract".format(version), payload = description).json()
 
     def post_extract_with_source(self, description: str, version: str = 'latest') -> dict:
         """Summary
@@ -169,4 +169,4 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        return self.download_data("versions/{}/extract?trace=true".format(version), {"full_text": description}).json()
+        return self.download_data("versions/{}/extract".format(version), payload = description, querystring = {"trace":"true"}).json()
