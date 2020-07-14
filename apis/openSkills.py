@@ -17,7 +17,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         """Summary
         """
         super().__init__()
-        self.base_url = "https://skills.emsicloud.com/"
+        self.base_url = "https://emsiservices.com/skills/"
         self.scope = "emsi_open"
 
         self.token = self.get_new_token()
@@ -40,22 +40,6 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         """
         return self.download_data("status").json()['data']['healthy']
 
-    def get_documentation(self) -> str:
-        """Summary
-
-        Returns:
-            str: Description
-        """
-        return self.download_data("docs").text
-
-    def get_changelog(self) -> str:
-        """Summary
-
-        Returns:
-            str: Description
-        """
-        return self.download_data("changelog").text
-
     def get_versions(self) -> list:
         """Summary
 
@@ -64,54 +48,76 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         """
         return self.download_data("versions").json()
 
-    def get_list_all_skills(self, version = "latest") -> list:
+    def get_version_metadata(self, version = "latest") -> list:
+        """Summary
+
+        Returns:
+            list: Description
+
+        Args:
+            version (str, optional): Description
+        """
+        return self.download_data(f"versions/{version}").json()
+
+    def get_list_all_skills(self, version: str = "latest", q: str = None, typeIds: str = None, fields: str = None) -> list:
         """Summary
 
         Args:
             version (str, optional): Description
+            q (str, optional): Description
+            typeIds (str, optional): Description
+            fields (str, optional): Description
 
         Returns:
             list: Description
         """
-        return self.download_data("versions/{}/skills".format(version)).json()
 
-    def post_list_requested_skills(self, payload: dict, version: str = "latest") -> dict:
+        base_querystring = {
+            "q": q,
+            "typeIds": typeIds,
+            "fields": fields
+        }
+
+        querystring: dict = {}
+
+        for key, value in base_querystring.items():
+            if value is None:
+                querystring[key] = value
+
+        if len(querystring) > 0:
+            return self.download_data("versions/{}/skills".format(version), querystring = querystring).json()
+
+        else:
+            return self.download_data("versions/{}/skills".format(version)).json()
+
+    def post_list_requested_skills(self, payload: dict, version: str = "latest", typeIds = None, fields = None) -> dict:
         """Summary
 
         Args:
             payload (dict): Description
             version (str, optional): Description
+            typeIds (None, optional): Description
+            fields (None, optional): Description
 
         Returns:
             dict: Description
         """
-        return self.download_data("versions/{}/skills".format(version), payload).json()
 
-    def get_search_skills(self, skill_name: str, version: str = "latest") -> dict:
-        """Summary
+        base_querystring = {
+            "typeIds": typeIds,
+            "fields": fields
+        }
 
-        Args:
-            skill_name (str): Description
-            version (str, optional): Description
+        querystring: dict = {}
+        for key, value in base_querystring.items():
+            if value is None:
+                querystring[key] = value
 
-        Returns:
-            dict: Description
-        """
-        query = {"q": skill_name}
-        return self.querystring_endpoint("versions/{}/skills".format(version), query).json()
+        if len(querystring) > 0:
+            return self.download_data("versions/{}/skills".format(version), payload = payload, querystring = querystring).json()
 
-    def get_skills_fields(self, fields: list, version: str = "latest") -> dict:
-        """Summary
-
-        Args:
-            fields (list): Description
-            version (str, optional): Description
-
-        Returns:
-            dict: Description
-        """
-        query = {"fields": ",".join(fields)}
-        return self.querystring_endpoint("versions/{}/skills".format(version), query).json()
+        else:
+            return self.download_data("versions/{}/skills".format(version), payload = payload).json()
 
     def get_skill_by_id(self, skill_id: str, version: str = "latest") -> dict:
         """Summary
@@ -125,27 +131,18 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         """
         return self.download_data("versions/{}/skills/{}".format(version, skill_id)).json()
 
-    def get_fields(self, version: str = "latest") -> dict:
+    def post_find_related_skills(self, skill_ids: list, version: str = "latest"):
         """Summary
 
         Args:
+            skill_ids (list): Description
             version (str, optional): Description
 
         Returns:
-            dict: Description
+            TYPE: Description
         """
-        return self.download_data("versions/{}/fields".format(version)).json()
-
-    def get_skill_types(self, version: str = "latest") -> dict:
-        """Summary
-
-        Args:
-            version (str, optional): Description
-
-        Returns:
-            dict: Description
-        """
-        return self.download_data("versions/{}/types".format(version)).json()
+        payload = {"ids": skill_ids}
+        return self.download_data("versions/{}/skills".format(version), payload = payload).json()
 
     def post_extract(self, description: str, version: str = 'latest') -> dict:
         """Summary
