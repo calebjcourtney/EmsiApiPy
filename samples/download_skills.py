@@ -8,7 +8,7 @@ conn = EmsiApiPy.SkillsClassificationConnection()
 data = conn.get_list_all_skills()
 
 # load into pandas
-df = pd.DataFrame(data['skills'])
+df = pd.DataFrame(data['data'])
 
 # export
 writer = pd.ExcelWriter("skills_list.xlsx")
