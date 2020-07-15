@@ -179,7 +179,6 @@ class JobPostingsConnection(EmsiBaseConnection):
             dict: Description
         """
         response = self.download_data('timeseries', payload)
-        print(response.text)
 
         return response.json()['data']
 
@@ -208,7 +207,7 @@ class JobPostingsConnection(EmsiBaseConnection):
         try:
             return response.json()['data']
         except Exception:
-            print(response)
+            print(response.text)
             return response.json()['data']
 
     def post_rankings(self, facet: str, payload: dict, querystring: dict = None) -> dict:
