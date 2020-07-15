@@ -59,7 +59,7 @@ class EmsiTitlesConnection(EmsiBaseConnection):
 
         return response.text
 
-    def get_titles(self, metric_name: str = None) -> dict:
+    def get_titles(self) -> dict:
         """
         Summary
 
