@@ -29,7 +29,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        return self.download_data("status").json()
+        return self.download_data("status")
 
     def is_healthy(self) -> bool:
         """
@@ -154,7 +154,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        return self.download_data("versions/{}/extract".format(version), {"full_text": description}).json()
+        return self.download_data("versions/{}/extract".format(version), payload = description).json()
 
     def post_extract_with_source(self, description: str, version: str = 'latest') -> dict:
         """Summary
@@ -166,4 +166,4 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        return self.download_data("versions/{}/extract?trace=true".format(version), {"full_text": description}).json()
+        return self.download_data("versions/{}/extract".format(version), payload = description, querystring = {"trace":"true"}).json()
