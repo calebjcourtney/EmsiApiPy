@@ -2,6 +2,7 @@
 Summary
 """
 from .base import EmsiBaseConnection
+import json
 
 
 class SkillsClassificationConnection(EmsiBaseConnection):
@@ -141,8 +142,8 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        payload = {"ids": skill_ids}
-        return self.download_data("versions/{}/skills".format(version), payload = payload).json()
+        payload = json.dumps({"ids":  skill_ids})
+        return self.download_data("versions/{}/related".format(version), payload = payload).json()
 
     def post_extract(self, description: str, version: str = 'latest') -> dict:
         """Summary
@@ -166,4 +167,4 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        return self.download_data("versions/{}/extract".format(version), payload = description, querystring = {"trace":"true"}).json()
+        return self.download_data("versions/{}/extract/trace".format(version), payload = description).json()
