@@ -109,3 +109,4 @@ permissions.py
 
 # internal-facing apis that aren't publicly accessible (yet)
 *skillClusters.py
+skills_list.xlsx
