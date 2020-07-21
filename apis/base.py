@@ -80,7 +80,12 @@ class EmsiBaseConnection(object):
             requests.Response: Description
         """
         headers = {'content-type': "application/json", 'authorization': "Bearer {}".format(self.token)}
-        response = requests.post(url, headers = headers, json = payload, data = payload, params = querystring)
+
+        # allows for users to pass in a string as the payload (yes, even though it is documented as a dict)
+        if isinstance(payload, str):
+            response = requests.post(url, headers = headers, data = payload, params = querystring)
+        else:
+            response = requests.post(url, headers = headers, json = payload, params = querystring)
 
         if response.status_code == 401:
             self.get_new_token()
