@@ -1,4 +1,6 @@
-"""Summary
+"""
+This service takes text describing a job and normalizes it into a standardized job title from Emsi's job title taxonomy.
+https://api.emsidata.com/apis/emsi-job-title-normalization
 """
 import requests
 
@@ -6,16 +8,16 @@ from .base import EmsiBaseConnection
 
 
 class EmsiTitlesConnection(EmsiBaseConnection):
-    """docstring for EmsiTitlesConnection
+    """This service takes text describing a job and normalizes it into a standardized job title from Emsi's job title taxonomy.
 
     Attributes:
-        base_url (str): Description
-        scope (str): Description
-        token (TYPE): Description
+        base_url (str): base url for the API
+        scope (str): scope used to request access from the OAuth server
+        token (str): auth token received from the OAuth server
     """
 
     def __init__(self) -> None:
-        """Summary
+        """Create the connection
         """
         super().__init__()
         self.base_url = "https://titles.emsicloud.com/"
@@ -23,81 +25,80 @@ class EmsiTitlesConnection(EmsiBaseConnection):
 
         self.token = self.get_new_token()
 
-    def get_status(self):
+    def get_status(self) -> dict:
         """
-        Summary
+        Returns health status of the service. Same as is_healthy.
 
         Returns:
-            TYPE: Description
+            dict: the status of the server
         """
         url = self.base_url + "status"
         response = requests.request("GET", url)
 
         return response
 
-    def is_healthy(self):
+    def is_healthy(self) -> bool:
         """
-        Summary
+        Returns health status of the service. Same as get_status.
 
         Returns:
-            TYPE: Description
+            bool: True if service is health; False if it is not
         """
         url = self.base_url + "status"
         response = requests.request("GET", url)
 
         return response.json()['data']['healthy']
 
-    def get_help(self):
+    def get_help(self) -> str:
         """
-        Summary
+        Usage information.
 
         Returns:
-            TYPE: Description
+            str: the raw markdown text from the doc site (https://api.emsidata.com/apis/emsi-job-title-normalization)
         """
         url = self.base_url + "help"
         response = requests.request("GET", url)
 
         return response.text
 
-    def get_titles(self) -> dict:
+    def get_titles(self) -> list:
         """
-        Summary
+        Returns the taxonomy of titles.
 
         Returns:
-            dict: Description
-
-        Args:
-            metric_name (str, optional): Description
+            list: a list of all the titles and their ids
         """
         response = self.download_data("titles")
 
         return response.json()
 
-    def get_normalize(self, title: str) -> dict:
-        """
-        Summary
-
-        Args:
-            metrics_list (list): Description
-
-        Returns:
-            dict: Description
-        """
-        querystring = {"title": title}
-        response = self.querystring_endpoint('normalize', querystring)
-
-        return response.json()
-
     def post_normalize(self, title: str) -> dict:
-        """Summary
+        """Basic title normalization route. Returns normalized title, its ID, and its similarity score.
+
+        Currently only supports the JSON usage ability for the API, no support for plain text
 
         Args:
-            payload (dict): Description
+            payload (dict): json to be sent to the API (e.g. `{"title" : "software engineer iii"}`)
 
         Returns:
-            dict: Description
+            dict: dictionary of the top match from the API (id, title, and similarity)
         """
         payload = {"title": title}
         response = self.download_data("normalize", payload)
+
+        return response.json()
+
+    def get_normalize(self, title: str) -> dict:
+        """
+        Get type must have the raw title in the query string with key title.
+
+        Args:
+            title (list): the title to normalize
+
+        Returns:
+            dict: dictionary of the top match from the API (id, title, and similarity)
+        """
+        querystring = {"title": title}
+        response = self.querystring_endpoint('normalize', querystring)
 
         return response.json()
