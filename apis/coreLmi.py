@@ -59,11 +59,11 @@ class CoreLMIConnection(EmsiBaseConnection):
     """Summary
 
     Attributes:
-        base_url (str): Description
-        limit_remaining (int): Description
-        limit_reset (TYPE): Description
-        scope (str): Description
-        token (str): Description
+        base_url (str): the base url used for querying the API
+        limit_remaining (int): the number of queries made within the allowed time period
+        limit_reset (int): the time the limit will reset on the queries allowed
+        scope (str): scope to be passed to the OAuth server
+        token (str): token received back from the OAuth server
     """
 
     def __init__(self) -> None:
@@ -81,14 +81,14 @@ class CoreLMIConnection(EmsiBaseConnection):
         self.limit_reset += datetime.timedelta(0, 300)
 
     def download_data(self, api_endpoint: str, payload: dict = None, smart_limit: bool = True) -> requests.Response:
-        """Summary
+        """Needs more work for downloading the data from Agnitio, since it does not automatically handle the rate liimit from the API
 
         Args:
-            api_endpoint (str): Description
-            payload (dict, optional): Description
+            api_endpoint (str): the url endpoint to query
+            payload (dict, optional): the payload to pass to the API. if no payload, then a GET request will be made.
 
         Returns:
-            requests.Response: Description
+            requests.Response: The response from the server
         """
         # if smart_limit:
         #     try:
@@ -118,69 +118,69 @@ class CoreLMIConnection(EmsiBaseConnection):
         return response
 
     def get_meta(self) -> dict:
-        """Summary
+        """You can use this interface (which uses these data discovery endpoints) to browse available datasets. Your contract with Emsi will determine which datasets you have access to, and you can list these datasets and their versions by querying the /meta endpoint
 
         Returns:
-            dict: Description
+            dict: json data response from the server
         """
         response = self.download_data("meta")
 
         return response.json()
 
-    def get_meta_dataset(self, dataset: str, datarun: str) -> dict:
-        """Summary
+    def get_meta_dataset(self, dataset: str, datarun: str) -> list:
+        """Available versions of a specific dataset can be retrieved by adding dataset/<name> to the path
 
         Args:
-            dataset (str): Description
-            datarun (str, optional): Description
+            dataset (str): the dataset to query (e.g. `emsi.us.occupation`)
+            datarun (str): the data version to use when querying the dataset (e.g. `2020.3`)
 
         Returns:
-            dict: Description
+            list: list of dataset versions available
         """
         response = self.download_data("meta/dataset/{}/{}".format(dataset, datarun))
 
         return response.json()
 
     def get_meta_dataset_dimension(self, dataset: str, dimension: str, datarun: str) -> dict:
-        """Summary
+        """Finally, you can view the hierarchy of a particular dimension of a dataset by adding dataset/<name>/<version>/<dimension> to the path:
 
         Args:
-            dataset (str): Description
-            dimension (str): Description
-            datarun (str, optional): Description
+            dataset (str): the dataset to query (e.g. `emsi.us.occupation`)
+            dimension (str): the dimension of the data to get a hierarchy for
+            datarun (str): the data version to use when querying the dataset (e.g. `2020.3`)
 
         Returns:
-            dict: Description
+            dict: hierarchichal representation of the dimension of data for the particular dataset
         """
         response = self.download_data("meta/dataset/{}/{}/{}".format(dataset, datarun, dimension))
 
         return response.json()
 
     def post_retrieve_data(self, dataset: str, payload: dict, datarun: str) -> dict:
-        """Summary
+        """Agnitio data queries are performed by assembling a JSON description of the query and POSTing it to the specific dataset you wish to query.
 
         Args:
-            dataset (str): Description
-            payload (dict): Description
-            datarun (str, optional): Description
+            dataset (str): the dataset to query (e.g. `emsi.us.occupation`)
+            payload (dict): the json data to be sent to the API
+            datarun (str): the data version to use when querying the dataset (e.g. `2020.3`)
 
         Returns:
-            dict: Description
+            dict: full data returned from the API
         """
         response = self.download_data("{}/{}".format(dataset, datarun), payload)
 
         return response.json()
 
     def get_dimension_hierarchy_df(self, dataset: str, dimension: str, datarun: str) -> pd.DataFrame:
-        """Summary
+        """Finally, you can view the hierarchy of a particular dimension of a dataset by adding dataset/<name>/<version>/<dimension> to the path:
 
         Args:
-            dataset (str): Description
-            dimension (str): Description
-            datarun (str, optional): Description
+            dataset (str): the dataset to query (e.g. `emsi.us.occupation`)
+            dimension (str): the dimension of the data to get a hierarchy for
+            datarun (str): the data version to use when querying the dataset (e.g. `2020.3`)
 
         Returns:
-            pd.DataFrame: Description
+            pd.DataFrame: Hierarchy data parsed into a pd.DataFrame
         """
         data = self.get_meta_dataset_dimension(dataset, dimension, datarun)
         df = pd.DataFrame(data['hierarchy'])
@@ -188,15 +188,16 @@ class CoreLMIConnection(EmsiBaseConnection):
         return df
 
     def post_retrieve_df(self, dataset: str, payload: dict, datarun: str) -> pd.DataFrame:
-        """Summary
+        """
+        Agnitio data queries are performed by assembling a JSON description of the query and POSTing it to the specific dataset you wish to query.
 
         Args:
-            dataset (str): Description
-            payload (dict): Description
-            datarun (str, optional): Description
+            dataset (str): the dataset to query (e.g. `emsi.us.occupation`)
+            payload (dict): the json data to be sent to the API
+            datarun (str): the data version to use when querying the dataset (e.g. `2020.3`)
 
         Returns:
-            pd.DataFrame: Description
+            pd.DataFrame: Data from the API in a pd.DataFrame
         """
         response = self.post_retrieve_data(dataset, payload, datarun)
         df = pd.DataFrame()
