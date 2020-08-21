@@ -105,10 +105,15 @@ class EmsiBaseConnection(object):
         """
         url = self.base_url + api_endpoint
         if payload is None:
-            return self.get_data(url, querystring)
+            response = self.get_data(url, querystring)
 
         else:
-            return self.post_data(url, payload, querystring)
+            response = self.post_data(url, payload, querystring)
+
+        if response.status_code != 200:
+            print(response.text)
+
+        return response
 
 
 class JobPostingsConnection(EmsiBaseConnection):
