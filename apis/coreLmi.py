@@ -80,7 +80,7 @@ class CoreLMIConnection(EmsiBaseConnection):
 
         return response.json()
 
-    def get_meta_dataset(self, dataset: str, datarun: str = "latest") -> dict:
+    def get_meta_dataset(self, dataset: str, datarun: str) -> dict:
         """Summary
 
         Args:
@@ -94,7 +94,7 @@ class CoreLMIConnection(EmsiBaseConnection):
 
         return response.json()
 
-    def get_meta_dataset_dimension(self, dataset: str, dimension: str, datarun: str = "latest") -> dict:
+    def get_meta_dataset_dimension(self, dataset: str, dimension: str, datarun: str) -> dict:
         """Summary
 
         Args:
@@ -109,7 +109,7 @@ class CoreLMIConnection(EmsiBaseConnection):
 
         return response.json()
 
-    def post_retrieve_data(self, dataset: str, payload: dict, datarun: str = "latest") -> dict:
+    def post_retrieve_data(self, dataset: str, payload: dict, datarun: str) -> dict:
         """Summary
 
         Args:
@@ -124,7 +124,7 @@ class CoreLMIConnection(EmsiBaseConnection):
 
         return response.json()
 
-    def get_dimension_hierarchy_df(self, dataset: str, dimension: str, datarun: str = "latest") -> pd.DataFrame:
+    def get_dimension_hierarchy_df(self, dataset: str, dimension: str, datarun: str) -> pd.DataFrame:
         """Summary
 
         Args:
@@ -140,7 +140,7 @@ class CoreLMIConnection(EmsiBaseConnection):
 
         return df
 
-    def post_retrieve_df(self, dataset: str, payload: dict, datarun: str = "latest") -> pd.DataFrame:
+    def post_retrieve_df(self, dataset: str, payload: dict, datarun: str) -> pd.DataFrame:
         """Summary
 
         Args:
