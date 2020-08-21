@@ -26,6 +26,7 @@ from .apis.openSkills import SkillsClassificationConnection
 from .apis.emsiTitles import EmsiTitlesConnection
 from .apis.usCompensation import UsCompensationConnection
 from .apis.usOccEarnings import UsOccupationEarningsConnection
+from .apis.usInputOutput import USInputOutputConncetion
 
 # these are internal APIs only
 try:
