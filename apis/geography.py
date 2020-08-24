@@ -31,7 +31,7 @@ class GeographyConnection(EmsiBaseConnection):
         Returns:
             dict: the status of the server
         """
-        response = self.download_data(self.base_url + "status")
+        response = self.download_data("status")
 
         return response
 
@@ -42,7 +42,7 @@ class GeographyConnection(EmsiBaseConnection):
         Returns:
             bool: True if service is health; False if it is not
         """
-        response = self.download_data(self.base_url + "status")
+        response = self.download_data("status")
 
         return response.json()['data']['healthy']
 
