@@ -32,5 +32,6 @@ from .apis.geography import GeographyConnection
 # these are internal APIs only
 try:
     from .apis.skillClusters import SkillClustersConnection
+    from .apis.jobTitleMapping import JobTitleMappingConnection
 except ImportError:
     pass
