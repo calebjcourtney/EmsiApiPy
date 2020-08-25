@@ -48,7 +48,7 @@ class JobTitleMappingConnection(EmsiBaseConnection):
     def get_meta(self) -> str:
         """
         """
-        return self.download_data(self.base_url + "meta").json()
+        return self.download_data("meta").json()
 
     def post_titles(self, titles: list, querystring: dict = None) -> list:
         """
