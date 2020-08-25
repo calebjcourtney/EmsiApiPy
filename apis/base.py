@@ -262,7 +262,7 @@ class JobPostingsConnection(EmsiBaseConnection):
 
         return response.json()['data']
 
-    def get_taxonomies(self, facet: str = None, q: str = None) -> dict:
+    def get_taxonomies(self, facet: str = None, q: str = None, querystring: dict = None) -> dict:
         """Summary
 
         Args:
@@ -276,7 +276,11 @@ class JobPostingsConnection(EmsiBaseConnection):
             response = self.download_data("taxonomies")
         else:
             api_endpoint = "taxonomies/{}".format(facet)
-            querystring = {"q": q}
+            if querystring is None:
+                querystring = {"q": q}
+            else:
+                querystring["q"] = q
+
             response = self.download_data(api_endpoint, querystring = querystring)
 
         return response.json()['data']
