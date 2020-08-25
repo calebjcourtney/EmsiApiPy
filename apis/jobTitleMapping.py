@@ -50,12 +50,12 @@ class JobTitleMappingConnection(EmsiBaseConnection):
         """
         return self.download_data(self.base_url + "meta").json()
 
-    def post_titles(self, titles: list) -> list:
+    def post_titles(self, titles: list, querystring: dict = None) -> list:
         """
         """
-        return self.download_data("titles", payload = {"titles": titles}).json()
+        return self.download_data("titles", payload = {"titles": titles}, querystring = querystring).json()
 
-    def get_title(self, title: str) -> list:
+    def get_title(self, title: str, querystring: dict = None) -> list:
         """
         """
-        return self.download_data(title).json()
+        return self.download_data(f"titles/{title}", querystring = querystring).json()
