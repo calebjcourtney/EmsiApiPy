@@ -77,7 +77,7 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
             dict: Description
         """
         querystring = {"metrics": ",".join(metrics_list)}
-        response = self.querystring_endpoint(level, querystring)
+        response = self.download_data(level, querystring=querystring)
 
         return response.json()['data']
 
