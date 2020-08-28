@@ -1,4 +1,4 @@
-# ACS (American Community Survey) Indicators
+# Automation Index
 ```python
 import EmsiApiPy
 
