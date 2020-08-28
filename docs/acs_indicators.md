@@ -1,4 +1,4 @@
-# Core LMI
+# ACS (American Community Survey) Indicators
 ```python
 import EmsiApiPy
 
