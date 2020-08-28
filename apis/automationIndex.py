@@ -133,25 +133,3 @@ class AutomationIndexConnection(EmsiBaseConnection):
                 raise ValueError("`soc_code` '{}' is invalid".format(soc))
 
         return output
-
-
-###### TESTS ######
-class TestAutomationIndexConnection(unittest.TestCase):
-    """
-    Our basic test class
-    """
-
-    def test_metadata(self):
-        """
-        The actual test.
-        Any method which starts with ``test_`` will considered as a test case.
-        """
-        conn = AutomationIndexConnection()
-        response = conn.get_metadata()
-
-        assert response is not None, "No index data returned"
-        assert response != [], "No index data returned"
-
-
-if __name__ == '__main__':
-    unittest.main()
