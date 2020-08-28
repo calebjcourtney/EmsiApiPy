@@ -1,4 +1,4 @@
-# Core LMI Usage Examples
+# Core LMI
 ```python
 import EmsiApiPy
 
