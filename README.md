@@ -6,9 +6,6 @@ This library is designed as a helpful resource for connecting to [Emsi's APIs](h
 2. [Setup](  #Setup)
 3. [Testing](  #Testing)
 4. [Documentation Links](  #Usage)
-    - [Core LMI Examples](  #core-lmi-usage-examples)
-    - [US Profiles Examples](  #aggregate-social-profiles)
-    - [US Job Postings Examples](  #us-job-postings)
 
 ## Installation
 Clone the repository. Install the required packages in `requirements.txt` into a [python virtual environment](https://www.geeksforgeeks.org/python-virtual-environment/). Here's an example using [virtualenv](https://virtualenv.pypa.io/en/latest/), which is what the source code has been tested in .
@@ -38,7 +35,7 @@ Tests can be run with `./tests/run_tests.sh`. Please be aware that this is testi
 
 
 ## Usage
-    - [Core LMI Examples](docs/core_lmi.md)
-    - [US Profiles Examples](docs/us_profiles.md)
-    - [US Job Postings Examples](docs/us_jpa.md)
-    - [Open Skills](docs/open_skills.md)
+- [Core LMI Examples](#docs/core_lmi.md)
+- [US Profiles Examples](#docs/us_profiles.md)
+- [US Job Postings Examples](#docs/us_jpa.md)
+- [Open Skills](#docs/open_skills.md)
