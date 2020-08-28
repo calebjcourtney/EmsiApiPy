@@ -35,7 +35,7 @@ Tests can be run with `./tests/run_tests.sh`. Please be aware that this is testi
 
 
 ## Usage
-- [Core LMI Examples](#docs/core_lmi.md)
-- [US Profiles Examples](#docs/us_profiles.md)
-- [US Job Postings Examples](#docs/us_jpa.md)
-- [Open Skills](#docs/open_skills.md)
+- [Core LMI Examples](docs/core_lmi.md)
+- [US Profiles Examples](docs/us_profiles.md)
+- [US Job Postings Examples](docs/us_jpa.md)
+- [Open Skills](docs/open_skills.md)
