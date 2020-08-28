@@ -1,7 +1,5 @@
 """Summary
 """
-import requests
-
 from .base import EmsiBaseConnection
 
 
