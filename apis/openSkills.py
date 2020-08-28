@@ -79,10 +79,10 @@ class SkillsClassificationConnection(EmsiBaseConnection):
             "fields": fields
         }
 
-        querystring: dict = {}
+        querystring = {}
 
         for key, value in base_querystring.items():
-            if value is None:
+            if value is not None:
                 querystring[key] = value
 
         if len(querystring) > 0:
@@ -142,7 +142,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        payload = json.dumps({"ids":  skill_ids})
+        payload = json.dumps({"ids": skill_ids})
         return self.download_data("versions/{}/related".format(version), payload = payload).json()
 
     def post_extract(self, description: str, version: str = 'latest') -> dict:
@@ -155,7 +155,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        return self.download_data("versions/{}/extract".format(version), payload = description).json()
+        return self.download_data("versions/{}/extract".format(version), payload = {"text": description}).json()
 
     def post_extract_with_source(self, description: str, version: str = 'latest') -> dict:
         """Summary
@@ -167,4 +167,4 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        return self.download_data("versions/{}/extract/trace".format(version), payload = description).json()
+        return self.download_data("versions/{}/extract/trace".format(version), payload = {"text": description}).json()
