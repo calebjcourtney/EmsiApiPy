@@ -1,18 +1,18 @@
 # EmsiApiPy
-This library is designed as a helpful resource for connecting to [Emsi's APIs](https://api.emsidata.com/). It is provided as-is under no warranty by Emsi, but rather as an effort by various users to provide a centralized, coordinated way to access the APIs in an effective manner. It is currently under active development, so improvements are being added all the time, and these may include breaking changes.
+This library is designed as a helpful resource for connecting to [Emsi's APIs](https: // api.emsidata.com/). It is provided as- is under no warranty by Emsi, but rather as an effort by various users to provide a centralized, coordinated way to access the APIs in an effective manner. It is currently under active development, so improvements are being added all the time, and these may include breaking changes.
 
 # Table of Contents
-1. [Installation](#installation)
-2. [Setup](#Setup)
-3. [Testing](#Testing)
-4. [Usage](#Usage)
-    - [Core LMI Usage Examples](#core-lmi-usage-examples)
-    - [US Profiles Usage Examples](#aggregate-social-profiles)
-
+1. [Installation](  # installation)
+2. [Setup](  # Setup)
+3. [Testing](  # Testing)
+4. [Usage](  # Usage)
+    - [Core LMI Examples](  # core-lmi-usage-examples)
+    - [US Profiles Examples](  # aggregate-social-profiles)
+    - [US Job Postings Examples]( # us-job-postings)
 
 # Installation
-Clone the repository. Install the required packages in `requirements.txt` into a [python virtual environment](https://www.geeksforgeeks.org/python-virtual-environment/). Here's an example using [virtualenv](https://virtualenv.pypa.io/en/latest/ ), which is what the source code has been tested in.
-```
+Clone the repository. Install the required packages in `requirements.txt` into a [python virtual environment](https: // www.geeksforgeeks.org / python - virtual - environment/). Here's an example using [virtualenv](https: // virtualenv.pypa.io / en / latest / ), which is what the source code has been tested in .
+```bash
 virtualenv - p python3 venv
 source venv / bin / activate
 pip install - r requirements.txt
@@ -20,7 +20,7 @@ pip install - r requirements.txt
 
 # Setup
 There is a file in the repository named `permissions.py.sample`. When the repo is cloned, it will look like this:
-```
+```python
 DEFAULT = {
     "username": "foo",
     "password": "bar"
@@ -28,7 +28,7 @@ DEFAULT = {
 ```
 You will need to change the `foo` and `bar` values to what was provided by the Emsi API support team, and rename the file to `permissions.py`.
 
-Make sure that the EmsiApiPy folder is accessible from your [`PYTHONPATH`](https://bic-berkeley.github.io/psych-214-fall-2016/using_pythonpath.html). You will know you've set it up correctly if you can run `import EmsiApiPy` from within your python environment.
+Make sure that the EmsiApiPy folder is accessible from your [`PYTHONPATH`](https: // bic - berkeley.github.io / psych - 214 - fall - 2016 / using_pythonpath.html). You will know you've set it up correctly if you can run `import EmsiApiPy` from within your python environment.
 
 
 # Testing
@@ -37,7 +37,7 @@ Tests can be run with `. / tests / run_tests.sh`. Please be aware that this is t
 
 # Usage
 # Core LMI Usage Examples
-```
+```python
 import EmsiApiPy
 
 conn = EmsiApiPy.CoreLMIConnection()
@@ -93,10 +93,10 @@ print(data_df.head())
 
 
 # Aggregate Social Profiles
-```
+```python
 import EmsiApiPy
 
-conn = EmsiApiPy.CoreLMIConnection()
+conn = EmsiApiPy.AggregateProfilesConnection()
 
 # make sure we have a good connection
 assert conn.is_healthy()
@@ -124,7 +124,7 @@ print(conn.post_totals(payload))
 # the facets that we can rank by
 print(conn.get_rankings())
 
-# rank the top 10 skills for data scientists
+# rank the top 10 hard skills for data scientists
 payload = {
     "filter": {
         "last_updated": {
@@ -148,7 +148,7 @@ print(conn.post_rankings(facet, payload))
 # make sure we're using the right id or name for "Data Scientist"
 print(conn.get_taxonomies(facet = 'title', q = 'Data Scientist'))
 
-# get the top skills for data scientists as a pandas dataframe
+# get the top hard skills for data scientists as a pandas dataframe
 payload = {
     "filter": {
         "last_updated": {
@@ -167,6 +167,85 @@ payload = {
 
 facet = 'hard_skills_name'
 
-df = us_profiles_conn.post_rankings_df(facet, payload)
+df = conn.post_rankings_df(facet, payload)
 
+```
+
+
+# US Job Postings
+```python
+import EmsiApiPy
+
+jpa_conn = EmsiApiPy.UnitedStatesPostingsConnection()
+
+# make sure we have a good connection
+assert jpa_conn.is_healthy()
+
+# metadata for the jpa endpoint
+print(jpa_conn.get_meta())
+
+# get the total job postings in the state of idaho for a year
+payload = {
+    "filter": {
+        "when": {
+            "start": "2019-08",
+            "end": "2020-07"
+        },
+        "state": [
+            16
+        ]
+    },
+    "metrics": [
+        "unique_postings"
+    ]
+}
+print(jpa_conn.post_totals(payload))
+
+# the facets that we can rank by
+print(jpa_conn.get_rankings())
+
+# rank the top 10 hard skills for data scientists
+payload = {
+    "filter": {
+        "when": {
+            "start": "2019-08",
+            "end": "2020-07"
+        },
+        "title_name": [
+            "Data Scientists"
+        ]
+    },
+    "rank": {
+        "by": "unique_postings",
+        "limit": 10
+    }
+}
+
+facet = 'hard_skills_name'
+
+print(jpa_conn.post_rankings(facet, payload))
+
+# make sure we're using the right id or name for "Data Scientist"
+print(jpa_conn.get_taxonomies(facet = 'title', q = 'Data Scientist'))
+
+# get the top hard skills for data scientists as a pandas dataframe
+payload = {
+    "filter": {
+        "when": {
+            "start": "2019-08",
+            "end": "2020-07"
+        },
+        "title_name": [
+            "Data Scientists"
+        ]
+    },
+    "rank": {
+        "by": "unique_postings",
+        "limit": 10
+    }
+}
+
+facet = 'hard_skills_name'
+
+df = jpa_conn.post_rankings_df(facet, payload)
 ```
