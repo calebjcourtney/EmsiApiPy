@@ -40,3 +40,4 @@ Tests can be run with `./tests/run_tests.sh`. Please be aware that this is testi
 - [US Job Postings](docs/us_jpa.md)
 - [Open Skills](docs/open_skills.md)
 - [ACS Indicators](docs/acs_indicators.md)
+- [Automation Index](docs/automation_index.md)

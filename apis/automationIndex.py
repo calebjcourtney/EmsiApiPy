@@ -1,7 +1,6 @@
 """Summary
 """
 import requests
-import unittest
 
 from .base import EmsiBaseConnection
 
@@ -42,10 +41,7 @@ class AutomationIndexConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        url = "https://emsiservices.com/automation-index/status"
-        response = requests.request("GET", url)
-
-        return response.json()['data']['message']
+        return self.download_data("status").json()["data"]["message"]
 
     def is_healthy(self):
         """
@@ -54,10 +50,7 @@ class AutomationIndexConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        url = "https://emsiservices.com/automation-index/status"
-        response = requests.request("GET", url)
-
-        return response.json()['data']['healthy']
+        return self.download_data("status").json()["data"]["healthy"]
 
     def get_countries(self):
         """
@@ -113,7 +106,7 @@ class AutomationIndexConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        if type(soc_code) != list or type(soc_code) != str:
+        if type(soc_code) != list and type(soc_code) != str:
             raise ValueError("input `soc_code` must be one of type `list` or `str`")
 
         if type(soc_code) == list:
