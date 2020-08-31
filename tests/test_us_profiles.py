@@ -66,7 +66,7 @@ def test_post_totals():
     }
     response = us_profiles_conn.post_totals(payload)
 
-    assert response['profiles'] == 62
+    assert response['profiles'] == 24
 
 
 def test_post_recency():
