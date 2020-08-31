@@ -99,6 +99,6 @@ class EmsiTitlesConnection(EmsiBaseConnection):
             dict: dictionary of the top match from the API (id, title, and similarity)
         """
         querystring = {"title": title}
-        response = self.querystring_endpoint('normalize', querystring)
+        response = self.download_data('normalize', querystring=querystring)
 
         return response.json()
