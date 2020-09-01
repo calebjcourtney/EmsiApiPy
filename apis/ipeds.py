@@ -101,6 +101,18 @@ class IpedsConnection(EmsiBaseConnection):
             payload = payload
         ).json()
 
+    def get_institutions_all(self, offset: int = 0, limit: int = 0) -> dict:
+        """
+        Lists all institutions with pagination.
+
+        Args:
+            payload (dict): Description
+
+        Returns:
+            dict: Description
+        """
+        return self.download_data(f"institutions/all/{offset}/{limit}").json()
+
     # please note that the post_rankings endpoint is not included,
     # since it has been removed from Emsi's software and the data is not updated
 
@@ -195,6 +207,21 @@ class IpedsConnection(EmsiBaseConnection):
         """
         data = self.get_institutions_search(payload)
         df = pd.DataFrame(data["rows"])
+
+        return df
+
+    def get_institutions_all_df(self, offset: int = 0, limit: int = 0) -> pd.DataFrame:
+        """
+        Lists all institutions with pagination.
+
+        Args:
+            payload (dict): Description
+
+        Returns:
+            dict: Description
+        """
+        data = self.download_data(f"institutions/all/{offset}/{limit}").json()
+        df = pd.DataFrame(data)
 
         return df
 
