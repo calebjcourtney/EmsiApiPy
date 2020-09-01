@@ -1,18 +1,23 @@
 """
-Summary
+This API provides metadata about educational institutions reporting via IPEDS, US News rankings, and a translation layer between CIP and SOC codes.
+Information and search functionality for institutions are exposed via the institution family of endpoints.
+A SOC-CIP mapping is provided via the `soccip` endpoints.
 """
 import pandas as pd
 
 from .base import EmsiBaseConnection
 
 
-class SkillsClassificationConnection(EmsiBaseConnection):
-    """docstring for SkillsClassificationConnection
+class IpedsConnection(EmsiBaseConnection):
+    """
+    This API provides metadata about educational institutions reporting via IPEDS, US News rankings, and a translation layer between CIP and SOC codes.
+    Information and search functionality for institutions are exposed via the institution family of endpoints.
+    A SOC-CIP mapping is provided via the `soccip` endpoints.
 
     Attributes:
-        base_url (str): Description
-        scope (str): Description
-        token (TYPE): Description
+        base_url (str): The url for connecting to the API and that every other url for this class is built off
+        scope (str): The scope for accessing the API
+        token (str): The current access token for connecting to the API
     """
 
     def __init__(self) -> None:
@@ -22,33 +27,27 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         self.base_url = "https://ipeds.emsicloud.com/"
         self.scope = "emsiauth"
 
-        self.token = self.get_new_token()
+        self.get_new_token()
 
     def get_status(self):
         """
-        url = "https://ipeds.emsicloud.com/health/status"
+        This endpoint checks the health of the service.
+        If the service is healthy, returns an empty `200 OK` response.
 
-        response = requests.request("GET", url)
-
-        print(response.text)
+        Returns:
+            TYPE: Description
         """
         return self.download_data("health/status").json()
 
-    def post_institutions(self, institutions: list):
+    def post_institutions(self, institutions: list) -> dict:
         """
-        import requests
+        Fetch information for one or more institutions. The institution IDs are IPEDS Unit IDs.
 
-        url = "https://ipeds.emsicloud.com/institutions"
+        Args:
+            institutions (list): list of institutions by id for accessing the API
 
-        payload = "{\"institutionIds\": [247940, 166027]}"
-        headers = {
-            'authorization': "Bearer <access_token>",
-            'content-type': "application/json"
-        }
-
-        response = requests.request("POST", url, data=payload, headers=headers)
-
-        print(response.text)
+        Returns:
+            dict: The JSON response from the API
         """
         payload = {"institutionIds": institutions}
         return self.download_data(
@@ -56,46 +55,46 @@ class SkillsClassificationConnection(EmsiBaseConnection):
             payload = payload
         ).json()
 
-    def get_institutions_geo(self, geo_level, geo_code):
+    def get_institutions_geo(self, geo_level: str, geo_code: str) -> dict:
         """
-        url = "https://ipeds.emsicloud.com/institutions/zip/42303"
+        Return a list of institutions operating in the specified FIPS/ZIP code.
 
-        headers = {'authorization': 'Bearer <access_token>'}
+        Args:
+            geo_level (str): Description
+            geo_code (str): Description
 
-        response = requests.request("GET", url, headers=headers)
+        Returns:
+            TYPE: Description
 
-        print(response.text)
+        Raises:
+            ValueError: Raises this error if the geo level is not one of [`zip`, `fips`]
         """
         if geo_level not in ['zip', 'fips']:
             raise ValueError(f"`geo_level` must be one of ['zip', 'fips'], found `{geo_level}`")
 
         return self.download_data(f"institutions/{geo_level}/{geo_code}").json()
 
-    def get_institutions_search(self, search):
+    def get_institutions_search(self, search: str) -> dict:
         """
-        url = "https://ipeds.emsicloud.com/institutions/Harvard"
+        Return a list of institutions matching the supplied name.
 
-        headers = {'authorization': 'Bearer <access_token>'}
+        Args:
+            search (str): Description
 
-        response = requests.request("GET", url, headers=headers)
-
-        print(response.text)
+        Returns:
+            TYPE: Description
         """
         return self.download_data(f"institutions/{search}").json()
 
-    def post_institutions_search(self, payload):
+    def post_institutions_search(self, payload: dict) -> dict:
         """
-        url = "https://ipeds.emsicloud.com/institutions/search"
+        Search institutions using multiple values. Valid search types are `zip`, `fips`, `city`, `id`, and `name`.
 
-        payload = "{\"searchType\": \"zip\", \"values\":[\"83843\", \"42303\"]}"
-        headers = {
-            'authorization': "Bearer <access_token>",
-            'content-type': "application/json"
-            }
+        Args:
+            payload (dict): Description
 
-        response = requests.request("POST", url, data=payload, headers=headers)
-
-        print(response.text)
+        Returns:
+            TYPE: Description
         """
         return self.download_data(
             f"institutions/search",
@@ -105,19 +104,16 @@ class SkillsClassificationConnection(EmsiBaseConnection):
     # please note that the post_rankings endpoint is not included,
     # since it has been removed from Emsi's software and the data is not updated
 
-    def post_cip_soc(self, cips: list):
+    def post_cip_soc(self, cips: list) -> dict:
         """
-        url = "https://ipeds.emsicloud.com/soccip/cip2soc"
+        This endpoint maps a CIP (Classification of Instructional Programs) code to the SOC (Standard Occupation Classification) codes it most likely trains for.
+        For more information on CIP codes, see the (NCES site)[https://nces.ed.gov/ipeds/cipcode/Default.aspx].
 
-        payload = "{\"cipCodes\": [\"45.0902\", \"45.0401\"]}"
-        headers = {
-            'authorization': "Bearer <access_token>",
-            'content-type': "application/json"
-            }
+        Args:
+            cips (list): Description
 
-        response = requests.request("POST", url, data=payload, headers=headers)
-
-        print(response.text)
+        Returns:
+            TYPE: Description
         """
         payload = {"cipCodes": cips}
         return self.download_data(
@@ -125,19 +121,15 @@ class SkillsClassificationConnection(EmsiBaseConnection):
             payload = payload
         ).json()
 
-    def post_soc_cip(self, socs: list):
+    def post_soc_cip(self, socs: list) -> dict:
         """
-        url = "https://ipeds.emsicloud.com/soccip/soc2cip"
+        This endpoint maps from one or more SOC codes to the CIP codes of the programs which most likely train for them.
 
-        payload = "{\"socCodes\": [\"19-3094\"]}"
-        headers = {
-            'authorization': "Bearer <access_token>",
-            'content-type': "application/json"
-            }
+        Args:
+            socs (list): Description
 
-        response = requests.request("POST", url, data=payload, headers=headers)
-
-        print(response.text)
+        Returns:
+            TYPE: Description
         """
         payload = {"socCodes": socs}
         return self.download_data(
@@ -145,89 +137,77 @@ class SkillsClassificationConnection(EmsiBaseConnection):
             payload = payload
         )
 
-    def post_institutions_df(self, institutions: list):
+    def post_institutions_df(self, institutions: list) -> pd.DataFrame:
         """
-        import requests
+        Fetch information for one or more institutions. The institution IDs are IPEDS Unit IDs.
 
-        url = "https://ipeds.emsicloud.com/institutions"
+        Args:
+            institutions (list): Description
 
-        payload = "{\"institutionIds\": [247940, 166027]}"
-        headers = {
-            'authorization': "Bearer <access_token>",
-            'content-type': "application/json"
-        }
-
-        response = requests.request("POST", url, data=payload, headers=headers)
-
-        print(response.text)
+        Returns:
+            TYPE: Description
         """
         data = self.post_institutions(institutions)
         df = pd.DataFrame(data["rows"])
 
         return df
 
-    def get_institutions_geo_df(self, geo_level, geo_code):
+    def get_institutions_geo_df(self, geo_level: str, geo_code: str) -> pd.DataFrame:
         """
-        url = "https://ipeds.emsicloud.com/institutions/zip/42303"
+        Return a list of institutions operating in the specified FIPS/ZIP code.
 
-        headers = {'authorization': 'Bearer <access_token>'}
+        Args:
+            geo_level (str): Description
+            geo_code (str): Description
 
-        response = requests.request("GET", url, headers=headers)
-
-        print(response.text)
+        Returns:
+            TYPE: Description
         """
         data = self.get_institutions_geo(geo_level, geo_code)
         df = pd.DataFrame(data["rows"])
 
         return df
 
-    def get_institutions_search_df(self, search):
+    def get_institutions_search_df(self, search: str) -> pd.DataFrame:
         """
-        url = "https://ipeds.emsicloud.com/institutions/Harvard"
+        Return a list of institutions matching the supplied name.
 
-        headers = {'authorization': 'Bearer <access_token>'}
+        Args:
+            search (str): Description
 
-        response = requests.request("GET", url, headers=headers)
-
-        print(response.text)
+        Returns:
+            TYPE: Description
         """
         data = self.get_institutions_search(search)
         df = pd.DataFrame(data["rows"])
 
         return df
 
-    def post_institutions_search_df(self, payload):
+    def post_institutions_search_df(self, payload: dict) -> pd.DataFrame:
         """
-        url = "https://ipeds.emsicloud.com/institutions/search"
+        Search institutions using multiple values. Valid search types are `zip`, `fips`, `city`, `id`, and `name`.
 
-        payload = "{\"searchType\": \"zip\", \"values\":[\"83843\", \"42303\"]}"
-        headers = {
-            'authorization': "Bearer <access_token>",
-            'content-type': "application/json"
-            }
+        Args:
+            payload (dict): Description
 
-        response = requests.request("POST", url, data=payload, headers=headers)
-
-        print(response.text)
+        Returns:
+            TYPE: Description
         """
         data = self.get_institutions_search(payload)
         df = pd.DataFrame(data["rows"])
 
         return df
 
-    def post_cip_soc_df(self, cips):
+    def post_cip_soc_df(self, cips: list) -> pd.DataFrame:
         """
-        url = "https://ipeds.emsicloud.com/soccip/cip2soc"
+        This endpoint maps a CIP (Classification of Instructional Programs) code to the SOC (Standard Occupation Classification) codes it most likely trains for.
+        For more information on CIP codes, see the (NCES site)[https://nces.ed.gov/ipeds/cipcode/Default.aspx].
 
-        payload = "{\"cipCodes\": [\"45.0902\", \"45.0401\"]}"
-        headers = {
-            'authorization': "Bearer <access_token>",
-            'content-type': "application/json"
-            }
+        Args:
+            cips (list): Description
 
-        response = requests.request("POST", url, data=payload, headers=headers)
-
-        print(response.text)
+        Returns:
+            TYPE: Description
         """
         data = self.post_cip_soc(cips)
         df = pd.DataFrame()
@@ -242,19 +222,15 @@ class SkillsClassificationConnection(EmsiBaseConnection):
 
         return df
 
-    def post_soc_cip_df(self, socs):
+    def post_soc_cip_df(self, socs: list) -> pd.DataFrame:
         """
-        url = "https://ipeds.emsicloud.com/soccip/soc2cip"
+        This endpoint maps from one or more SOC codes to the CIP codes of the programs which most likely train for them.
 
-        payload = "{\"socCodes\": [\"19-3094\"]}"
-        headers = {
-            'authorization': "Bearer <access_token>",
-            'content-type': "application/json"
-            }
+        Args:
+            socs (list): Description
 
-        response = requests.request("POST", url, data=payload, headers=headers)
-
-        print(response.text)
+        Returns:
+            TYPE: Description
         """
 
         data = self.post_soc_cip(socs)

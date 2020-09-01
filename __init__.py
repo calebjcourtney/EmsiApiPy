@@ -28,6 +28,7 @@ from .apis.usCompensation import UsCompensationConnection
 from .apis.usOccEarnings import UsOccupationEarningsConnection
 from .apis.usInputOutput import USInputOutputConncetion
 from .apis.geography import GeographyConnection
+from .apis.ipeds import IpedsConnection
 
 # these are internal APIs only
 try:
