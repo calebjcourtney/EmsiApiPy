@@ -21,7 +21,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         self.base_url = "https://emsiservices.com/skills/"
         self.scope = "emsi_open"
 
-        self.token = self.get_new_token()
+        self.get_new_token()
 
     def get_status(self) -> dict:
         """

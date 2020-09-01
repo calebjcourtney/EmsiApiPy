@@ -22,7 +22,7 @@ class JobTitleMappingConnection(EmsiBaseConnection):
         self.base_url = "https://emsiservices.com/jtm/"
         self.scope = "jtm"
 
-        self.token = self.get_new_token()
+        self.get_new_token()
 
     def get_status(self) -> dict:
         """

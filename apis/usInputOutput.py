@@ -19,7 +19,7 @@ class USInputOutputConncetion(EmsiBaseConnection):
         self.base_url = "https://io.emsicloud.com/"
         self.scope = "us-io"  # todo: add more scopes for other nations
 
-        self.token = self.get_new_token()
+        self.get_new_token()
 
     def get_dataruns(self, country = "us") -> list:
         """All possible dataruns available for a country may be accessed by doing a GET request to https://io.emsicloud.com/v1/<country>/.

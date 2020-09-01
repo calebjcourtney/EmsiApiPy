@@ -23,7 +23,7 @@ class EmsiTitlesConnection(EmsiBaseConnection):
         self.base_url = "https://titles.emsicloud.com/"
         self.scope = "titles"
 
-        self.token = self.get_new_token()
+        self.get_new_token()
 
     def get_status(self) -> dict:
         """

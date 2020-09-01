@@ -19,4 +19,4 @@ class UnitedStatesPostingsConnection(JobPostingsConnection):
         self.base_url = "https://emsiservices.com/jpa/"
         self.scope = "postings:us"
 
-        self.token = self.get_new_token()
+        self.get_new_token()

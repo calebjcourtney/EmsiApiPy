@@ -22,7 +22,7 @@ class GeographyConnection(EmsiBaseConnection):
         self.base_url = "https://emsiservices.com/gis/v1/"
         self.scope = "gis"
 
-        self.token = self.get_new_token()
+        self.get_new_token()
 
     def get_status(self) -> dict:
         """

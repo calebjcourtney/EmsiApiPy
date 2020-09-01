@@ -29,4 +29,4 @@ class AggregateProfilesConnection(ProfilesConnection):
         self.base_url = "https://emsiservices.com/profiles/"
         self.scope = "profiles:us"
 
-        self.token = self.get_new_token()
+        self.get_new_token()

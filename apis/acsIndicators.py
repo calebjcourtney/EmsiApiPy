@@ -20,7 +20,7 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
         self.base_url = "https://emsiservices.com/acs/"
         self.scope = "acs"
 
-        self.token = self.get_new_token()
+        self.get_new_token()
 
     def get_status(self):
         """

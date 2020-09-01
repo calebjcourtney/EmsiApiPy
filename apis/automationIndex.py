@@ -19,7 +19,7 @@ class AutomationIndexConnection(EmsiBaseConnection):
         self.base_url = "https://emsiservices.com/automation-index/"
         self.scope = "automation-index"
 
-        self.token = self.get_new_token()
+        self.get_new_token()
 
     def get_available_endpoints(self):
         """

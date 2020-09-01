@@ -33,4 +33,4 @@ class GlobalProfilesConnection(ProfilesConnection):
         self.base_url = "https://emsiservices.com/global-profiles/"
         self.scope = "profiles:global"
 
-        self.token = self.get_new_token()
+        self.get_new_token()
