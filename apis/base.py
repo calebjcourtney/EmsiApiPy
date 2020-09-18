@@ -166,7 +166,7 @@ class JobPostingsConnection(EmsiBaseConnection):
 
         return response.json()['data']
 
-    def post_totals(self, payload: dict) -> dict:
+    def post_totals(self, payload: dict, querystring: dict = None) -> dict:
         """Summary
 
         Args:
@@ -175,11 +175,15 @@ class JobPostingsConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        response = self.download_data('totals', payload)
+        response = self.download_data(
+            'totals',
+            payload = payload,
+            querystring = querystring
+        )
 
         return response.json()['data']['totals']
 
-    def post_timeseries(self, payload: dict) -> dict:
+    def post_timeseries(self, payload: dict, querystring: dict = None) -> dict:
         """Summary
 
         Args:
@@ -188,7 +192,11 @@ class JobPostingsConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        response = self.download_data('timeseries', payload)
+        response = self.download_data(
+            'timeseries',
+            payload = payload,
+            querystring = querystring
+        )
 
         return response.json()['data']
 
@@ -202,7 +210,7 @@ class JobPostingsConnection(EmsiBaseConnection):
 
         return response.json()['data']
 
-    def post_rankings_timeseries(self, facet: str, payload: dict) -> dict:
+    def post_rankings_timeseries(self, facet: str, payload: dict, querystring: dict = None) -> dict:
         """Summary
 
         Args:
@@ -212,7 +220,11 @@ class JobPostingsConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        response = self.download_data('rankings/{}/timeseries'.format(facet), payload)
+        response = self.download_data(
+            'rankings/{}/timeseries'.format(facet),
+            payload = payload,
+            querystring = querystring
+        )
 
         try:
             return response.json()['data']
@@ -230,11 +242,15 @@ class JobPostingsConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        response = self.download_data("rankings/{}".format(facet), payload, querystring)
+        response = self.download_data(
+            "rankings/{}".format(facet),
+            payload = payload,
+            querystring = querystring
+        )
 
         return response.json()
 
-    def post_nested_rankings(self, facet: str, nested_facet: str, payload: dict) -> dict:
+    def post_nested_rankings(self, facet: str, nested_facet: str, payload: dict, querystring: dict = None) -> dict:
         """Summary
 
         Args:
@@ -245,11 +261,15 @@ class JobPostingsConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        response = self.download_data("rankings/{}/rankings/{}".format(facet, nested_facet), payload)
+        response = self.download_data(
+            "rankings/{}/rankings/{}".format(facet, nested_facet),
+            payload = payload,
+            querystring = querystring
+        )
 
         return response.json()
 
-    def post_samples(self, payload: dict) -> dict:
+    def post_samples(self, payload: dict, querystring: dict = None) -> dict:
         """Summary
 
         Args:
@@ -258,7 +278,28 @@ class JobPostingsConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        response = self.download_data('samples', payload)
+        response = self.download_data(
+            'samples',
+            payload = payload,
+            querystring = querystring
+        )
+
+        return response.json()['data']
+
+    def post_postings(self, payload: dict, querystring: dict = None) -> dict:
+        """Summary
+
+        Args:
+            payload (dict): Description
+
+        Returns:
+            dict: Description
+        """
+        response = self.download_data(
+            'postings',
+            payload = payload,
+            querystring = querystring
+        )
 
         return response.json()['data']
 
@@ -285,7 +326,7 @@ class JobPostingsConnection(EmsiBaseConnection):
 
         return response.json()['data']
 
-    def post_taxonomies(self, facet: str, payload: dict) -> dict:
+    def post_taxonomies(self, facet: str, payload: dict, querystring: dict = None) -> dict:
         """Summary
 
         Args:
@@ -295,7 +336,11 @@ class JobPostingsConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        response = self.download_data("taxonomies/{}/lookup".format(facet), payload)
+        response = self.download_data(
+            "taxonomies/{}/lookup".format(facet),
+            payload = payload,
+            querystring = querystring
+        )
 
         return response.json()['data']
 
@@ -309,14 +354,18 @@ class JobPostingsConnection(EmsiBaseConnection):
         Returns:
             pd.DataFrame: Description
         """
-        response = self.post_rankings(facet, payload, querystring)
+        response = self.post_rankings(
+            facet,
+            payload = payload,
+            querystring = querystring
+        )
 
         df = pd.DataFrame(response['data']['ranking']['buckets'])
         df.rename(columns = {'name': facet}, inplace = True)
 
         return df
 
-    def post_nested_rankings_df(self, facet: str, nested_facet: str, payload: dict) -> pd.DataFrame:
+    def post_nested_rankings_df(self, facet: str, nested_facet: str, payload: dict, querystring: dict = None) -> pd.DataFrame:
         """Summary
 
         Args:
@@ -327,7 +376,12 @@ class JobPostingsConnection(EmsiBaseConnection):
         Returns:
             pd.DataFrame: Description
         """
-        response = self.post_nested_rankings(facet, nested_facet, payload)
+        response = self.post_nested_rankings(
+            facet,
+            nested_facet,
+            payload = payload,
+            querystring = querystring
+        )
 
         df = pd.DataFrame()
         for bucket in response['data']['ranking']['buckets']:
@@ -394,7 +448,7 @@ class ProfilesConnection(EmsiBaseConnection):
         response = self.download_data("meta")
         return response.json()['data']
 
-    def post_totals(self, payload: dict) -> dict:
+    def post_totals(self, payload: dict, querystring: dict = None) -> dict:
         """Get summary metrics on all profiles matching the filters.
 
         Args:
@@ -403,11 +457,15 @@ class ProfilesConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        response = self.download_data('totals', payload)
+        response = self.download_data(
+            'totals',
+            payload = payload,
+            querystring = querystring
+        )
 
         return response.json()['data']['totals']
 
-    def post_recency(self, payload: dict) -> dict:
+    def post_recency(self, payload: dict, querystring: dict = None) -> dict:
         """Group filtered profile metrics by year, based on profile recency (when they were last updated).
 
         Args:
@@ -416,7 +474,11 @@ class ProfilesConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        response = self.download_data('recency', payload)
+        response = self.download_data(
+            'recency',
+            payload = payload,
+            querystring = querystring
+        )
 
         return response.json()['data']['recency']
 
@@ -430,7 +492,7 @@ class ProfilesConnection(EmsiBaseConnection):
 
         return response.json()['data']
 
-    def post_rankings(self, facet: str, payload: dict) -> dict:
+    def post_rankings(self, facet: str, payload: dict, querystring: dict = None) -> dict:
         """Rank profiles by a given facet
 
         Args:
@@ -440,11 +502,15 @@ class ProfilesConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        response = self.download_data("rankings/{}".format(facet), payload)
+        response = self.download_data(
+            "rankings/{}".format(facet),
+            payload = payload,
+            querystring = querystring
+        )
 
         return response.json()
 
-    def get_taxonomies(self, facet: str = None, q: str = None) -> dict:
+    def get_taxonomies(self, facet: str = None, q: str = None, querystring: dict = None) -> dict:
         """
         Search taxonomies using either whole keywords (relevance search) or partial keywords (autocomplete), or list taxonomy items.
         Get a list of current available taxonomy facets.
@@ -461,12 +527,16 @@ class ProfilesConnection(EmsiBaseConnection):
             response = self.download_data("taxonomies")
         else:
             api_endpoint = "taxonomies/{}".format(facet)
-            querystring = {"q": q}
+            if querystring is None:
+                querystring = {"q": q}
+            else:
+                querystring["q"] = q
+
             response = self.download_data(api_endpoint, querystring = querystring)
 
         return response.json()['data']
 
-    def post_taxonomies(self, facet: str, payload: dict) -> dict:
+    def post_taxonomies(self, facet: str, payload: dict, querystring: dict = None) -> dict:
         """Lookup taxonomy items by ID.
 
         Args:
@@ -476,11 +546,15 @@ class ProfilesConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        response = self.download_data("taxonomies/{}/lookup".format(facet), payload)
+        response = self.download_data(
+            "taxonomies/{}/lookup".format(facet),
+            payload = payload,
+            querystring = querystring
+        )
 
         return response.json()['data']
 
-    def post_rankings_df(self, facet: str, payload: dict) -> pd.DataFrame:
+    def post_rankings_df(self, facet: str, payload: dict, querystring: dict = None) -> pd.DataFrame:
         """Summary
 
         Args:
@@ -490,7 +564,11 @@ class ProfilesConnection(EmsiBaseConnection):
         Returns:
             pd.DataFrame: Description
         """
-        response = self.post_rankings(facet, payload)
+        response = self.post_rankings(
+            facet,
+            payload = payload,
+            querystring = querystring
+        )
         df = pd.DataFrame(response['data']['ranking']['buckets'])
         df.rename(columns = {'name': facet}, inplace = True)
 
