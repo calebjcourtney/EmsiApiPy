@@ -303,6 +303,19 @@ class JobPostingsConnection(EmsiBaseConnection):
 
         return response.json()['data']
 
+    def get_postings(self, posting_id: str) -> dict:
+        """Summary
+
+        Args:
+            posting_id (str): The unique ID for a given job posting
+
+        Returns:
+            dict: Data for the specified job posting
+        """
+        response = self.download_data(f'postings/{posting_id}',)
+
+        return response.json()['data']
+
     def get_taxonomies(self, facet: str = None, q: str = None, querystring: dict = None) -> dict:
         """Summary
 
