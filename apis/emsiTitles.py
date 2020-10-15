@@ -84,7 +84,7 @@ class EmsiTitlesConnection(EmsiBaseConnection):
 
         return response.json()["data"]
 
-    def get_list_all_titles(self, q: str = None, querystring: dict = None, version: str = "latest") -> list:
+    def get_list_all_titles(self, q: str = None, fields = ['id', 'name'], version: str = "latest") -> list:
         """
         Returns a list of all titles in {version} sorted by title name
 
@@ -96,13 +96,9 @@ class EmsiTitlesConnection(EmsiBaseConnection):
             querystring (dict, optional): Description
             version (str, optional): Description
         """
-        if q is None:
-            response = self.download_data(f"versions/{version}/titles", querystring = querystring)
-        elif querystring is not None:
+        querystring = {"fields": fields}
+        if q is not None:
             querystring["q"] = q
-            response = self.download_data(f"versions/{version}/titles", querystring = querystring)
-        else:
-            querystring = {"q": q}
             response = self.download_data(f"versions/{version}/titles", querystring = querystring)
 
         return response.json()["data"]
