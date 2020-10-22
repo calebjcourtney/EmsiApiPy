@@ -96,10 +96,12 @@ class EmsiTitlesConnection(EmsiBaseConnection):
             querystring (dict, optional): Description
             version (str, optional): Description
         """
-        querystring = {"fields": fields}
+        querystring = {"fields": ",".join(fields)}
+
         if q is not None:
             querystring["q"] = q
-            response = self.download_data(f"versions/{version}/titles", querystring = querystring)
+
+        response = self.download_data(f"versions/{version}/titles", querystring = querystring)
 
         return response.json()["data"]
 
