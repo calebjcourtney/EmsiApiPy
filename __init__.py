@@ -29,6 +29,7 @@ from .apis.usOccEarnings import UsOccupationEarningsConnection
 from .apis.usInputOutput import USInputOutputConncetion
 from .apis.geography import GeographyConnection
 from .apis.ipeds import IpedsConnection
+from .apis.unitedKingdomPostings import UKPostingsConnection
 
 # these are internal APIs only
 try:
