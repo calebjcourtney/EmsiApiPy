@@ -57,33 +57,33 @@ class GeographyConnection(EmsiBaseConnection):
         return self.download_data(country).json()
 
     def post_withinproximity(self, country: str, version: str, level: str, payload: dict) -> dict:
-        url = f"{self.base_url}{country}/{version}/{level}/withinproximity"
+        url = f"{country}/{version}/{level}/withinproximity"
         return self.download_data(url, payload).json()
 
     def post_closest(self, country: str, version: str, level: str, payload: dict) -> dict:
-        url = f"{self.base_url}{country}/{version}/{level}/closest"
+        url = f"{country}/{version}/{level}/closest"
         return self.download_data(url, payload).json()
 
     def post_contains(self, country: str, version: str, level: str, payload: dict) -> dict:
-        url = f"{self.base_url}{country}/{version}/{level}/contains"
+        url = f"{country}/{version}/{level}/contains"
         return self.download_data(url, payload).json()
 
     def post_centroid(self, country: str, version: str, level: str, payload: dict) -> dict:
-        url = f"{self.base_url}{country}/{version}/{level}/centroid"
-        return self.download_data(url, payload).json()
+        url = f"{country}/{version}/{level}/centroid"
+        return self.download_data(url, payload = payload).json()
 
     def post_mbr(self, country: str, version: str, level: str, payload: dict) -> dict:
-        url = f"{self.base_url}{country}/{version}/{level}/mbr"
+        url = f"{country}/{version}/{level}/mbr"
         return self.download_data(url, payload).json()
 
     def post_mbc(self, country: str, version: str, level: str, payload: dict) -> dict:
-        url = f"{self.base_url}{country}/{version}/{level}/mbc"
+        url = f"{country}/{version}/{level}/mbc"
         return self.download_data(url, payload).json()
 
     def post_geojson(self, country: str, version: str, level: str, payload: dict) -> dict:
-        url = f"{self.base_url}{country}/{version}/{level}/geojson"
+        url = f"{country}/{version}/{level}/geojson"
         return self.download_data(url, payload).json()
 
     def post_svg(self, country: str, version: str, level: str, payload: dict) -> dict:
-        url = f"{self.base_url}{country}/{version}/{level}/svg"
+        url = f"{country}/{version}/{level}/svg"
         return self.download_data(url, payload).json()
