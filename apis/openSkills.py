@@ -2,7 +2,6 @@
 Summary
 """
 from .base import EmsiBaseConnection
-import json
 
 
 class SkillsClassificationConnection(EmsiBaseConnection):
