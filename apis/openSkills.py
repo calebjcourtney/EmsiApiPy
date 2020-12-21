@@ -132,7 +132,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         """
         return self.download_data("versions/{}/skills/{}".format(version, skill_id)).json()
 
-    def post_find_related_skills(self, skill_ids: list, version: str = "latest"):
+    def post_find_related_skills(self, skill_ids: list, limit = 10, fields = ["id", "name", "type", "infoUrl"], version: str = "latest"):
         """Summary
 
         Args:
@@ -142,7 +142,11 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        payload = json.dumps({"ids": skill_ids})
+        payload = {
+            "ids": skill_ids,
+            "limit": limit,
+            "fields": fields
+        }
         return self.download_data("versions/{}/related".format(version), payload = payload).json()
 
     def post_extract(self, description: str, version: str = 'latest') -> dict:
