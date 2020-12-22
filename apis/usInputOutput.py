@@ -41,7 +41,7 @@ class USInputOutputConncetion(EmsiBaseConnection):
             response = self.post_data(url, payload, querystring)
 
         if response.status_code != 200:
-            if response.text == "Token expired":
+            if "Token expired" in response.text:
                 self.get_new_token()
                 return self.download_data(api_endpoint, payload, querystring)
 
