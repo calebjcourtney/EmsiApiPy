@@ -79,7 +79,7 @@ class USInputOutputConncetion(EmsiBaseConnection):
         if year is None:
             year = max(self.get_years(datarun, country))
 
-        return self.download_data(f"/v1/{country}/{datarun}/{year}/").json()
+        return self.download_data(f"v1/{country}/{datarun}/{year}/").json()
 
     def post_basics(self, payload: dict, datarun: str = None, year: str = None, country: str = "us") -> dict:
         """A series of services that just return data and don't require any inputs. They can be requested individually as services by using https://io.emsicloud.com/v1/<country>/<datarun>/<year>/<service>. Alternatively, when requesting the basics service using https://io.emsicloud.com/v1/<country>/<datarun>/<year>/<basics>, they can be bundled in the metrics array.
@@ -116,7 +116,7 @@ class USInputOutputConncetion(EmsiBaseConnection):
             year = max(self.get_years(datarun, country))
 
         response = self.download_data(
-            url = f"/v1/{country}/{datarun}/{year}/basics",
+            url = f"v1/{country}/{datarun}/{year}/basics",
             payload = payload
         )
 
@@ -141,9 +141,9 @@ class USInputOutputConncetion(EmsiBaseConnection):
             year = max(self.get_years(datarun, country))
 
         return self.download_data(
-            url = f"/v1/{country}/{datarun}/{year}/basics",
+            url = f"v1/{country}/{datarun}/{year}/scenario",
             payload = payload
-        )
+        ).json()
 
     def post_requirements(self, payload: dict, datarun: str = None, year: str = None, country: str = "us") -> dict:
         """
@@ -166,9 +166,9 @@ class USInputOutputConncetion(EmsiBaseConnection):
             year = max(self.get_years(datarun, country))
 
         return self.download_data(
-            url = f"/v1/{country}/{datarun}/{year}/basics",
+            f"v1/{country}/{datarun}/{year}/requirements",
             payload = payload
-        )
+        ).json()
 
     def post_spending(self, payload: dict, datarun: str = None, year: str = None, country: str = "us") -> dict:
         """This service requires inputs of sectors for the service to process.
@@ -190,9 +190,9 @@ class USInputOutputConncetion(EmsiBaseConnection):
             year = max(self.get_years(datarun, country))
 
         return self.download_data(
-            url = f"/v1/{country}/{datarun}/{year}/basics",
+            url = f"v1/{country}/{datarun}/{year}/spending",
             payload = payload
-        )
+        ).json()
 
     def post_econbase(self, payload: dict, datarun: str = None, year: str = None, country: str = "us") -> dict:
         """This service requires inputs of all sectors that will be broken out into groups.
@@ -213,6 +213,6 @@ class USInputOutputConncetion(EmsiBaseConnection):
             year = max(self.get_years(datarun, country))
 
         return self.download_data(
-            url = f"/v1/{country}/{datarun}/{year}/basics",
+            url = f"v1/{country}/{datarun}/{year}/econbase",
             payload = payload
-        )
+        ).json()
