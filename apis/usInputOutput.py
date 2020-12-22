@@ -3,6 +3,8 @@ This documentation describes Emsi's Input-Output API for regions in the U.S., Ca
 """
 from .base import EmsiBaseConnection
 
+import requests
+
 
 class USInputOutputConncetion(EmsiBaseConnection):
     """
@@ -20,6 +22,33 @@ class USInputOutputConncetion(EmsiBaseConnection):
         self.scope = "us-io"  # todo: add more scopes for other nations
 
         self.get_new_token()
+
+    def download_data(self, api_endpoint: str, payload: dict = None, querystring: dict = None) -> requests.Response:
+        """Summary
+
+        Args:
+            api_endpoint (TYPE): Description
+            payload (None, optional): Description
+
+        Returns:
+            requests.Response: Description
+        """
+        url = self.base_url + api_endpoint
+        if payload is None:
+            response = self.get_data(url, querystring)
+
+        else:
+            response = self.post_data(url, payload, querystring)
+
+        if response.status_code != 200:
+            if response.text == "Token expired":
+                self.get_new_token()
+                return self.download_data(api_endpoint, payload, querystring)
+
+            else:
+                print(response.text)
+
+        return response
 
     def get_dataruns(self, country = "us") -> list:
         """All possible dataruns available for a country may be accessed by doing a GET request to https://io.emsicloud.com/v1/<country>/.
