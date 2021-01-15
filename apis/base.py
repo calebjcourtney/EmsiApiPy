@@ -117,25 +117,23 @@ class EmsiBaseConnection(object):
 
 
 class JobPostingsConnection(EmsiBaseConnection):
-    """docstring for JobPostingsConnection
+    """Class for handling connections to APIs built on Emsi's postings data
 
     Deleted Attributes:
-        base_url (str): Description
-        scope (str): Description
-        token (str): Description
+        base_url (str): the base url that is built off for each request
+        scope (str): the scope used in the request for a token (in the Base class above)
+        token (str): the token used in the request for data
     """
 
     def __init__(self) -> None:
-        """Summary
-        """
         super().__init__()
 
     def get_status(self) -> str:
         """
-        Summary
+        Get the health of the service. Be sure to check the healthy attribute of the response, not just the status code. Caching not recommended.
 
         Returns:
-            str: Description
+            str: "Service is healthy"
         """
         response = self.download_data("status")
 
@@ -143,37 +141,36 @@ class JobPostingsConnection(EmsiBaseConnection):
 
     def is_healthy(self) -> bool:
         """
-        Summary
+        Get the health of the service. Be sure to check the healthy attribute of the response, not just the status code. Caching not recommended.
 
         Returns:
-            bool: Description
+            bool: True if service is health. False if not. Likely will throw an error instead, if it can't connect to the service.
         """
         response = self.download_data("status")
 
         return response.json()['data']['healthy']
 
-    def get_metadata(self) -> dict:
+    def get_meta(self) -> dict:
         """
-        Summary
+        Get info on taxonomies, available months of data, available filters and facets, etc.
 
         Returns:
-            dict: Description
-
-        Deleted Parameters:
-            nation (str, optional): Description
+            dict: metadata, including taxonomies, available months of data, facets, metrics, and attribution text
         """
         response = self.download_data("meta")
 
         return response.json()['data']
 
     def post_totals(self, payload: dict, querystring: dict = None) -> dict:
-        """Summary
+        """
+        Get summary metrics on all postings matching the filters.
 
         Args:
-            payload (dict): Description
+            payload (dict): json object for sending to the API as the body of the request
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
-            dict: Description
+            dict: the data response from the API
         """
         response = self.download_data(
             'totals',
@@ -184,13 +181,18 @@ class JobPostingsConnection(EmsiBaseConnection):
         return response.json()['data']['totals']
 
     def post_timeseries(self, payload: dict, querystring: dict = None) -> dict:
-        """Summary
+        """
+        Get summary metrics just like the /totals endpoint but broken out by month or day depending on the format of the requested time-frame.
+        When requesting a daily timeseries only up to 90 days may be requested at a time.
+        Months or days with 0 postings will be included in the response.
+        Median posting duration is not available by timeseries to avoid biased results.
 
         Args:
-            payload (dict): Description
+            payload (dict): json object for sending to the API as the body of the request
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
-            dict: Description
+            dict: the data response from the API
         """
         response = self.download_data(
             'timeseries',
@@ -200,11 +202,11 @@ class JobPostingsConnection(EmsiBaseConnection):
 
         return response.json()['data']
 
-    def get_rankings(self) -> dict:
-        """Summary
+    def get_rankings(self) -> list:
+        """Group and rank postings by available facets.
 
         Returns:
-            dict: Description
+            list: list of facets available to rank by
         """
         response = self.download_data('rankings')
 
@@ -214,11 +216,12 @@ class JobPostingsConnection(EmsiBaseConnection):
         """Summary
 
         Args:
-            facet (str): Description
-            payload (dict): Description
+            facet (str): the data dimension to group and order on
+            payload (dict): json object for sending to the API as the body of the request
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
-            dict: Description
+            dict: the data response from the API
         """
         response = self.download_data(
             'rankings/{}/timeseries'.format(facet),
@@ -233,14 +236,16 @@ class JobPostingsConnection(EmsiBaseConnection):
             return response.json()['data']
 
     def post_rankings(self, facet: str, payload: dict, querystring: dict = None) -> dict:
-        """Summary
+        """
+        Group and rank postings by {ranking_facet} with a monthly or daily timeseries for each ranked group.
 
         Args:
-            facet (str): Description
-            payload (dict): Description
+            facet (str): the data dimension to group and order on
+            payload (dict): json object for sending to the API as the body of the request
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
-            dict: Description
+            dict: the data response from the API
         """
         response = self.download_data(
             "rankings/{}".format(facet),
@@ -251,15 +256,17 @@ class JobPostingsConnection(EmsiBaseConnection):
         return response.json()
 
     def post_nested_rankings(self, facet: str, nested_facet: str, payload: dict, querystring: dict = None) -> dict:
-        """Summary
+        """
+        Get a nested ranking (e.g. top companies, then top skills per company).
 
         Args:
-            facet (str): Description
-            nested_facet (str): Description
-            payload (dict): Description
+            facet (str): the data dimension to group and order on
+            nested_facet (str): one additional data dimension to group and order on
+            payload (dict): json object for sending to the API as the body of the request
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
-            dict: Description
+            dict: the data response from the API
         """
         response = self.download_data(
             "rankings/{}/rankings/{}".format(facet, nested_facet),
@@ -270,13 +277,17 @@ class JobPostingsConnection(EmsiBaseConnection):
         return response.json()
 
     def post_samples(self, payload: dict, querystring: dict = None) -> dict:
-        """Summary
+        """
+        Get data for individual postings that match your requested filters.
+        Note that not all fields are present for all postings, and some may be null or "Unknown".
+        The url field is only available for currently active postings, and the destination website is not guaranteed to be secure or functional.
 
         Args:
-            payload (dict): Description
+            payload (dict): json object for sending to the API as the body of the request
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
-            dict: Description
+            dict: the data response from the API
         """
         response = self.download_data(
             'samples',
@@ -287,13 +298,17 @@ class JobPostingsConnection(EmsiBaseConnection):
         return response.json()['data']
 
     def post_postings(self, payload: dict, querystring: dict = None) -> dict:
-        """Summary
+        """
+        Get data for individual postings that match your requested filters.
+        Note that not all fields are present for all postings, and some may be null or "Unknown".
+        The url field is only available for currently active postings, and the destination website is not guaranteed to be secure or functional.
 
         Args:
-            payload (dict): Description
+            payload (dict): json object for sending to the API as the body of the request
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
-            dict: Description
+            dict: the data response from the API
         """
         response = self.download_data(
             'postings',
@@ -303,11 +318,13 @@ class JobPostingsConnection(EmsiBaseConnection):
 
         return response.json()['data']
 
-    def get_postings(self, posting_id: str) -> dict:
-        """Summary
+    def get_postings(self, posting_id: str, querystring: dict = None) -> dict:
+        """
+        Get a single posting by its id.
 
         Args:
             posting_id (str): The unique ID for a given job posting
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
             dict: Data for the specified job posting
@@ -317,14 +334,17 @@ class JobPostingsConnection(EmsiBaseConnection):
         return response.json()['data']
 
     def get_taxonomies(self, facet: str = None, q: str = None, querystring: dict = None) -> dict:
-        """Summary
+        """
+        Get a list of current available taxonomy facets.
+        If `q` parameter is used, will search taxonomies using either whole keywords (relevance search) or partial keywords (autocomplete).
 
         Args:
-            facet (str, optional): Description
-            q (str, optional): Description
+            facet (str, optional): Which taxonomy to search for ID/name suggestions (Cities will always have a null ID, and cannot be listed without a q query parameter).
+            q (str, optional): A query string of whole or partial keywords to search for. Only when autocomplete is true is q is assumed to be a prefix. If q is omitted, the response will list results sorted by id of length limit.
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
-            dict: Description
+            dict: the data response from the API
         """
         if facet is None:
             response = self.download_data("taxonomies")
@@ -340,14 +360,16 @@ class JobPostingsConnection(EmsiBaseConnection):
         return response.json()['data']
 
     def post_taxonomies(self, facet: str, payload: dict, querystring: dict = None) -> dict:
-        """Summary
+        """
+        Look up taxonomy items by ID.
 
         Args:
-            facet (str): Description
-            payload (dict): Description
+            facet (str, optional): Which taxonomy to search for ID/name suggestions (Cities will always have a null ID, and cannot be listed without a q query parameter).
+            payload (dict): json object for sending to the API as the body of the request
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
-            dict: Description
+            dict: the data response from the API
         """
         response = self.download_data(
             "taxonomies/{}/lookup".format(facet),
@@ -361,11 +383,12 @@ class JobPostingsConnection(EmsiBaseConnection):
         """Summary
 
         Args:
-            facet (str): Description
-            payload (dict): Description
+            facet (str, optional): Which taxonomy to search for ID/name suggestions (Cities will always have a null ID, and cannot be listed without a q query parameter).
+            payload (dict): json object for sending to the API as the body of the request
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
-            pd.DataFrame: Description
+            pd.DataFrame: A pandas dataframe of the rankings data
         """
         response = self.post_rankings(
             facet,
@@ -382,12 +405,13 @@ class JobPostingsConnection(EmsiBaseConnection):
         """Summary
 
         Args:
-            facet (str): Description
-            nested_facet (str): Description
-            payload (dict): Description
+            facet (str): the data dimension to group and order on
+            nested_facet (str): one additional data dimension to group and order on
+            payload (dict): json object for sending to the API as the body of the request
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
-            pd.DataFrame: Description
+            pd.DataFrame: A pandas dataframe of the nested rankings data
         """
         response = self.post_nested_rankings(
             facet,
@@ -448,12 +472,12 @@ class ProfilesConnection(EmsiBaseConnection):
         response = self.download_data("status")
         return response.json()['data']['healthy']
 
-    def get_metadata(self) -> dict:
+    def get_meta(self) -> dict:
         """
         Get service metadata, including taxonomies, available years of data (first and last year in which any available profiles were updated), and attribution text. Caching is encouraged, but the metadata may change weekly.
 
         Returns:
-            dict: Description
+            dict: the data response from the API
 
         Deleted Parameters:
             nation (str, optional): Description
@@ -468,7 +492,7 @@ class ProfilesConnection(EmsiBaseConnection):
             payload (dict): Description
 
         Returns:
-            dict: Description
+            dict: the data response from the API
         """
         response = self.download_data(
             'totals',
@@ -485,7 +509,7 @@ class ProfilesConnection(EmsiBaseConnection):
             payload (dict): Description
 
         Returns:
-            dict: Description
+            dict: the data response from the API
         """
         response = self.download_data(
             'recency',
@@ -499,7 +523,7 @@ class ProfilesConnection(EmsiBaseConnection):
         """Get a list of current available ranking facets.
 
         Returns:
-            dict: Description
+            dict: the data response from the API
         """
         response = self.download_data('rankings')
 
@@ -513,7 +537,7 @@ class ProfilesConnection(EmsiBaseConnection):
             payload (dict): Description
 
         Returns:
-            dict: Description
+            dict: the data response from the API
         """
         response = self.download_data(
             "rankings/{}".format(facet),
@@ -534,7 +558,7 @@ class ProfilesConnection(EmsiBaseConnection):
             q (str, optional): Description
 
         Returns:
-            dict: Description
+            dict: the data response from the API
         """
         if facet is None:
             response = self.download_data("taxonomies")
@@ -557,7 +581,7 @@ class ProfilesConnection(EmsiBaseConnection):
             payload (dict): Description
 
         Returns:
-            dict: Description
+            dict: the data response from the API
         """
         response = self.download_data(
             "taxonomies/{}/lookup".format(facet),
