@@ -1,4 +1,8 @@
-"""Summary
+"""
+This API is deprecated and will be removed in the future.
+No new features will be added here.
+
+https://api.emsidata.com/apis/automation-index
 """
 from .base import EmsiBaseConnection
 

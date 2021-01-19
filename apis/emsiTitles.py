@@ -7,7 +7,8 @@ from .base import EmsiBaseConnection
 
 
 class EmsiTitlesConnection(EmsiBaseConnection):
-    """This API exposes the complete collection of Emsi titles which includes curated occupation and skill mappings for each title and normalization functionality to transform raw job titles to Emsi titles.
+    """
+    This API exposes the complete collection of Emsi titles which includes curated occupation and skill mappings for each title and normalization functionality to transform raw job titles to Emsi titles.
 
     Attributes:
         base_url (str): base url for the API
@@ -18,8 +19,6 @@ class EmsiTitlesConnection(EmsiBaseConnection):
     """
 
     def __init__(self) -> None:
-        """Create the connection
-        """
         super().__init__()
         self.base_url = "https://emsiservices.com/titles/"
         self.scope = "titles"

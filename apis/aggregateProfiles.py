@@ -22,7 +22,8 @@ class AggregateProfilesConnection(ProfilesConnection):
     """
 
     def __init__(self) -> None:
-        """Summary
+        """
+        Inherits from the top-level Profiles Connection, and that is all the inheritance needed.
 
         """
         super().__init__()

@@ -16,9 +16,6 @@ class GlobalProfilesConnection(ProfilesConnection):
     About the data
     Profiles are collected from various sources and processed/enriched to provide information such as standardized company name, occupation, skills, and geography.
 
-    Usage:
-
-
     Attributes:
         base_url (str): what every url has to start with to query the API
         scope (str): the scope for requesting the proper access token
@@ -26,9 +23,6 @@ class GlobalProfilesConnection(ProfilesConnection):
     """
 
     def __init__(self) -> None:
-        """Summary
-
-        """
         super().__init__()
         self.base_url = "https://emsiservices.com/global-profiles/"
         self.scope = "profiles:global"

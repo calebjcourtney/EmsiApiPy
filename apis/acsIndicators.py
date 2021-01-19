@@ -1,4 +1,8 @@
-"""Summary
+"""
+This API will be removed in the future, and is here temporarily.
+Since it will be removed, no additional work will be done on this integration to support it.
+
+https://api.emsidata.com/apis/emsi-acs-indicators
 """
 
 from .base import EmsiBaseConnection
