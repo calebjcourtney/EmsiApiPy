@@ -37,7 +37,13 @@ class EmsiBaseConnection(object):
         """
         url = "https://auth.emsicloud.com/connect/token"
 
-        payload = "grant_type=client_credentials&client_id={}&client_secret={}&scope={}".format(self.username, self.password, self.scope)
+        payload = {
+            "grant_type": "client_credentials",
+            "scope": self.scope,
+            "client_id": self.username,
+            "client_secret": self.password
+        }
+
         headers = {'content-type': 'application/x-www-form-urlencoded'}
 
         response = requests.request("POST", url, data=payload, headers=headers)
