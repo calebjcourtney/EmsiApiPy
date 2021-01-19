@@ -13,27 +13,23 @@ class EmsiBaseConnection(object):
     """docstring for EmsiBaseConnection
 
     Attributes:
-        token (TYPE): Description
-
-    Deleted Attributes:
-        password (TYPE): Description
-        username (TYPE): Description
+        token (str): the authentication token for accessing the given API
+        username (str): the client_id for accessing the API
+        password (str): the client_secret for accessing the API
+        scope (str): the scope for requesting an auth token from the API
     """
 
     def __init__(self) -> None:
-        """Summary
         """
-
+        Parses the username and password from the permissions
+        """
         self.username, self.password = DEFAULT['username'], DEFAULT['password']
 
     def get_new_token(self) -> None:
-        """Summary
+        """Creates a new access token for connecting to the API
 
         Raises:
-            ValueError: Description
-
-        No Longer Returned:
-            str: Description
+            ValueError: Raises an error if you don't have permission to access the given API
         """
         url = "https://auth.emsicloud.com/connect/token"
 
@@ -48,6 +44,7 @@ class EmsiBaseConnection(object):
 
         response = requests.request("POST", url, data=payload, headers=headers)
 
+        # prints the error, if there is one
         if response.status_code != 200:
             print(response.text)
             print(response.status_code)
@@ -57,13 +54,15 @@ class EmsiBaseConnection(object):
         self.token = response.json()['access_token']
 
     def get_data(self, url: str, querystring: dict = None) -> requests.Response:
-        """Summary
+        """
+        Makes a GET request to the API, given the URL and any querystring parameters.
 
         Args:
-            url (str): Description
+            url (str): the url for the query
+            querystring (dict, optional): any additional url parameters to pass to the API
 
         Returns:
-            requests.Response: Description
+            requests.Response: the response from the API
         """
         headers = {'content-type': "application/json", 'authorization': "Bearer {}".format(self.token)}
 
@@ -76,14 +75,16 @@ class EmsiBaseConnection(object):
         return response
 
     def post_data(self, url: str, payload: dict, querystring: dict = None) -> requests.Response:
-        """Summary
+        """
+        Makes a POST request to the API, given the url and payload (querystring optional)
 
         Args:
-            url (str): Description
-            payload (dict): Description
+            url (str): the url for the query
+            payload (dict or str): a json object to be sent to the payload
+            querystring (dict, optional): any additional url parameters to pass to the API
 
         Returns:
-            requests.Response: Description
+            requests.Response: the response from the API
         """
         headers = {'content-type': "application/json", 'authorization': "Bearer {}".format(self.token)}
 
@@ -100,14 +101,18 @@ class EmsiBaseConnection(object):
         return response
 
     def download_data(self, api_endpoint: str, payload: dict = None, querystring: dict = None) -> requests.Response:
-        """Summary
+        """
+        Handles constructing the api_endpoint with the base url
+        If the payload is None, we assume this should be a GET request (how Emsi's APIs function)
+        If the payload is not None, we make a POST request instead.
 
         Args:
-            api_endpoint (TYPE): Description
-            payload (None, optional): Description
+            api_endpoint (TYPE): the API url endpoint to query from
+            payload (dict or str, optional): a json object to be sent to the payload
+            querystring (dict, optional): any additional url parameters to pass to the API
 
         Returns:
-            requests.Response: Description
+            requests.Response: the response from the API
         """
         url = self.base_url + api_endpoint
         if payload is None:
@@ -413,7 +418,7 @@ class JobPostingsConnection(EmsiBaseConnection):
         Args:
             facet (str): the data dimension to group and order on
             nested_facet (str): one additional data dimension to group and order on
-            payload (dict): json object for sending to the API as the body of the request
+            payload (dict or str): json object for sending to the API as the body of the request
             querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
@@ -447,15 +452,12 @@ class ProfilesConnection(EmsiBaseConnection):
     Profiles are collected from various sources and processed/enriched to provide information such as standardized company name, occupation, skills, and geography.
 
     Deleted Attributes:
-        base_url (str): Description
-        scope (str): Description
-        token (TYPE): Description
+        base_url (str): the beginning of the url for routing purposes (e.g. "https://emsiservices.com/profiles/")
+        scope (str): the scope for requesting an auth token from the API
+        token (str): the authentication token for accessing the given API
     """
 
     def __init__(self) -> None:
-        """Summary
-
-        """
         super().__init__()
 
     def get_status(self) -> str:
@@ -463,7 +465,7 @@ class ProfilesConnection(EmsiBaseConnection):
         Get the health of the service. Be sure to check the `healthy` attribute of the response, not just the status code. Caching not recommended.
 
         Returns:
-            str: Description
+            str: The message. Should be "service is healthy"
         """
         response = self.download_data("status")
         return response.json()['data']['message']
@@ -473,7 +475,7 @@ class ProfilesConnection(EmsiBaseConnection):
         Get the health of the service. Be sure to check the `healthy` attribute of the response, not just the status code. Caching not recommended.
 
         Returns:
-            bool: Description
+            bool: True if the service is healthy, False otherwise
         """
         response = self.download_data("status")
         return response.json()['data']['healthy']
@@ -484,9 +486,6 @@ class ProfilesConnection(EmsiBaseConnection):
 
         Returns:
             dict: the data response from the API
-
-        Deleted Parameters:
-            nation (str, optional): Description
         """
         response = self.download_data("meta")
         return response.json()['data']
@@ -495,7 +494,7 @@ class ProfilesConnection(EmsiBaseConnection):
         """Get summary metrics on all profiles matching the filters.
 
         Args:
-            payload (dict): Description
+            payload (dict or str): json object for sending to the API as the body of the request
 
         Returns:
             dict: the data response from the API
@@ -512,7 +511,7 @@ class ProfilesConnection(EmsiBaseConnection):
         """Group filtered profile metrics by year, based on profile recency (when they were last updated).
 
         Args:
-            payload (dict): Description
+            payload (dict or str): json object for sending to the API as the body of the request
 
         Returns:
             dict: the data response from the API
@@ -539,8 +538,8 @@ class ProfilesConnection(EmsiBaseConnection):
         """Rank profiles by a given facet
 
         Args:
-            facet (str): Description
-            payload (dict): Description
+            facet (str): Which taxonomy to search for ID/name suggestions (Cities will always have a null ID, and cannot be listed without a q query parameter).
+            payload (dict or str): json object for sending to the API as the body of the request
 
         Returns:
             dict: the data response from the API
@@ -560,8 +559,8 @@ class ProfilesConnection(EmsiBaseConnection):
         Search taxonomies using either whole keywords (relevance search) or partial keywords (autocomplete).
 
         Args:
-            facet (str, optional): Description
-            q (str, optional): Description
+            facet (str, optional): Which taxonomy to search for ID/name suggestions (Cities will always have a null ID, and cannot be listed without a q query parameter).
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
             dict: the data response from the API
@@ -583,8 +582,9 @@ class ProfilesConnection(EmsiBaseConnection):
         """Lookup taxonomy items by ID.
 
         Args:
-            facet (str): Description
-            payload (dict): Description
+            facet (str): Which taxonomy to search for ID/name suggestions (Cities will always have a null ID, and cannot be listed without a q query parameter).
+            payload (dict): json object for sending to the API as the body of the request
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
             dict: the data response from the API
@@ -601,8 +601,9 @@ class ProfilesConnection(EmsiBaseConnection):
         """Summary
 
         Args:
-            facet (str): Description
-            payload (dict): Description
+            facet (str): Which taxonomy to search for ID/name suggestions (Cities will always have a null ID, and cannot be listed without a q query parameter).
+            payload (dict): json object for sending to the API as the body of the request
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
 
         Returns:
             pd.DataFrame: Description
