@@ -51,6 +51,7 @@ import requests
 from dateutil import parser
 import datetime
 import pandas as pd
+import time
 
 from .base import EmsiBaseConnection
 
@@ -80,7 +81,7 @@ class CoreLMIConnection(EmsiBaseConnection):
         self.limit_reset = datetime.datetime.now()
         self.limit_reset += datetime.timedelta(0, 300)
 
-    def download_data(self, api_endpoint: str, payload: dict = None, smart_limit: bool = True) -> requests.Response:
+    def download_data(self, api_endpoint: str, payload: dict = None, smart_limit: bool = False) -> requests.Response:
         """Needs more work for downloading the data from Agnitio, since it does not automatically handle the rate liimit from the API
 
         Args:
@@ -90,7 +91,14 @@ class CoreLMIConnection(EmsiBaseConnection):
         Returns:
             requests.Response: The response from the server
         """
-        # if smart_limit:
+        # possible addition of adding smart_limit
+        # for now, if smart_limit is true, then it will simply wait 1 second before returning data
+        if smart_limit:
+            time.sleep(1)
+
+        # currently in-progress:
+        #       - track the limit remaining
+        #       - sleep for a longer or shorter amount of time depending on number of requests left
         #     try:
         #         time.sleep((self.limit_reset - datetime.datetime.now()).total_seconds() / self.limit_remaining)
         #     except ZeroDivisionError:
@@ -105,12 +113,14 @@ class CoreLMIConnection(EmsiBaseConnection):
         else:
             response = self.post_data(url, payload)
 
+        # we've run out of requests
         if response.status_code == 429:
-            import time
+            # wait until the limit has reset then run again
             time.sleep(300)
 
             return self.download_data(api_endpoint, payload)
 
+        # limit information
         self.limit_remaining = int(response.headers['X-Rate-Limit-Remaining'])
         self.limit_reset = parser.parse(response.headers['X-Rate-Limit-Reset'])
         self.limit_reset = self.limit_reset.replace(tzinfo = None)
@@ -118,7 +128,8 @@ class CoreLMIConnection(EmsiBaseConnection):
         return response
 
     def get_meta(self) -> dict:
-        """You can use this interface (which uses these data discovery endpoints) to browse available datasets. Your contract with Emsi will determine which datasets you have access to, and you can list these datasets and their versions by querying the /meta endpoint
+        """
+        You can use this interface (which uses these data discovery endpoints) to browse available datasets. Your contract with Emsi will determine which datasets you have access to, and you can list these datasets and their versions by querying the /meta endpoint
 
         Returns:
             dict: json data response from the server
@@ -128,7 +139,8 @@ class CoreLMIConnection(EmsiBaseConnection):
         return response.json()
 
     def get_meta_dataset(self, dataset: str, datarun: str) -> list:
-        """Available versions of a specific dataset can be retrieved by adding dataset/<name> to the path
+        """
+        Available versions of a specific dataset can be retrieved by adding dataset/<name> to the path
 
         Args:
             dataset (str): the dataset to query (e.g. `emsi.us.occupation`)
@@ -142,7 +154,8 @@ class CoreLMIConnection(EmsiBaseConnection):
         return response.json()
 
     def get_meta_dataset_dimension(self, dataset: str, dimension: str, datarun: str) -> dict:
-        """Finally, you can view the hierarchy of a particular dimension of a dataset by adding dataset/<name>/<version>/<dimension> to the path:
+        """
+        Finally, you can view the hierarchy of a particular dimension of a dataset by adding dataset/<name>/<version>/<dimension> to the path:
 
         Args:
             dataset (str): the dataset to query (e.g. `emsi.us.occupation`)
@@ -157,7 +170,8 @@ class CoreLMIConnection(EmsiBaseConnection):
         return response.json()
 
     def post_retrieve_data(self, dataset: str, payload: dict, datarun: str) -> dict:
-        """Agnitio data queries are performed by assembling a JSON description of the query and POSTing it to the specific dataset you wish to query.
+        """
+        Agnitio data queries are performed by assembling a JSON description of the query and POSTing it to the specific dataset you wish to query.
 
         Args:
             dataset (str): the dataset to query (e.g. `emsi.us.occupation`)
@@ -172,7 +186,8 @@ class CoreLMIConnection(EmsiBaseConnection):
         return response.json()
 
     def get_dimension_hierarchy_df(self, dataset: str, dimension: str, datarun: str) -> pd.DataFrame:
-        """Finally, you can view the hierarchy of a particular dimension of a dataset by adding dataset/<name>/<version>/<dimension> to the path:
+        """
+        Finally, you can view the hierarchy of a particular dimension of a dataset by adding dataset/<name>/<version>/<dimension> to the path:
 
         Args:
             dataset (str): the dataset to query (e.g. `emsi.us.occupation`)
