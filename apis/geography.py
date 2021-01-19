@@ -16,8 +16,6 @@ class GeographyConnection(EmsiBaseConnection):
     """
 
     def __init__(self) -> None:
-        """Create the connection
-        """
         super().__init__()
         self.base_url = "https://emsiservices.com/gis/v1/"
         self.scope = "gis"
@@ -27,6 +25,7 @@ class GeographyConnection(EmsiBaseConnection):
     def get_status(self) -> dict:
         """
         Returns health status of the service. Same as is_healthy.
+        https://api.emsidata.com/apis/geography#get-status
 
         Returns:
             dict: the status of the server
@@ -47,43 +46,49 @@ class GeographyConnection(EmsiBaseConnection):
         return response.json()['data']['healthy']
 
     def get_countries(self) -> str:
-        """
-        """
+        # https://api.emsidata.com/apis/geography#get
         return self.download_data(self.base_url).json()
 
     def get_country_meta(self, country: str) -> list:
-        """
-        """
+        # https://api.emsidata.com/apis/geography#get-country
         return self.download_data(country).json()
 
     def post_withinproximity(self, country: str, version: str, level: str, payload: dict) -> dict:
+        # https://api.emsidata.com/apis/geography#post-country-version-level-withinproximity
         url = f"{country}/{version}/{level}/withinproximity"
         return self.download_data(url, payload).json()
 
     def post_closest(self, country: str, version: str, level: str, payload: dict) -> dict:
+        # https://api.emsidata.com/apis/geography#post-country-version-level-closest
         url = f"{country}/{version}/{level}/closest"
         return self.download_data(url, payload).json()
 
     def post_contains(self, country: str, version: str, level: str, payload: dict) -> dict:
+        # https://api.emsidata.com/apis/geography#post-country-version-level-contains
         url = f"{country}/{version}/{level}/contains"
         return self.download_data(url, payload).json()
 
     def post_centroid(self, country: str, version: str, level: str, payload: dict) -> dict:
+        # https://api.emsidata.com/apis/geography#post-country-version-level-centroid
         url = f"{country}/{version}/{level}/centroid"
         return self.download_data(url, payload = payload).json()
 
     def post_mbr(self, country: str, version: str, level: str, payload: dict) -> dict:
+        # https://api.emsidata.com/apis/geography#post-country-version-level-mbr
         url = f"{country}/{version}/{level}/mbr"
         return self.download_data(url, payload).json()
 
     def post_mbc(self, country: str, version: str, level: str, payload: dict) -> dict:
+        # https://api.emsidata.com/apis/geography#post-country-version-level-mbc
         url = f"{country}/{version}/{level}/mbc"
         return self.download_data(url, payload).json()
 
     def post_geojson(self, country: str, version: str, level: str, payload: dict) -> dict:
+        # https://api.emsidata.com/apis/geography#post-country-version-level-geojson
         url = f"{country}/{version}/{level}/geojson"
         return self.download_data(url, payload).json()
 
     def post_svg(self, country: str, version: str, level: str, payload: dict) -> dict:
+        # https://api.emsidata.com/apis/geography#post-country-version-level-svg
         url = f"{country}/{version}/{level}/svg"
         return self.download_data(url, payload).json()
