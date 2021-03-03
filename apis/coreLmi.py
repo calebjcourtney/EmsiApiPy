@@ -120,6 +120,12 @@ class CoreLMIConnection(EmsiBaseConnection):
 
             return self.download_data(api_endpoint, payload)
 
+        elif response.status_code != 200:
+            import json
+            print(json.dumps(payload))
+            print(url)
+            print(response.text)
+
         # limit information
         self.limit_remaining = int(response.headers['X-Rate-Limit-Remaining'])
         self.limit_reset = parser.parse(response.headers['X-Rate-Limit-Reset'])
@@ -135,6 +141,17 @@ class CoreLMIConnection(EmsiBaseConnection):
             dict: json data response from the server
         """
         response = self.download_data("meta")
+
+        return response.json()
+
+    def get_meta_definitions(self) -> dict:
+        """
+        You can use this interface (which uses these data discovery endpoints) to browse available datasets. Your contract with Emsi will determine which datasets you have access to, and you can list these datasets and their versions by querying the /meta endpoint
+
+        Returns:
+            dict: json data response from the server
+        """
+        response = self.download_data("meta/definitions")
 
         return response.json()
 
