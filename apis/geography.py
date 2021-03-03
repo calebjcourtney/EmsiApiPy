@@ -92,3 +92,8 @@ class GeographyConnection(EmsiBaseConnection):
         # https://api.emsidata.com/apis/geography#post-country-version-level-svg
         url = f"{country}/{version}/{level}/svg"
         return self.download_data(url, payload).json()
+
+    def post_traveltime(self, country: str, version: str, level: str, payload: dict) -> dict:
+        # https://emsiapi-internal.surge.sh/apis/geography#post-country-version-level-traveltime
+        url = f"{country}/{version}/{level}/traveltime"
+        return self.download_data(url, payload).json()
