@@ -32,6 +32,8 @@ from .apis.geography import GeographyConnection
 from .apis.ipeds import IpedsConnection
 from .apis.unitedKingdomPostings import UKPostingsConnection
 from .apis.talentBenchmark import TalentBenchmarkConnection
+from .apis.globalPostings import GlobalPostingsConnection
+from .apis.globalProfiles import GlobalProfilesConnection
 
 # these are internal APIs only
 try:
