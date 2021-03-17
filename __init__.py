@@ -34,10 +34,3 @@ from .apis.unitedKingdomPostings import UKPostingsConnection
 from .apis.talentBenchmark import TalentBenchmarkConnection
 from .apis.globalPostings import GlobalPostingsConnection
 from .apis.globalProfiles import GlobalProfilesConnection
-
-# these are internal APIs only
-try:
-    from .apis.skillClusters import SkillClustersConnection
-    from .apis.jobTitleMapping import JobTitleMappingConnection
-except ImportError:
-    pass
