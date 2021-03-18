@@ -5,10 +5,10 @@ This is an interface for retrieving aggregated Emsi Global Profile data that is 
 About the data
 Profiles are collected from various sources and processed/enriched to provide information such as standardized company name, occupation, skills, and geography.
 """
-from .base import PostingsConnection
+from .base import JobPostingsConnection
 
 
-class GlobalPostingsConnection(PostingsConnection):
+class GlobalPostingsConnection(JobPostingsConnection):
     """
     Use case
     This is an interface for retrieving aggregated Emsi Global Profile data that is filtered, sorted and ranked by various properties of the profiles.
