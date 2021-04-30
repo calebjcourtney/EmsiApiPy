@@ -21,7 +21,7 @@ class EmsiTitlesConnection(EmsiBaseConnection):
     def __init__(self) -> None:
         super().__init__()
         self.base_url = "https://emsiservices.com/titles/"
-        self.scope = "titles"
+        self.scope = "emsi_open"
 
         self.get_new_token()
 
@@ -120,7 +120,7 @@ class EmsiTitlesConnection(EmsiBaseConnection):
             version (str, optional): Description
         """
         payload = {"ids": titles, "fields": fields}
-        response = self.download_data(f"versions/{version}/titles/", payload = payload)
+        response = self.download_data(f"versions/{version}/titles", payload = payload)
         return response.json()["data"]
 
     def get_title_by_id(self, title_id: str, version: str = "latest") -> str:
