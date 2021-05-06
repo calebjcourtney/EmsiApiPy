@@ -66,7 +66,8 @@ class EmsiBaseConnection(object):
         """
         headers = {'content-type': "application/json", 'authorization': "Bearer {}".format(self.token)}
 
-        response = requests.get(url, headers = headers, params = querystring)
+        # added timeout = None - some meta requests from Core LMI are taking a long time to fulfill
+        response = requests.get(url, headers = headers, params = querystring, timeout = None)
 
         if response.status_code == 401:
             self.get_new_token()
