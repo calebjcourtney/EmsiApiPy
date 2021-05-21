@@ -148,7 +148,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         }
         return self.download_data("versions/{}/related".format(version), payload = payload).json()
 
-    def post_extract(self, description: str, version: str = 'latest') -> dict:
+    def post_extract(self, description: str, version: str = 'latest', confidenceThreshold: float = 0.5) -> dict:
         """Summary
 
         Args:
@@ -158,16 +158,27 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        return self.download_data("versions/{}/extract".format(version), payload = {"text": description}).json()
+        return self.download_data(
+            "versions/{}/extract".format(version),
+            payload = {"text": description},
+            querystring = {"confidenceThreshold": confidenceThreshold}
+        ).json()
 
-    def post_extract_with_source(self, description: str, version: str = 'latest') -> dict:
+    def post_extract_with_source(self, description: str, version: str = 'latest', includeNormalizedText: bool = False) -> dict:
         """Summary
 
         Args:
             description (str): Description
             version (str, optional): Description
+            confidenceThreshold (float, optional): Description
 
         Returns:
             dict: Description
         """
-        return self.download_data("versions/{}/extract/trace".format(version), payload = {"text": description}).json()
+        return self.download_data(
+            "versions/{}/extract/trace".format(version),
+            payload = {
+                "text": description,
+                "includeNormalizedText": includeNormalizedText
+            },
+        ).json()
