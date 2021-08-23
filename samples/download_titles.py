@@ -5,7 +5,7 @@ import pandas as pd
 conn = EmsiApiPy.EmsiTitlesConnection()
 
 # download the data
-data = conn.get_titles()
+data = conn.get_list_all_titles()
 
 # load into pandas df
 df = pd.DataFrame(data)
