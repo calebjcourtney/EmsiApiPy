@@ -13,12 +13,11 @@ class EmsiTitlesConnection(EmsiBaseConnection):
     Attributes:
         base_url (str): base url for the API
         scope (str): scope used to request access from the OAuth server
-
-    Deleted Attributes:
-        token (str): auth token received from the OAuth server
     """
 
     def __init__(self) -> None:
+        """Summary
+        """
         super().__init__()
         self.base_url = "https://emsiservices.com/titles/"
         self.scope = "emsi_open"
@@ -77,9 +76,23 @@ class EmsiTitlesConnection(EmsiBaseConnection):
             dict: Version specific metadata
 
         Args:
-            version (str, optional): Description
+            version (str, optional): The titles classification version.
         """
         response = self.download_data(f"versions/{version}")
+
+        return response.json()["data"]
+
+    def get_version_changes(self, version: str = "latest") -> dict:
+        """
+        Get version specific changes.
+
+        Returns:
+            dict: Version specific changes
+
+        Args:
+            version (str, optional): The titles classification version.
+        """
+        response = self.download_data(f"versions/{version}/changes")
 
         return response.json()["data"]
 
@@ -91,9 +104,10 @@ class EmsiTitlesConnection(EmsiBaseConnection):
             list: Returns a list of all titles in {version} sorted by title name
 
         Args:
-            q (str, optional): Description
-            querystring (dict, optional): Description
-            version (str, optional): Description
+            q (str, optional): A query string of title names to search for.
+            fields (list, optional): List of fields to return per title.
+            version (str, optional): The titles classification version.
+            limit (None, optional): Limit the number of titles returned in the response.
         """
         querystring = {"fields": ",".join(fields)}
 
@@ -116,8 +130,8 @@ class EmsiTitlesConnection(EmsiBaseConnection):
 
         Args:
             titles (list): Description
-            fields (list, optional): Description
-            version (str, optional): Description
+            fields (list, optional): List of fields to return per title.
+            version (str, optional): The titles classification version.
         """
         payload = {"ids": titles, "fields": fields}
         response = self.download_data(f"versions/{version}/titles", payload = payload)
@@ -132,7 +146,7 @@ class EmsiTitlesConnection(EmsiBaseConnection):
 
         Args:
             title_id (str): Description
-            version (str, optional): Description
+            version (str, optional): The titles classification version.
         """
         response = self.download_data(f"versions/{version}/titles/{title_id}")
         return response.json()["data"]
@@ -144,15 +158,12 @@ class EmsiTitlesConnection(EmsiBaseConnection):
 
         Args:
             title (str): Description
-            version (str, optional): Description
+            version (str, optional): The titles classification version.
             confidenceThreshold (float, optional): Description
-            fields (list, optional): Description
+            fields (list, optional): List of fields to return per title.
 
         Returns:
             dict: dictionary of the top match from the API (id, title, and similarity)
-
-        Deleted Parameters:
-            payload (dict): json to be sent to the API (e.g. `{"title" : "software engineer iii"}`)
         """
         payload = {
             "term": title,
@@ -173,16 +184,13 @@ class EmsiTitlesConnection(EmsiBaseConnection):
 
         Args:
             title (str): Description
-            version (str, optional): Description
+            version (str, optional): The titles classification version.
             confidenceThreshold (float, optional): Description
             limit (int, optional): Description
-            fields (list, optional): Description
+            fields (list, optional): List of fields to return per title.
 
         Returns:
             dict: dictionary of the top match from the API (id, title, and similarity)
-
-        Deleted Parameters:
-            payload (dict): json to be sent to the API (e.g. `{"title" : "software engineer iii"}`)
         """
         payload = {
             "term": title,
@@ -200,15 +208,12 @@ class EmsiTitlesConnection(EmsiBaseConnection):
 
         Args:
             titles (list): Description
-            version (str, optional): Description
+            version (str, optional): The titles classification version.
             confidenceThreshold (float, optional): Description
-            fields (list, optional): Description
+            fields (list, optional): List of fields to return per title.
 
         Returns:
             list: dictionary of the top match from the API (id, title, and similarity)
-
-        Deleted Parameters:
-            title (list): List of terms to normalize
         """
         payload = {
             "terms": titles,
