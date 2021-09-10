@@ -10,6 +10,8 @@ class SkillsClassificationConnection(EmsiBaseConnection):
     Attributes:
         base_url (str): Description
         scope (str): Description
+
+    Deleted Attributes:
         token (TYPE): Description
     """
 
@@ -58,6 +60,20 @@ class SkillsClassificationConnection(EmsiBaseConnection):
             version (str, optional): Description
         """
         return self.download_data(f"versions/{version}").json()
+
+    def get_version_changes(self, version = "latest") -> dict:
+        """Summary
+
+        Args:
+            version (str, optional): Description
+
+        Returns:
+            dict: Description
+        """
+        response = self.download_data(f"versions/{version}/changes")
+        data = response.json()["data"]
+
+        return data
 
     def get_list_all_skills(self, version: str = "latest", q: str = None, typeIds: str = None, fields: str = None) -> list:
         """Summary
@@ -136,6 +152,8 @@ class SkillsClassificationConnection(EmsiBaseConnection):
 
         Args:
             skill_ids (list): Description
+            limit (int, optional): Description
+            fields (list, optional): Description
             version (str, optional): Description
 
         Returns:
@@ -154,6 +172,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Args:
             description (str): Description
             version (str, optional): Description
+            confidenceThreshold (float, optional): Description
 
         Returns:
             dict: Description
@@ -170,10 +189,13 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Args:
             description (str): Description
             version (str, optional): Description
-            confidenceThreshold (float, optional): Description
+            includeNormalizedText (bool, optional): Description
 
         Returns:
             dict: Description
+
+        Deleted Parameters:
+            confidenceThreshold (float, optional): Description
         """
         return self.download_data(
             "versions/{}/extract/trace".format(version),
