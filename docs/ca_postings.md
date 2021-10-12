@@ -1,4 +1,4 @@
-# US Job Postings
+# Canada Job Postings
 ***
 ```python
 import EmsiApiPy
