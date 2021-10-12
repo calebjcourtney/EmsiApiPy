@@ -49,7 +49,7 @@ Make sure that the EmsiApiPy folder is accessible from your [`PYTHONPATH`](https
 Tests can be run with `./tests/run_tests.sh`. Please be aware that this is testing all of the API connections available. If you don't have access to one of the APIs, then the tests will fail. It might be worth editing the `run_tests.sh` file to ensure that you are only running tests for the APIs that you want to access.
 
 
-## Usage
+## APIs Covered
 - [ACS Indicators](docs/acs_indicators.md)
 - [Automation Index](docs/automation_index.md)
 - [Canada Job Postings](docs/ca_postings.md)
