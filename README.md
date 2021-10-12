@@ -37,7 +37,7 @@ Tests can be run with `./tests/run_tests.sh`. Please be aware that this is testi
 ## Usage
 - [ACS Indicators](docs/acs_indicators.md)
 - [Automation Index](docs/automation_index.md)
-- Canada Job Postings
+- [Canada Job Postings](docs/ca_postings.md)
 - Companies
 - [Core LMI](docs/core_lmi.md)
 - Geography
