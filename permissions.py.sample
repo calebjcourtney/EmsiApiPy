@@ -1,4 +1,16 @@
-DEFAULT = {
-    "username": "foo",
-    "password": "bar"
-}
+import os
+
+if "emsi_client_id" in os.environ and "emsi_client_secret" in os.environ:
+    # if you've saved the credentials as environment variables
+    DEFAULT = {
+        "username": os.environ.get("emsi_client_id"),
+        "password": os.environ.get("emsi_client_secret")
+    }
+
+else:
+    # you can save your client_id and client_secret in this local file instead
+    # don't share this file with others if it has your credentials in it
+    DEFAULT = {
+        "username": "foo",
+        "password": "bar"
+    }
