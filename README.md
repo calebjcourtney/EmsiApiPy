@@ -20,13 +20,28 @@ pip install - r requirements.txt
 There is a file in the repository named `permissions.py.sample`. When the repo is cloned, it will look like this:
 
 ```python
-DEFAULT = {
-    "username": "foo",
-    "password": "bar"
-}
+import os
+
+if "emsi_client_id" in os.environ and "emsi_client_secret" in os.environ:
+    DEFAULT = {
+        "username": os.environ.get("emsi_client_id"),
+        "password": os.environ.get("emsi_client_secret")
+    }
+
+else:
+    # you can save your client_id and client_secret locally instead
+    DEFAULT = {
+        "username": "foo",
+        "password": "bar"
+    }
+
 ```
 
-You will need to change the `foo` and `bar` values to what was provided by the Emsi API support team, and rename the file to `permissions.py`.
+To setup the library so it can read your credentials, you have two options:
+- Replace the `foo` and `bar` values to what was provided by the Emsi API support team. Please simply be careful about sharing the files
+- Add two new environment variables called `emsi_client_id` and `emsi_client_secret`. To learn how to set an environment variable, I recommend [this article](https://www.schrodinger.com/kb/1842).
+
+Be sure to rename the file to `permissions.py`. This is what the library will look for when connecting to the API.
 
 Make sure that the EmsiApiPy folder is accessible from your [`PYTHONPATH`](https://bic-berkeley.github.io/psych-214-fall-2016/using_pythonpath.html). You will know you've set it up correctly if you can run `import EmsiApiPy` from within your python environment.
 
