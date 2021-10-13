@@ -24,39 +24,6 @@ class CompaniesConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
-    def get_status(self) -> dict:
-        """
-        Get the health of the service. Be sure to check the healthy attribute of the response, not just the status code. Caching not recommended.
-
-        Returns:
-            dict: the status of the server
-        """
-        response = self.download_data("status")
-
-        return response
-
-    def is_healthy(self) -> bool:
-        """
-        Get the health of the service. Be sure to check the healthy attribute of the response, not just the status code. Caching not recommended.
-
-        Returns:
-            bool: True if service is health; False if it is not
-        """
-        response = self.download_data("status")
-
-        return response.json()['data']['healthy']
-
-    def get_meta(self) -> str:
-        """
-        Get service metadata, including latest version, and attribution text. Caching is encouraged, but the metadata can change weekly.
-
-        Returns:
-            str: service metadata, including latest version, and attribution text
-        """
-        response = self.download_data("meta")
-
-        return response.json()["data"]
-
     def get_versions(self) -> list:
         """
         Version latest can be used as an alias to the latest title version. See our titles Changelog for the updates in each version.

@@ -22,29 +22,6 @@ class GeographyConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
-    def get_status(self) -> dict:
-        """
-        Returns health status of the service. Same as is_healthy.
-        https://api.emsidata.com/apis/geography#get-status
-
-        Returns:
-            dict: the status of the server
-        """
-        response = self.download_data("status")
-
-        return response
-
-    def is_healthy(self) -> bool:
-        """
-        Returns health status of the service. Same as get_status.
-
-        Returns:
-            bool: True if service is health; False if it is not
-        """
-        response = self.download_data("status")
-
-        return response.json()['data']['healthy']
-
     def get_countries(self) -> str:
         # https://api.emsidata.com/apis/geography#get
         return self.download_data(self.base_url).json()

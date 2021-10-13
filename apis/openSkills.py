@@ -24,23 +24,8 @@ class SkillsClassificationConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
-    def get_status(self) -> dict:
-        """
-        Summary
-
-        Returns:
-            dict: Description
-        """
-        return self.download_data("status")
-
-    def is_healthy(self) -> bool:
-        """
-        Summary
-
-        Returns:
-            bool: Description
-        """
-        return self.download_data("status").json()['data']['healthy']
+    def get_meta(self):
+        return self.get_versions()
 
     def get_versions(self) -> list:
         """Summary

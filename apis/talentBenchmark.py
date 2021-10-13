@@ -639,17 +639,6 @@ class TalentBenchmarkConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
-    def get_status(self) -> dict:
-        """
-        https://api.emsidata.com/apis/talent-benchmark#get-get-service-status
-        Returns health status of the service. Same as is_healthy.
-
-        Returns:
-            dict: the status of the server
-        """
-
-        return self.download_data("status").json()["data"]
-
     def get_service_status(self) -> dict:
         # same as get_status, but this is more in line with the Emsi documentation
         return self.get_status()

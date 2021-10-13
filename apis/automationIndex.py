@@ -25,6 +25,10 @@ class AutomationIndexConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
+    def get_meta(self):
+        # redefine the meta schema that was used in Emsi Base
+        return self.get_metadata()
+
     def get_available_endpoints(self):
         """
         List available endpoints.
@@ -35,24 +39,6 @@ class AutomationIndexConnection(EmsiBaseConnection):
         response = self.download_data("")
 
         return response.json()['data']['endpoints']
-
-    def get_status(self):
-        """
-        Summary
-
-        Returns:
-            TYPE: Description
-        """
-        return self.download_data("status").json()["data"]["message"]
-
-    def is_healthy(self):
-        """
-        Summary
-
-        Returns:
-            TYPE: Description
-        """
-        return self.download_data("status").json()["data"]["healthy"]
 
     def get_countries(self):
         """

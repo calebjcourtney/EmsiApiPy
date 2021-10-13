@@ -127,19 +127,6 @@ class EmsiBaseConnection(object):
 
         return response
 
-
-class JobPostingsConnection(EmsiBaseConnection):
-    """Class for handling connections to APIs built on Emsi's postings data
-
-    Deleted Attributes:
-        base_url (str): the base url that is built off for each request
-        scope (str): the scope used in the request for a token (in the Base class above)
-        token (str): the token used in the request for data
-    """
-
-    def __init__(self) -> None:
-        super().__init__()
-
     def get_status(self) -> str:
         """
         Get the health of the service. Be sure to check the healthy attribute of the response, not just the status code. Caching not recommended.
@@ -172,6 +159,19 @@ class JobPostingsConnection(EmsiBaseConnection):
         response = self.download_data("meta")
 
         return response.json()['data']
+
+
+class JobPostingsConnection(EmsiBaseConnection):
+    """Class for handling connections to APIs built on Emsi's postings data
+
+    Deleted Attributes:
+        base_url (str): the base url that is built off for each request
+        scope (str): the scope used in the request for a token (in the Base class above)
+        token (str): the token used in the request for data
+    """
+
+    def __init__(self) -> None:
+        super().__init__()
 
     def post_totals(self, payload: dict, querystring: dict = None) -> dict:
         """
@@ -460,36 +460,6 @@ class ProfilesConnection(EmsiBaseConnection):
 
     def __init__(self) -> None:
         super().__init__()
-
-    def get_status(self) -> str:
-        """
-        Get the health of the service. Be sure to check the `healthy` attribute of the response, not just the status code. Caching not recommended.
-
-        Returns:
-            str: The message. Should be "service is healthy"
-        """
-        response = self.download_data("status")
-        return response.json()['data']['message']
-
-    def is_healthy(self) -> bool:
-        """
-        Get the health of the service. Be sure to check the `healthy` attribute of the response, not just the status code. Caching not recommended.
-
-        Returns:
-            bool: True if the service is healthy, False otherwise
-        """
-        response = self.download_data("status")
-        return response.json()['data']['healthy']
-
-    def get_meta(self) -> dict:
-        """
-        Get service metadata, including taxonomies, available years of data (first and last year in which any available profiles were updated), and attribution text. Caching is encouraged, but the metadata may change weekly.
-
-        Returns:
-            dict: the data response from the API
-        """
-        response = self.download_data("meta")
-        return response.json()['data']
 
     def post_totals(self, payload: dict, querystring: dict = None) -> dict:
         """Get summary metrics on all profiles matching the filters.

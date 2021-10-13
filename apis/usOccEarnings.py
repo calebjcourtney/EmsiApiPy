@@ -27,14 +27,6 @@ class UsOccupationEarningsConnection(EmsiBaseConnection):
         self.token = ""
         self.get_new_token()
 
-    def get_status(self) -> int:
-        """Summary
-
-        Returns:
-            int: Description
-        """
-        return self.download_data("status").status_code
-
     def get_versions(self) -> list:
         """Summary
 

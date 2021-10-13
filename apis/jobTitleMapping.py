@@ -24,32 +24,6 @@ class JobTitleMappingConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
-    def get_status(self) -> dict:
-        """
-        Returns health status of the service. Same as is_healthy.
-
-        Returns:
-            dict: the status of the server
-        """
-
-        return self.download_data("status").json()
-
-    def is_healthy(self) -> bool:
-        """
-        Returns health status of the service. Same as get_status.
-
-        Returns:
-            bool: True if service is health; False if it is not
-        """
-        status = self.get_status()
-
-        return status['data']['healthy']
-
-    def get_meta(self) -> str:
-        """
-        """
-        return self.download_data("meta").json()
-
     def post_titles(self, titles: list, querystring: dict = None) -> list:
         """
         """

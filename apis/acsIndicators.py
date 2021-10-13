@@ -26,32 +26,6 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
-    def get_status(self):
-        """
-        Summary
-
-        Returns:
-            TYPE: Description
-        """
-        response = self.download_data("status")
-
-        return response.json()['data']['message']
-
-    def is_healthy(self):
-        """
-        Summary
-
-        Returns:
-            TYPE: Description
-        """
-        response = self.download_data("status")
-
-        return response.json()['data']['healthy']
-
-    def get_meta(self):
-        response = self.download_data("meta")
-        return response.json()
-
     def get_metrics(self, metric_name: str = None) -> dict:
         """
         Summary
