@@ -24,7 +24,6 @@ class UsCompensationConnection(EmsiBaseConnection):
         self.base_url = "https://comp.emsicloud.com/"
         self.scope = "emsiauth"
 
-        self.token = ""
         self.get_new_token()
 
     def post_estimate(self, payload: dict) -> dict:

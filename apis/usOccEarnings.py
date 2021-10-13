@@ -24,7 +24,6 @@ class UsOccupationEarningsConnection(EmsiBaseConnection):
         self.base_url = "https://earnings.emsicloud.com/"
         self.scope = "occearn"
 
-        self.token = ""
         self.get_new_token()
 
     def get_versions(self) -> list:

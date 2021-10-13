@@ -75,7 +75,6 @@ class CoreLMIConnection(EmsiBaseConnection):
         self.base_url = "https://agnitio.emsicloud.com/"
         self.scope = "emsiauth"
 
-        self.token = ""
         self.get_new_token()
         self.limit_remaining = 300
         self.limit_reset = datetime.datetime.now()
