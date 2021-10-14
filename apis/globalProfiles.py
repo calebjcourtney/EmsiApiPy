@@ -28,3 +28,5 @@ class GlobalProfilesConnection(ProfilesConnection):
         self.scope = "profiles:global"
 
         self.get_new_token()
+
+        self.name = "Global_Profiles"

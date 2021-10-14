@@ -26,6 +26,8 @@ class UsOccupationEarningsConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
+        self.name = "US_OccupationEarnings"
+
     def get_versions(self) -> list:
         """Summary
 

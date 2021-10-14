@@ -80,6 +80,8 @@ class CoreLMIConnection(EmsiBaseConnection):
         self.limit_reset = datetime.datetime.now()
         self.limit_reset += datetime.timedelta(0, 300)
 
+        self.name = "Core_LMI"
+
     def download_data(self, api_endpoint: str, payload: dict = None, smart_limit: bool = False) -> requests.Response:
         """Needs more work for downloading the data from Agnitio, since it does not automatically handle the rate liimit from the API
 

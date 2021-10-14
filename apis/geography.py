@@ -22,6 +22,8 @@ class GeographyConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
+        self.name = "Geography"
+
     def get_countries(self) -> str:
         # https://api.emsidata.com/apis/geography#get
         return self.download_data(self.base_url).json()

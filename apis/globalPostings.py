@@ -28,3 +28,5 @@ class GlobalPostingsConnection(JobPostingsConnection):
         self.scope = "postings:global"
 
         self.get_new_token()
+
+        self.name = "Global_Postings"

@@ -29,6 +29,8 @@ class IpedsConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
+        self.name = "IPEDS"
+
     def get_status(self):
         """
         This endpoint checks the health of the service.

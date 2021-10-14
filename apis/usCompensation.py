@@ -26,6 +26,8 @@ class UsCompensationConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
+        self.name = "US_Compensation"
+
     def post_estimate(self, payload: dict) -> dict:
         """Summary
 

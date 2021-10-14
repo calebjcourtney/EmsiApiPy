@@ -23,6 +23,8 @@ class USInputOutputConncetion(EmsiBaseConnection):
 
         self.get_new_token()
 
+        self.name = "US_InputOutput"
+
     def download_data(self, api_endpoint: str, payload: dict = None, querystring: dict = None) -> requests.Response:
         """Summary
 

@@ -25,6 +25,8 @@ class AutomationIndexConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
+        self.name = "Automation_Index"
+
     def get_meta(self):
         # redefine the meta schema that was used in Emsi Base
         return self.get_metadata()

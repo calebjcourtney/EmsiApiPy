@@ -24,6 +24,8 @@ class CompaniesConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
+        self.name = "Companies"
+
     def get_versions(self) -> list:
         """
         Version latest can be used as an alias to the latest title version. See our titles Changelog for the updates in each version.

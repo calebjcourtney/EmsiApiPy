@@ -24,6 +24,8 @@ class JobTitleMappingConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
+        self.name = "Job_Title_Mapping"
+
     def post_titles(self, titles: list, querystring: dict = None) -> list:
         """
         """

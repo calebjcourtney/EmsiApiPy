@@ -20,3 +20,5 @@ class UKPostingsConnection(JobPostingsConnection):
         self.scope = "postings:uk"
 
         self.get_new_token()
+
+        self.name = "UK_Postings"

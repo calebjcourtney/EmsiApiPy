@@ -24,6 +24,8 @@ class SkillsClassificationConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
+        self.name = "Skills"
+
     def get_meta(self):
         return self.get_versions()
 

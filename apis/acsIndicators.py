@@ -26,6 +26,8 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
 
         self.get_new_token()
 
+        self.name = "ACS"
+
     def get_metrics(self, metric_name: str = None) -> dict:
         """
         Summary

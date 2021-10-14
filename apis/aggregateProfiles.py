@@ -31,3 +31,5 @@ class AggregateProfilesConnection(ProfilesConnection):
         self.scope = "profiles:us"
 
         self.get_new_token()
+
+        self.name = "US_Profiles"

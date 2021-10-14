@@ -619,96 +619,98 @@ from .base import EmsiBaseConnection
 
 
 class TalentBenchmarkConnection(EmsiBaseConnection):
+  """
+  Use case
+  This is an interface for retrieving key indicators to help benchmark talent by location in the United States.
+
+  About the data
+  The data in this API exposes key talent benchmarking metrics oriented around supply, demand, diversity, and compensation. These metrics are aggregated from various Emsi datasets including US job postings, US profiles, and US Diversity along with our Compensation model for any job title and city in the United States.
+
+  Attributes:
+      base_url (str): what every url has to start with to query the API
+      scope (str): the scope for requesting the proper access token
+      token (str): the auth token received from the auth API
+  """
+
+  def __init__(self) -> None:
+    super().__init__()
+    self.base_url = "https://emsiservices.com/benchmark/"
+    self.scope = "benchmark"
+
+    self.get_new_token()
+
+    self.name = "Talent_Benchmark"
+
+  def get_service_status(self) -> dict:
+    # same as get_status, but this is more in line with the Emsi documentation
+    return self.get_status()
+
+  def __send_request(self, endpoint, city, title) -> dict:
     """
-    Use case
-    This is an interface for retrieving key indicators to help benchmark talent by location in the United States.
+    Private function to abstract the building of the payload and making the request
 
-    About the data
-    The data in this API exposes key talent benchmarking metrics oriented around supply, demand, diversity, and compensation. These metrics are aggregated from various Emsi datasets including US job postings, US profiles, and US Diversity along with our Compensation model for any job title and city in the United States.
-
-    Attributes:
-        base_url (str): what every url has to start with to query the API
-        scope (str): the scope for requesting the proper access token
-        token (str): the auth token received from the auth API
+    Returns:
+        dict: the body of the response from the API as a json object
     """
+    payload = {"title": title, "city": city}
+    return self.download_data(endpoint, payload = payload).json()
 
-    def __init__(self) -> None:
-        super().__init__()
-        self.base_url = "https://emsiservices.com/benchmark/"
-        self.scope = "benchmark"
+  def get_service_metadata(self) -> dict:
+    """
+    https://api.emsidata.com/apis/talent-benchmark#get-get-service-metadata
+    Get service metadata, including access information and attribution text.
 
-        self.get_new_token()
+    Returns:
+        dict: dictionary of attribution and access available to the given client_id
+    """
+    return self.download_data("meta").json()['data']
 
-    def get_service_status(self) -> dict:
-        # same as get_status, but this is more in line with the Emsi documentation
-        return self.get_status()
+  def post_benchmark_summary(self, city: str, title: str) -> dict:
+    """
+    https://api.emsidata.com/apis/talent-benchmark#post-get-benchmark-summary
+    Get summary data on each metric that you have access to.
 
-    def __send_request(self, endpoint, city, title) -> dict:
-        """
-        Private function to abstract the building of the payload and making the request
+    Returns:
+        dict: search parameters and data response from the API
+    """
+    return self.__send_request("", city, title)
 
-        Returns:
-            dict: the body of the response from the API as a json object
-        """
-        payload = {"title": title, "city": city}
-        return self.download_data(endpoint, payload = payload).json()
+  def post_supply_benchmark_data(self, city: str, title: str) -> dict:
+    """
+    https://api.emsidata.com/apis/talent-benchmark#post-get-supply-benchmark-data
+    Emsi aggregates online social profiles from all over the web. The details in this endpoint provide aggregate totals for the top employers, top titles, and top skills associated with the profiles matching your search.
 
-    def get_service_metadata(self) -> dict:
-        """
-        https://api.emsidata.com/apis/talent-benchmark#get-get-service-metadata
-        Get service metadata, including access information and attribution text.
+    Returns:
+        dict: search parameters and data response from the API
+    """
+    return self.__send_request("supply", city, title)
 
-        Returns:
-            dict: dictionary of attribution and access available to the given client_id
-        """
-        return self.download_data("meta").json()['data']
+  def post_demand_benchmark_data(self, city: str, title: str) -> dict:
+    """
+    https://api.emsidata.com/apis/talent-benchmark#post-get-demand-benchmark-data
+    Emsi aggregates job posting details from all over the web. The details in this endpoint provide aggregate totals for the top employers, top titles, and top skills associated with the postings matching your search.
 
-    def post_benchmark_summary(self, city: str, title: str) -> dict:
-        """
-        https://api.emsidata.com/apis/talent-benchmark#post-get-benchmark-summary
-        Get summary data on each metric that you have access to.
+    Returns:
+        dict: search parameters and data response from the API
+    """
+    return self.__send_request("demand", city, title)
 
-        Returns:
-            dict: search parameters and data response from the API
-        """
-        return self.__send_request("", city, title)
+  def post_compensation_benchmark_data(self, city: str, title: str) -> dict:
+    """
+    https://api.emsidata.com/apis/talent-benchmark#post-get-compensation-benchmark-data
+    Emsi models compensation data using government data and advertised salary observations identified from job postings data.
 
-    def post_supply_benchmark_data(self, city: str, title: str) -> dict:
-        """
-        https://api.emsidata.com/apis/talent-benchmark#post-get-supply-benchmark-data
-        Emsi aggregates online social profiles from all over the web. The details in this endpoint provide aggregate totals for the top employers, top titles, and top skills associated with the profiles matching your search.
+    Returns:
+        dict: search parameters and data response from the API
+    """
+    return self.__send_request("compensation", city, title)
 
-        Returns:
-            dict: search parameters and data response from the API
-        """
-        return self.__send_request("supply", city, title)
+  def post_diversity_benchmark_data(self, city: str, title: str) -> dict:
+    """
+    https://api.emsidata.com/apis/talent-benchmark#post-get-diversity-benchmark-data
+    Emsi models diversity data by applying a staffing pattern to government data related to industries.
 
-    def post_demand_benchmark_data(self, city: str, title: str) -> dict:
-        """
-        https://api.emsidata.com/apis/talent-benchmark#post-get-demand-benchmark-data
-        Emsi aggregates job posting details from all over the web. The details in this endpoint provide aggregate totals for the top employers, top titles, and top skills associated with the postings matching your search.
-
-        Returns:
-            dict: search parameters and data response from the API
-        """
-        return self.__send_request("demand", city, title)
-
-    def post_compensation_benchmark_data(self, city: str, title: str) -> dict:
-        """
-        https://api.emsidata.com/apis/talent-benchmark#post-get-compensation-benchmark-data
-        Emsi models compensation data using government data and advertised salary observations identified from job postings data.
-
-        Returns:
-            dict: search parameters and data response from the API
-        """
-        return self.__send_request("compensation", city, title)
-
-    def post_diversity_benchmark_data(self, city: str, title: str) -> dict:
-        """
-        https://api.emsidata.com/apis/talent-benchmark#post-get-diversity-benchmark-data
-        Emsi models diversity data by applying a staffing pattern to government data related to industries.
-
-        Returns:
-            dict: search parameters and data response from the API
-        """
-        return self.__send_request("diversity", city, title)
+    Returns:
+        dict: search parameters and data response from the API
+    """
+    return self.__send_request("diversity", city, title)
