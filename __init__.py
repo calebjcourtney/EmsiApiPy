@@ -35,3 +35,4 @@ from .apis.talentBenchmark import TalentBenchmarkConnection
 from .apis.globalPostings import GlobalPostingsConnection
 from .apis.globalProfiles import GlobalProfilesConnection
 from .apis.companies import CompaniesConnection
+from .apis.unitedKingdomProfiles import UKProfiles
