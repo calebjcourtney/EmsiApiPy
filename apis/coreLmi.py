@@ -134,6 +134,11 @@ class CoreLMIConnection(EmsiBaseConnection):
 
         return response
 
+    def get_meta(self):
+        response = self.download_data("meta")
+
+        return response.json()
+
     def get_meta_definitions(self) -> dict:
         """
         You can use this interface (which uses these data discovery endpoints) to browse available datasets. Your contract with Emsi will determine which datasets you have access to, and you can list these datasets and their versions by querying the /meta endpoint
