@@ -65,7 +65,7 @@ class CompaniesConnection(EmsiBaseConnection):
 
         return response.json()["data"]
 
-    def get_list_all_companies(self, q: str = None, fields = ['id', 'name'], version: str = "latest", limit = None) -> list:
+    def get_list_all_companies(self, fields = ['id', 'name'], version: str = "latest", limit = None, after = None) -> list:
         """
         Returns a list of all titles in {version} sorted by title name
 
@@ -80,17 +80,17 @@ class CompaniesConnection(EmsiBaseConnection):
         """
         querystring = {"fields": ",".join(fields)}
 
-        if q is not None:
-            querystring["q"] = q
-
         if limit is not None:
             querystring["limit"] = limit
 
-        response = self.download_data(f"versions/{version}/titles", querystring = querystring)
+        if after is not None:
+            querystring["after"] = after
 
-        return response.json()["data"]
+        response = self.download_data(f"versions/{version}/companies", querystring = querystring)
 
-    def post_list_requested_companies(self, titles: list, fields: list = ['id', 'name'], version: str = "latest") -> list:
+        return response.json()
+
+    def post_list_requested_companies(self, companies: list, fields: list = ['id', 'name'], version: str = "latest") -> list:
         """
         Usage information.
 
@@ -98,15 +98,15 @@ class CompaniesConnection(EmsiBaseConnection):
             list: the raw markdown text from the doc site (https://api.emsidata.com/apis/emsi-job-title-normalization)
 
         Args:
-            titles (list): Description
+            companies (list): Description
             fields (list, optional): List of fields to return per title.
-            version (str, optional): The titles classification version.
+            version (str, optional): The companies classification version.
         """
-        payload = {"ids": titles, "fields": fields}
-        response = self.download_data(f"versions/{version}/titles", payload = payload)
+        payload = {"ids": companies, "fields": fields}
+        response = self.download_data(f"versions/{version}/companies", payload = payload)
         return response.json()["data"]
 
-    def get_company_by_id(self, title_id: str, version: str = "latest") -> str:
+    def get_company_by_id(self, company_id: str, version: str = "latest") -> str:
         """
         Usage information.
 
@@ -114,10 +114,10 @@ class CompaniesConnection(EmsiBaseConnection):
             str: the raw markdown text from the doc site (https://api.emsidata.com/apis/emsi-job-title-normalization)
 
         Args:
-            title_id (str): Description
+            company_id (str): Description
             version (str, optional): The titles classification version.
         """
-        response = self.download_data(f"versions/{version}/titles/{title_id}")
+        response = self.download_data(f"versions/{version}/companies/{company_id}")
         return response.json()["data"]
 
     def post_normalize_company(self, title: str, version: str = "latest", fields = ['id', 'name']) -> dict:
