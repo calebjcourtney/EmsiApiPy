@@ -5,7 +5,7 @@ This library is designed as a helpful resource for connecting to [Emsi's APIs](h
 1. [Installation](  #installation)
 2. [Setup](  #Setup)
 3. [Testing](  #Testing)
-4. [Documentation Links](  #Usage)
+4. [Documentation Links](  #APIs Covered)
 
 ## Installation
 Clone the repository. Install the required packages in `requirements.txt` into a [python virtual environment](https://www.geeksforgeeks.org/python-virtual-environment/). Here's an example using [virtualenv](https://virtualenv.pypa.io/en/latest/), which is what the source code has been tested in .
