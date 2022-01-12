@@ -65,7 +65,7 @@ class EmsiTitlesConnection(EmsiBaseConnection):
 
         return response.json()["data"]
 
-    def get_list_all_titles(self, q: str = None, fields = ['id', 'name'], version: str = "latest", limit = None) -> list:
+    def get_list_all_titles(self, q: str = None, fields = ['id', 'name'], version: str = "latest", limit: int = None, page: int = None) -> list:
         """
         Returns a list of all titles in {version} sorted by title name
 
@@ -85,6 +85,9 @@ class EmsiTitlesConnection(EmsiBaseConnection):
 
         if limit is not None:
             querystring["limit"] = limit
+
+        if page is not None:
+            querystring["page"] = page
 
         response = self.download_data(f"versions/{version}/titles", querystring = querystring)
 
