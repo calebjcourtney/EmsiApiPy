@@ -10,7 +10,6 @@ from EmsiApiPy import (
     ACSIndicatorsConnection,
     SkillsClassificationConnection,
     EmsiTitlesConnection,
-    # UsCompensationConnection,
     UsOccupationEarningsConnection,
     GeographyConnection,
     IpedsConnection,
@@ -18,7 +17,11 @@ from EmsiApiPy import (
     TalentBenchmarkConnection,
     GlobalPostingsConnection,
     GlobalProfilesConnection,
-    CompaniesConnection
+    CompaniesConnection,
+    # these apis don't have a "docs" endpoint
+    # UsCompensationConnection,
+    # USInputOutputConncetion,
+    # CoreLMIConnection,
 )
 
 for connection in [
@@ -29,7 +32,6 @@ for connection in [
         ACSIndicatorsConnection,
         SkillsClassificationConnection,
         EmsiTitlesConnection,
-        # UsCompensationConnection,
         UsOccupationEarningsConnection,
         GeographyConnection,
         IpedsConnection,
@@ -37,7 +39,11 @@ for connection in [
         TalentBenchmarkConnection,
         GlobalProfilesConnection,
         GlobalPostingsConnection,
-        CompaniesConnection
+        CompaniesConnection,
+        # these apis don't have a "docs" endpoint
+        # UsCompensationConnection,
+        # USInputOutputConncetion,
+        # CoreLMIConnection,
 ]:
     conn = connection()
     print(conn.name)
