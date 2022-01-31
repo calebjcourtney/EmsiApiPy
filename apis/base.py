@@ -1,5 +1,7 @@
 """Summary
 """
+from datetime import datetime, timedelta
+
 import requests
 import pandas as pd
 
@@ -7,6 +9,15 @@ try:
     from ..permissions import DEFAULT
 except ValueError:  # need this for testing
     from permissions import DEFAULT
+
+
+class Token:
+    def __init__(self, token):
+        self.token = token
+        self.creation = datetime.now()
+
+    def is_expired(self):
+        return datetime.now() > self.creation + timedelta(minutes = 59)
 
 
 class EmsiBaseConnection(object):
@@ -51,7 +62,9 @@ class EmsiBaseConnection(object):
 
             raise ValueError("Looks like you don't have access to this dataset with those credentials")
 
-        self.token = response.json()['access_token']
+        # self.token = response.json()['access_token']
+
+        self.token = Token(response.json()['access_token'])
 
     def get_data(self, url: str, querystring: dict = None) -> requests.Response:
         """
@@ -64,14 +77,14 @@ class EmsiBaseConnection(object):
         Returns:
             requests.Response: the response from the API
         """
-        headers = {'content-type': "application/json", 'authorization': "Bearer {}".format(self.token)}
+        headers = {'content-type': "application/json", 'authorization': "Bearer {}".format(self.token.token)}
 
         # added timeout = None - some meta requests from Core LMI are taking a long time to fulfill
         response = requests.get(url, headers = headers, params = querystring, timeout = None)
 
-        if response.status_code == 401:
-            self.get_new_token()
-            return self.get_data(url, querystring)
+        # if response.status_code == 401:
+        #     self.get_new_token()
+        #     return self.get_data(url, querystring)
 
         return response
 
@@ -87,7 +100,7 @@ class EmsiBaseConnection(object):
         Returns:
             requests.Response: the response from the API
         """
-        headers = {'content-type': "application/json", 'authorization': "Bearer {}".format(self.token)}
+        headers = {'content-type': "application/json", 'authorization': "Bearer {}".format(self.token.token)}
 
         # allows for users to pass in a string as the payload (yes, even though it is documented as a dict)
         if isinstance(payload, str):
@@ -95,9 +108,9 @@ class EmsiBaseConnection(object):
         else:
             response = requests.post(url, headers = headers, json = payload, params = querystring)
 
-        if response.status_code == 401:
-            self.get_new_token()
-            return self.post_data(url, payload, querystring)
+        # if response.status_code == 401:
+        #     self.get_new_token()
+        #     return self.post_data(url, payload, querystring)
 
         return response
 
@@ -115,6 +128,9 @@ class EmsiBaseConnection(object):
         Returns:
             requests.Response: the response from the API
         """
+        if self.token.is_expired():
+            self.get_new_token()
+
         url = self.base_url + api_endpoint
         if payload is None:
             response = self.get_data(url, querystring)
