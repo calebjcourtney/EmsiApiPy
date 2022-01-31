@@ -48,12 +48,36 @@ print(data_df.head())
 """
 
 import requests
-from dateutil import parser
-import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 import time
 
 from .base import EmsiBaseConnection
+
+
+class Limiter:
+    def __init__(self):
+        self.start = datetime.now()
+        self.expiration = self.start + timedelta(minutes = 5)
+        self.upper_limit = 300
+
+    def smart_limit(self):
+        """
+            Gets the time left before the quota reset, then divides the time by the upper limit left
+            this results in an even distribution of requests and ensures never returning a 429 response
+        """
+        time_left = self.seconds_left()
+
+        if time_left <= 0:
+            self.__init__()
+
+        if self.upper_limit == 0:
+            return time_left
+
+        return time_left / self.upper_limit
+
+    def seconds_left(self):
+        return (self.expiration - datetime.now()).seconds
 
 
 class CoreLMIConnection(EmsiBaseConnection):
@@ -76,9 +100,7 @@ class CoreLMIConnection(EmsiBaseConnection):
         self.scope = "emsiauth"
 
         self.get_new_token()
-        self.limit_remaining = 300
-        self.limit_reset = datetime.datetime.now()
-        self.limit_reset += datetime.timedelta(0, 300)
+        self.limiter = Limiter()
 
         self.name = "Core_LMI"
 
@@ -95,17 +117,10 @@ class CoreLMIConnection(EmsiBaseConnection):
         # possible addition of adding smart_limit
         # for now, if smart_limit is true, then it will simply wait 1 second before returning data
         if smart_limit:
-            time.sleep(1)
+            time.sleep(self.limiter.smart_limit())
 
-        # currently in-progress:
-        #       - track the limit remaining
-        #       - sleep for a longer or shorter amount of time depending on number of requests left
-        #     try:
-        #         time.sleep((self.limit_reset - datetime.datetime.now()).total_seconds() / self.limit_remaining)
-        #     except ZeroDivisionError:
-        #         time.sleep((self.limit_reset - datetime.datetime.now()).total_seconds())
-        #         self.limit_remaining = 300
-        #         self.limit_reset = datetime.datetime.now() + datetime.timedelta(0, 300)
+        if self.limiter.upper_limit == 0:
+            time.sleep(self.limiter.smart_limit())
 
         url = self.base_url + api_endpoint
         if payload is None:
@@ -114,23 +129,13 @@ class CoreLMIConnection(EmsiBaseConnection):
         else:
             response = self.post_data(url, payload)
 
-        # we've run out of requests
-        if response.status_code == 429:
-            # wait until the limit has reset then run again
-            time.sleep(300)
+        self.upper_limit -= 1
 
-            return self.download_data(api_endpoint, payload)
-
-        elif response.status_code != 200:
+        if response.status_code != 200:
             import json
             print(json.dumps(payload))
             print(url)
             print(response.text)
-
-        # limit information
-        self.limit_remaining = int(response.headers['X-Rate-Limit-Remaining'])
-        self.limit_reset = parser.parse(response.headers['X-Rate-Limit-Reset'])
-        self.limit_reset = self.limit_reset.replace(tzinfo = None)
 
         return response
 
