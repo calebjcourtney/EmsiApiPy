@@ -129,7 +129,7 @@ class CoreLMIConnection(EmsiBaseConnection):
         else:
             response = self.post_data(url, payload)
 
-        self.upper_limit -= 1
+        self.limiter.upper_limit -= 1
 
         if response.status_code != 200:
             import json
