@@ -18,8 +18,7 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
     """
 
     def __init__(self) -> None:
-        """Summary
-        """
+        """Summary"""
         super().__init__()
         self.base_url = "https://emsiservices.com/acs/"
         self.scope = "acs"
@@ -43,7 +42,7 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
         else:
             response = self.download_data("meta/metrics/{}".format(metric_name))
 
-        return response.json()['data']
+        return response.json()["data"]
 
     def get_level(self, level: str, metrics_list: list) -> dict:
         """
@@ -59,7 +58,7 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
         querystring = {"metrics": ",".join(metrics_list)}
         response = self.download_data(level, querystring=querystring)
 
-        return response.json()['data']
+        return response.json()["data"]
 
     def post_level(self, level: str, payload: dict) -> dict:
         """Summary
@@ -73,4 +72,4 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
         """
         response = self.download_data(level, payload)
 
-        return response.json()['data']
+        return response.json()["data"]
