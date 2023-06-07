@@ -58,13 +58,13 @@ from .base import EmsiBaseConnection
 class Limiter:
     def __init__(self):
         self.start = datetime.now()
-        self.expiration = self.start + timedelta(minutes = 5)
+        self.expiration = self.start + timedelta(minutes=5)
         self.upper_limit = 300
 
     def smart_limit(self):
         """
-            Gets the time left before the quota reset, then divides the time by the upper limit left
-            this results in an even distribution of requests and ensures never returning a 429 response
+        Gets the time left before the quota reset, then divides the time by the upper limit left
+        this results in an even distribution of requests and ensures never returning a 429 response
         """
         time_left = self.seconds_left()
 
@@ -92,8 +92,7 @@ class CoreLMIConnection(EmsiBaseConnection):
     """
 
     def __init__(self) -> None:
-        """Summary
-        """
+        """Summary"""
 
         super().__init__()
         self.base_url = "https://agnitio.emsicloud.com/"
@@ -104,7 +103,9 @@ class CoreLMIConnection(EmsiBaseConnection):
 
         self.name = "Core_LMI"
 
-    def download_data(self, api_endpoint: str, payload: dict = None, smart_limit: bool = False) -> requests.Response:
+    def download_data(
+        self, api_endpoint: str, payload: dict = None, smart_limit: bool = False
+    ) -> requests.Response:
         """Needs more work for downloading the data from Agnitio, since it does not automatically handle the rate liimit from the API
 
         Args:
@@ -133,6 +134,7 @@ class CoreLMIConnection(EmsiBaseConnection):
 
         if response.status_code != 200:
             import json
+
             print(json.dumps(payload))
             print(url)
             print(response.text)
@@ -170,7 +172,9 @@ class CoreLMIConnection(EmsiBaseConnection):
 
         return response.json()
 
-    def get_meta_dataset_dimension(self, dataset: str, dimension: str, datarun: str) -> dict:
+    def get_meta_dataset_dimension(
+        self, dataset: str, dimension: str, datarun: str
+    ) -> dict:
         """
         Finally, you can view the hierarchy of a particular dimension of a dataset by adding dataset/<name>/<version>/<dimension> to the path:
 
@@ -182,7 +186,9 @@ class CoreLMIConnection(EmsiBaseConnection):
         Returns:
             dict: hierarchichal representation of the dimension of data for the particular dataset
         """
-        response = self.download_data("meta/dataset/{}/{}/{}".format(dataset, datarun, dimension))
+        response = self.download_data(
+            "meta/dataset/{}/{}/{}".format(dataset, datarun, dimension)
+        )
 
         return response.json()
 
@@ -202,7 +208,9 @@ class CoreLMIConnection(EmsiBaseConnection):
 
         return response.json()
 
-    def get_dimension_hierarchy_df(self, dataset: str, dimension: str, datarun: str) -> pd.DataFrame:
+    def get_dimension_hierarchy_df(
+        self, dataset: str, dimension: str, datarun: str
+    ) -> pd.DataFrame:
         """
         Finally, you can view the hierarchy of a particular dimension of a dataset by adding dataset/<name>/<version>/<dimension> to the path:
 
@@ -215,11 +223,13 @@ class CoreLMIConnection(EmsiBaseConnection):
             pd.DataFrame: Hierarchy data parsed into a pd.DataFrame
         """
         data = self.get_meta_dataset_dimension(dataset, dimension, datarun)
-        df = pd.DataFrame(data['hierarchy'])
+        df = pd.DataFrame(data["hierarchy"])
 
         return df
 
-    def post_retrieve_df(self, dataset: str, payload: dict, datarun: str) -> pd.DataFrame:
+    def post_retrieve_df(
+        self, dataset: str, payload: dict, datarun: str
+    ) -> pd.DataFrame:
         """
         Agnitio data queries are performed by assembling a JSON description of the query and POSTing it to the specific dataset you wish to query.
 
@@ -233,7 +243,7 @@ class CoreLMIConnection(EmsiBaseConnection):
         """
         response = self.post_retrieve_data(dataset, payload, datarun)
         df = pd.DataFrame()
-        for column in response['data']:
-            df[column['name']] = column['rows']
+        for column in response["data"]:
+            df[column["name"]] = column["rows"]
 
         return df

@@ -17,8 +17,7 @@ class AutomationIndexConnection(EmsiBaseConnection):
     """
 
     def __init__(self) -> None:
-        """Summary
-        """
+        """Summary"""
         super().__init__()
         self.base_url = "https://emsiservices.com/automation-index/"
         self.scope = "automation-index"
@@ -40,7 +39,7 @@ class AutomationIndexConnection(EmsiBaseConnection):
         """
         response = self.download_data("")
 
-        return response.json()['data']['endpoints']
+        return response.json()["data"]["endpoints"]
 
     def get_countries(self):
         """
@@ -50,11 +49,11 @@ class AutomationIndexConnection(EmsiBaseConnection):
             TYPE: Description
         """
         endpoints = self.get_available_endpoints()
-        endpoints.remove('/status')
+        endpoints.remove("/status")
 
         return endpoints
 
-    def get_metadata(self, nation = 'us'):
+    def get_metadata(self, nation="us"):
         """
         Summary
 
@@ -67,9 +66,9 @@ class AutomationIndexConnection(EmsiBaseConnection):
         api_endpoint = "/{}/meta".format(nation)
         response = self.download_data(api_endpoint)
 
-        return response.json()['data']
+        return response.json()["data"]
 
-    def get_index(self, nation = 'us'):
+    def get_index(self, nation="us"):
         """Summary
 
         Args:
@@ -81,9 +80,9 @@ class AutomationIndexConnection(EmsiBaseConnection):
         api_endpoint = "/{}/data".format(nation)
         response = self.download_data(api_endpoint)
 
-        return response.json()['data']
+        return response.json()["data"]
 
-    def filter_soc_index(self, soc_code, nation = 'us'):
+    def filter_soc_index(self, soc_code, nation="us"):
         """Summary
 
         Args:

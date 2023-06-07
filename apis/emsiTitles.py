@@ -16,8 +16,7 @@ class EmsiTitlesConnection(EmsiBaseConnection):
     """
 
     def __init__(self) -> None:
-        """Summary
-        """
+        """Summary"""
         super().__init__()
         self.base_url = "https://emsiservices.com/titles/"
         self.scope = "emsi_open"
@@ -65,7 +64,14 @@ class EmsiTitlesConnection(EmsiBaseConnection):
 
         return response.json()["data"]
 
-    def get_list_all_titles(self, q: str = None, fields = ['id', 'name'], version: str = "latest", limit: int = None, page: int = None) -> list:
+    def get_list_all_titles(
+        self,
+        q: str = None,
+        fields=["id", "name"],
+        version: str = "latest",
+        limit: int = None,
+        page: int = None,
+    ) -> list:
         """
         Returns a list of all titles in {version} sorted by title name
 
@@ -89,11 +95,18 @@ class EmsiTitlesConnection(EmsiBaseConnection):
         if page is not None:
             querystring["page"] = page
 
-        response = self.download_data(f"versions/{version}/titles", querystring = querystring)
+        response = self.download_data(
+            f"versions/{version}/titles", querystring=querystring
+        )
 
         return response.json()["data"]
 
-    def post_list_requested_titles(self, titles: list, fields: list = ['id', 'name', 'pluralName'], version: str = "latest") -> list:
+    def post_list_requested_titles(
+        self,
+        titles: list,
+        fields: list = ["id", "name", "pluralName"],
+        version: str = "latest",
+    ) -> list:
         """
         Usage information.
 
@@ -106,7 +119,7 @@ class EmsiTitlesConnection(EmsiBaseConnection):
             version (str, optional): The titles classification version.
         """
         payload = {"ids": titles, "fields": fields}
-        response = self.download_data(f"versions/{version}/titles", payload = payload)
+        response = self.download_data(f"versions/{version}/titles", payload=payload)
         return response.json()["data"]
 
     def get_title_by_id(self, title_id: str, version: str = "latest") -> str:
@@ -123,7 +136,13 @@ class EmsiTitlesConnection(EmsiBaseConnection):
         response = self.download_data(f"versions/{version}/titles/{title_id}")
         return response.json()["data"]
 
-    def post_normalize_title(self, title: str, version: str = "latest", confidenceThreshold = 0.5, fields = ['id', 'name', 'pluralName']) -> dict:
+    def post_normalize_title(
+        self,
+        title: str,
+        version: str = "latest",
+        confidenceThreshold=0.5,
+        fields=["id", "name", "pluralName"],
+    ) -> dict:
         """Normalize a raw job title string to the best matching Emsi title.
 
         Currently only supports the JSON usage ability for the API, no support for plain text
@@ -140,16 +159,20 @@ class EmsiTitlesConnection(EmsiBaseConnection):
         payload = {
             "term": title,
             "fields": fields,
-            "confidenceThreshold": confidenceThreshold
+            "confidenceThreshold": confidenceThreshold,
         }
-        response = self.download_data(
-            f"versions/{version}/normalize",
-            payload = payload
-        )
+        response = self.download_data(f"versions/{version}/normalize", payload=payload)
 
         return response.json()["data"]
 
-    def post_inspect_title_normalization(self, title: str, version: str = "latest", confidenceThreshold: float = 0.5, limit: int = 5, fields: list = ['id', 'name', 'pluralName']) -> dict:
+    def post_inspect_title_normalization(
+        self,
+        title: str,
+        version: str = "latest",
+        confidenceThreshold: float = 0.5,
+        limit: int = 5,
+        fields: list = ["id", "name", "pluralName"],
+    ) -> dict:
         """Normalize a raw job title string to a list of the top matching Emsi titles.
 
         Currently only supports the JSON usage ability for the API, no support for plain text
@@ -168,13 +191,19 @@ class EmsiTitlesConnection(EmsiBaseConnection):
             "term": title,
             "confidenceThreshold": confidenceThreshold,
             "limit": limit,
-            "fields": fields
+            "fields": fields,
         }
         response = self.download_data(f"versions/{version}/normalize/inspect", payload)
 
         return response.json()["data"]
 
-    def post_normalize_titles_in_bulk(self, titles: list, version: str = "latest", confidenceThreshold: float = 0.5, fields = ['id', 'name', 'pluralName']) -> list:
+    def post_normalize_titles_in_bulk(
+        self,
+        titles: list,
+        version: str = "latest",
+        confidenceThreshold: float = 0.5,
+        fields=["id", "name", "pluralName"],
+    ) -> list:
         """
         Normalize multiple raw job title strings to a list of best matching Emsi titles.
 
@@ -190,8 +219,10 @@ class EmsiTitlesConnection(EmsiBaseConnection):
         payload = {
             "terms": titles,
             "confidenceThreshold": confidenceThreshold,
-            "fields": fields
+            "fields": fields,
         }
-        response = self.download_data(f"versions/{version}/normalize/bulk", payload = payload)
+        response = self.download_data(
+            f"versions/{version}/normalize/bulk", payload=payload
+        )
 
         return response.json()["data"]

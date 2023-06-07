@@ -16,8 +16,7 @@ class CompaniesConnection(EmsiBaseConnection):
     """
 
     def __init__(self) -> None:
-        """Summary
-        """
+        """Summary"""
         super().__init__()
         self.base_url = "https://emsiservices.com/companies/"
         self.scope = "companies"
@@ -65,7 +64,9 @@ class CompaniesConnection(EmsiBaseConnection):
 
         return response.json()["data"]
 
-    def get_list_all_companies(self, fields = ['id', 'name'], version: str = "latest", limit = None, after = None) -> list:
+    def get_list_all_companies(
+        self, fields=["id", "name"], version: str = "latest", limit=None, after=None
+    ) -> list:
         """
         Returns a list of all titles in {version} sorted by title name
 
@@ -86,11 +87,15 @@ class CompaniesConnection(EmsiBaseConnection):
         if after is not None:
             querystring["after"] = after
 
-        response = self.download_data(f"versions/{version}/companies", querystring = querystring)
+        response = self.download_data(
+            f"versions/{version}/companies", querystring=querystring
+        )
 
         return response.json()
 
-    def post_list_requested_companies(self, companies: list, fields: list = ['id', 'name'], version: str = "latest") -> list:
+    def post_list_requested_companies(
+        self, companies: list, fields: list = ["id", "name"], version: str = "latest"
+    ) -> list:
         """
         Usage information.
 
@@ -103,7 +108,7 @@ class CompaniesConnection(EmsiBaseConnection):
             version (str, optional): The companies classification version.
         """
         payload = {"ids": companies, "fields": fields}
-        response = self.download_data(f"versions/{version}/companies", payload = payload)
+        response = self.download_data(f"versions/{version}/companies", payload=payload)
         return response.json()["data"]
 
     def get_company_by_id(self, company_id: str, version: str = "latest") -> str:
@@ -120,7 +125,9 @@ class CompaniesConnection(EmsiBaseConnection):
         response = self.download_data(f"versions/{version}/companies/{company_id}")
         return response.json()["data"]
 
-    def post_normalize_company(self, title: str, version: str = "latest", fields = ['id', 'name']) -> dict:
+    def post_normalize_company(
+        self, title: str, version: str = "latest", fields=["id", "name"]
+    ) -> dict:
         """Normalize a raw job title string to the best matching Emsi title.
 
         Currently only supports the JSON usage ability for the API, no support for plain text
@@ -134,18 +141,18 @@ class CompaniesConnection(EmsiBaseConnection):
         Returns:
             dict: dictionary of the top match from the API (id, title, and similarity)
         """
-        payload = {
-            "term": title,
-            "fields": fields
-        }
-        response = self.download_data(
-            f"versions/{version}/normalize",
-            payload = payload
-        )
+        payload = {"term": title, "fields": fields}
+        response = self.download_data(f"versions/{version}/normalize", payload=payload)
 
         return response.json()["data"]
 
-    def post_inspect_company_normalization(self, title: str, version: str = "latest", limit: int = 5, fields: list = ['id', 'name']) -> dict:
+    def post_inspect_company_normalization(
+        self,
+        title: str,
+        version: str = "latest",
+        limit: int = 5,
+        fields: list = ["id", "name"],
+    ) -> dict:
         """Normalize a raw job title string to a list of the top matching Emsi titles.
 
         Currently only supports the JSON usage ability for the API, no support for plain text
@@ -160,16 +167,14 @@ class CompaniesConnection(EmsiBaseConnection):
         Returns:
             dict: dictionary of the top match from the API (id, title, and similarity)
         """
-        payload = {
-            "term": title,
-            "limit": limit,
-            "fields": fields
-        }
+        payload = {"term": title, "limit": limit, "fields": fields}
         response = self.download_data(f"versions/{version}/normalize/inspect", payload)
 
         return response.json()["data"]
 
-    def post_normalize_companies_in_bulk(self, titles: list, version: str = "latest", fields = ['id', 'name']) -> list:
+    def post_normalize_companies_in_bulk(
+        self, titles: list, version: str = "latest", fields=["id", "name"]
+    ) -> list:
         """
         Normalize multiple raw job title strings to a list of best matching Emsi titles.
 
@@ -182,10 +187,9 @@ class CompaniesConnection(EmsiBaseConnection):
         Returns:
             list: dictionary of the top match from the API (id, title, and similarity)
         """
-        payload = {
-            "terms": titles,
-            "fields": fields
-        }
-        response = self.download_data(f"versions/{version}/normalize/bulk", payload = payload)
+        payload = {"terms": titles, "fields": fields}
+        response = self.download_data(
+            f"versions/{version}/normalize/bulk", payload=payload
+        )
 
         return response.json()["data"]
