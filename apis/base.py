@@ -308,27 +308,6 @@ class JobPostingsConnection(EmsiBaseConnection):
 
         return response.json()
 
-    def post_samples(self, payload: dict, querystring: dict = None) -> dict:
-        """
-        Get data for individual postings that match your requested filters.
-        Note that not all fields are present for all postings, and some may be null or "Unknown".
-        The url field is only available for currently active postings, and the destination website is not guaranteed to be secure or functional.
-
-        Args:
-            payload (dict): json object for sending to the API as the body of the request
-            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
-
-        Returns:
-            dict: the data response from the API
-        """
-        response = self.download_data(
-            'samples',
-            payload = payload,
-            querystring = querystring
-        )
-
-        return response.json()['data']
-
     def post_postings(self, payload: dict, querystring: dict = None) -> dict:
         """
         Get data for individual postings that match your requested filters.
