@@ -2,7 +2,7 @@
 ```python
 import EmsiApiPy
 
-conn = EmsiApiPy.EmsiTitlesConnection()
+conn = EmsiApiPy.TitlesConnection()
 
 # make sure we have a good connection
 assert conn.is_healthy()
@@ -26,21 +26,21 @@ print(conn.get_list_all_skills())
 print(conn.get_title_by_id("ETEB3BB8E555C79368"))
 """
 {
-  'pluralName': '.NET Developers', 
+  'pluralName': '.NET Developers',
   'mapping': {
     'skills': [
       {
         'id': 'KS1200B62W5ZF38RJ7TD',
         'name': '.NET Framework'
       }
-    ], 
+    ],
     'socs': [
       {
-        'id': '15-1256', 
+        'id': '15-1256',
         'name': 'Software Developers and Software Quality Assurance Analysts and Testers'
-      }, 
+      },
       {
-        'id': '15-1251', 
+        'id': '15-1251',
         'name': 'Computer Programmers'
       }
     ]

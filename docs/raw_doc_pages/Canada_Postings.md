@@ -1,4 +1,4 @@
-# Canada Job Postings 
+# Canada Job Postings
 #### v1.23.0
 ##### Information on past releases can be found in the [Changelog](/updates/canada-job-postings-api-changelog).
 
@@ -22262,4 +22262,3 @@ The facet you requested wasn't found.
 
 
 </div>
-

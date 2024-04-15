@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import EmsiApiPy
 
 conn = EmsiApiPy.CoreLMIConnection()
@@ -6,7 +8,11 @@ dataset = "emsi.us.grossregionalproduct"
 
 dimension = "Area"
 
-df = conn.get_dimension_hierarchy_df(dataset = dataset, dimension = dimension)
+df = conn.get_dimension_hierarchy_df(
+    dataset=dataset,
+    dimension=dimension,
+    datarun="2023.1",
+)
 
 print(df.head())
 
@@ -20,23 +26,29 @@ print(df.head())
 """
 
 # limit only to the states
-df = df.loc[df['level_name'] == '2']
+df = df.loc[df["level_name"] == "2"]
 
 payload = {
     "metrics": [
         {
-            "name": "Dollars.2019"
-        }
+            "name": "Dollars.2019",
+        },
     ],
     "constraints": [
         {
             "dimensionName": "Area",
-            "map": {row[1]['name']: [row[1]["child"]] for row in df.iterrows()}
-        }
-    ]
+            "map": {
+                row[1]["name"]: [row[1]["child"]] for row in df.iterrows()
+            },
+        },
+    ],
 }
 
-data_df = conn.post_retrieve_df(dataset = dataset, payload = payload)
+data_df = conn.post_retrieve_df(
+    dataset=dataset,
+    payload=payload,
+    datarun="2023.1",
+)
 print(data_df.head())
 
 """

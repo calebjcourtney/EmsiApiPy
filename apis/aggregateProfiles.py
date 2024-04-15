@@ -1,6 +1,8 @@
 """
 The following is taken from Emsi's documentation, available here: https://api.emsidata.com/apis/aggregate-profile-data
 """
+from __future__ import annotations
+
 from .base import ProfilesConnection
 
 

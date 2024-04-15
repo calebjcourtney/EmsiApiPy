@@ -2,6 +2,7 @@
 This service takes text describing a job and normalizes it into a standardized job title from Emsi's job title taxonomy.
 https://api.emsidata.com/apis/titles
 """
+from __future__ import annotations
 
 from .base import EmsiBaseConnection
 
@@ -65,7 +66,11 @@ class CompaniesConnection(EmsiBaseConnection):
         return response.json()["data"]
 
     def get_list_all_companies(
-        self, fields=["id", "name"], version: str = "latest", limit=None, after=None
+        self,
+        fields=["id", "name"],
+        version: str = "latest",
+        limit=None,
+        after=None,
     ) -> list:
         """
         Returns a list of all titles in {version} sorted by title name
@@ -88,13 +93,17 @@ class CompaniesConnection(EmsiBaseConnection):
             querystring["after"] = after
 
         response = self.download_data(
-            f"versions/{version}/companies", querystring=querystring
+            f"versions/{version}/companies",
+            querystring=querystring,
         )
 
         return response.json()
 
     def post_list_requested_companies(
-        self, companies: list, fields: list = ["id", "name"], version: str = "latest"
+        self,
+        companies: list,
+        fields: list = ["id", "name"],
+        version: str = "latest",
     ) -> list:
         """
         Usage information.
@@ -108,10 +117,17 @@ class CompaniesConnection(EmsiBaseConnection):
             version (str, optional): The companies classification version.
         """
         payload = {"ids": companies, "fields": fields}
-        response = self.download_data(f"versions/{version}/companies", payload=payload)
+        response = self.download_data(
+            f"versions/{version}/companies",
+            payload=payload,
+        )
         return response.json()["data"]
 
-    def get_company_by_id(self, company_id: str, version: str = "latest") -> str:
+    def get_company_by_id(
+        self,
+        company_id: str,
+        version: str = "latest",
+    ) -> str:
         """
         Usage information.
 
@@ -122,11 +138,16 @@ class CompaniesConnection(EmsiBaseConnection):
             company_id (str): Description
             version (str, optional): The titles classification version.
         """
-        response = self.download_data(f"versions/{version}/companies/{company_id}")
+        response = self.download_data(
+            f"versions/{version}/companies/{company_id}",
+        )
         return response.json()["data"]
 
     def post_normalize_company(
-        self, title: str, version: str = "latest", fields=["id", "name"]
+        self,
+        title: str,
+        version: str = "latest",
+        fields=["id", "name"],
     ) -> dict:
         """Normalize a raw job title string to the best matching Emsi title.
 
@@ -142,7 +163,10 @@ class CompaniesConnection(EmsiBaseConnection):
             dict: dictionary of the top match from the API (id, title, and similarity)
         """
         payload = {"term": title, "fields": fields}
-        response = self.download_data(f"versions/{version}/normalize", payload=payload)
+        response = self.download_data(
+            f"versions/{version}/normalize",
+            payload=payload,
+        )
 
         return response.json()["data"]
 
@@ -168,12 +192,18 @@ class CompaniesConnection(EmsiBaseConnection):
             dict: dictionary of the top match from the API (id, title, and similarity)
         """
         payload = {"term": title, "limit": limit, "fields": fields}
-        response = self.download_data(f"versions/{version}/normalize/inspect", payload)
+        response = self.download_data(
+            f"versions/{version}/normalize/inspect",
+            payload,
+        )
 
         return response.json()["data"]
 
     def post_normalize_companies_in_bulk(
-        self, titles: list, version: str = "latest", fields=["id", "name"]
+        self,
+        titles: list,
+        version: str = "latest",
+        fields=["id", "name"],
     ) -> list:
         """
         Normalize multiple raw job title strings to a list of best matching Emsi titles.
@@ -189,7 +219,8 @@ class CompaniesConnection(EmsiBaseConnection):
         """
         payload = {"terms": titles, "fields": fields}
         response = self.download_data(
-            f"versions/{version}/normalize/bulk", payload=payload
+            f"versions/{version}/normalize/bulk",
+            payload=payload,
         )
 
         return response.json()["data"]

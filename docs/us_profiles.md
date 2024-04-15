@@ -29,10 +29,10 @@ print(conn.post_totals(payload))
 print(conn.get_rankings())
 """
 [
-    'certifications', 'certifications_name', 'cip2', 'cip2_name', 'cip4', 'cip4_name', 'cip6', 'cip6_name', 
-    'city', 'city_name', 'company', 'company_name', 'county', 'edulevels', 'edulevels_name', 'fips', 
-    'hard_skills', 'hard_skills_name', 'msa', 'naics2', 'naics3', 'naics4', 'naics5', 'naics6', 'onet', 
-    'schools', 'schools_ipeds', 'schools_name', 'skills', 'skills_name', 'soc2', 'soc3', 'soc4', 'soc5', 
+    'certifications', 'certifications_name', 'cip2', 'cip2_name', 'cip4', 'cip4_name', 'cip6', 'cip6_name',
+    'city', 'city_name', 'company', 'company_name', 'county', 'edulevels', 'edulevels_name', 'fips',
+    'hard_skills', 'hard_skills_name', 'msa', 'naics2', 'naics3', 'naics4', 'naics5', 'naics6', 'onet',
+    'schools', 'schools_ipeds', 'schools_name', 'skills', 'skills_name', 'soc2', 'soc3', 'soc4', 'soc5',
     'soft_skills', 'soft_skills_name', 'state', 'title', 'title_name'
 ]
 """
@@ -61,11 +61,11 @@ print(conn.post_rankings(facet, payload))
 {
     'data': {
         'ranking': {
-            'buckets': [...], 
-            'facet': 'hard_skills_name', 
-            'limit': 10, 
+            'buckets': [...],
+            'facet': 'hard_skills_name',
+            'limit': 10,
             'rank_by': 'profiles'
-        }, 
+        },
         'totals': {
             'profiles': 37798
         }

@@ -4,6 +4,8 @@ No new features will be added here.
 
 https://api.emsidata.com/apis/automation-index
 """
+from __future__ import annotations
+
 from .base import EmsiBaseConnection
 
 
@@ -63,7 +65,7 @@ class AutomationIndexConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        api_endpoint = "/{}/meta".format(nation)
+        api_endpoint = f"/{nation}/meta"
         response = self.download_data(api_endpoint)
 
         return response.json()["data"]
@@ -77,7 +79,7 @@ class AutomationIndexConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        api_endpoint = "/{}/data".format(nation)
+        api_endpoint = f"/{nation}/data"
         response = self.download_data(api_endpoint)
 
         return response.json()["data"]
@@ -96,7 +98,9 @@ class AutomationIndexConnection(EmsiBaseConnection):
             TYPE: Description
         """
         if type(soc_code) != list and type(soc_code) != str:
-            raise ValueError("input `soc_code` must be one of type `list` or `str`")
+            raise ValueError(
+                "input `soc_code` must be one of type `list` or `str`",
+            )
 
         if type(soc_code) == list:
             payload = soc_code
@@ -112,6 +116,6 @@ class AutomationIndexConnection(EmsiBaseConnection):
             try:
                 output[soc] = index[soc]
             except ValueError:
-                raise ValueError("`soc_code` '{}' is invalid".format(soc))
+                raise ValueError(f"`soc_code` '{soc}' is invalid")
 
         return output

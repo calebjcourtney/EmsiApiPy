@@ -1,4 +1,4 @@
-# Global Profiles 
+# Global Profiles
 #### v1.10.2
 ##### Information on past releases can be found in the [Changelog](/updates/global-profiles-changelog).
 
@@ -3857,4 +3857,3 @@ The facet you requested wasn't found.
 
 
 </div>
-

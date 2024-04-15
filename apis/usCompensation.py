@@ -1,5 +1,7 @@
 """Summary
 """
+from __future__ import annotations
+
 from .base import EmsiBaseConnection
 
 
@@ -17,8 +19,7 @@ class UsCompensationConnection(EmsiBaseConnection):
     """
 
     def __init__(self) -> None:
-        """Summary
-        """
+        """Summary"""
 
         super().__init__()
         self.base_url = "https://comp.emsicloud.com/"

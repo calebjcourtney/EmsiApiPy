@@ -1,4 +1,4 @@
-# Occupation Automation Index 
+# Occupation Automation Index
 #### v1.1.2
 ##### Information on past releases can be found in the [Changelog](/updates/automation-index-changelog).
 
@@ -611,4 +611,3 @@ The facet you requested wasn't found.
 
 
 </div>
-

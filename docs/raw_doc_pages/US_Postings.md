@@ -1,4 +1,4 @@
-# Job Postings 
+# Job Postings
 #### v2.39.0
 ##### Information on past releases can be found in the [Changelog](/updates/job-postings-api-changelog).
 
@@ -25312,4 +25312,3 @@ The facet you requested wasn't found.
 
 
 </div>
-

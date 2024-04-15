@@ -1,4 +1,4 @@
-# Companies API 
+# Companies API
 #### v1.0.0
 
 ##### Information on past releases can be found in the [Changelog](/updates/companies-api-changelog).
@@ -2168,4 +2168,3 @@ Unsupported Content Type.
 </div>
 
 </div>
-

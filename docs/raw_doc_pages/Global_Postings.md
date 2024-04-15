@@ -1,4 +1,4 @@
-# Global Job Postings 
+# Global Job Postings
 #### v1.6.1
 ##### Information on past releases can be found in the [Changelog](/updates/global-job-postings-api-changelog).
 
@@ -6502,4 +6502,3 @@ The facet you requested wasn't found.
 
 
 </div>
-

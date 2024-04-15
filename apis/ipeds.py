@@ -3,7 +3,10 @@ This API provides metadata about educational institutions reporting via IPEDS, U
 Information and search functionality for institutions are exposed via the institution family of endpoints.
 A SOC-CIP mapping is provided via the `soccip` endpoints.
 """
+from __future__ import annotations
+
 import pandas as pd
+import requests
 
 from .base import EmsiBaseConnection
 
@@ -21,8 +24,7 @@ class IpedsConnection(EmsiBaseConnection):
     """
 
     def __init__(self) -> None:
-        """Summary
-        """
+        """Summary"""
         super().__init__()
         self.base_url = "https://ipeds.emsicloud.com/"
         self.scope = "emsiauth"
@@ -54,7 +56,7 @@ class IpedsConnection(EmsiBaseConnection):
         payload = {"institutionIds": institutions}
         return self.download_data(
             "institutions",
-            payload = payload
+            payload=payload,
         ).json()
 
     def get_institutions_geo(self, geo_level: str, geo_code: str) -> dict:
@@ -71,10 +73,14 @@ class IpedsConnection(EmsiBaseConnection):
         Raises:
             ValueError: Raises this error if the geo level is not one of [`zip`, `fips`]
         """
-        if geo_level not in ['zip', 'fips']:
-            raise ValueError(f"`geo_level` must be one of ['zip', 'fips'], found `{geo_level}`")
+        if geo_level not in ["zip", "fips"]:
+            raise ValueError(
+                f"`geo_level` must be one of ['zip', 'fips'], found `{geo_level}`",
+            )
 
-        return self.download_data(f"institutions/{geo_level}/{geo_code}").json()
+        return self.download_data(
+            f"institutions/{geo_level}/{geo_code}",
+        ).json()
 
     def get_institutions_search(self, search: str) -> dict:
         """
@@ -88,7 +94,7 @@ class IpedsConnection(EmsiBaseConnection):
         """
         return self.download_data(f"institutions/{search}").json()
 
-    def post_institutions_search(self, payload: dict) -> dict:
+    def post_institutions_search(self, payload: dict) -> requests.Response:
         """
         Search institutions using multiple values. Valid search types are `zip`, `fips`, `city`, `id`, and `name`.
 
@@ -100,7 +106,7 @@ class IpedsConnection(EmsiBaseConnection):
         """
         return self.download_data(
             f"institutions/search",
-            payload = payload
+            payload=payload,
         ).json()
 
     def get_institutions_all(self, offset: int = 0, limit: int = 0) -> dict:
@@ -132,10 +138,10 @@ class IpedsConnection(EmsiBaseConnection):
         payload = {"cipCodes": cips}
         return self.download_data(
             "soccip/cip2soc",
-            payload = payload
+            payload=payload,
         ).json()
 
-    def post_soc_cip(self, socs: list) -> dict:
+    def post_soc_cip(self, socs: list) -> requests.Response:
         """
         This endpoint maps from one or more SOC codes to the CIP codes of the programs which most likely train for them.
 
@@ -148,7 +154,7 @@ class IpedsConnection(EmsiBaseConnection):
         payload = {"socCodes": socs}
         return self.download_data(
             "soccip/soc2cip",
-            payload = payload
+            payload=payload,
         )
 
     def post_institutions_df(self, institutions: list) -> pd.DataFrame:
@@ -166,7 +172,11 @@ class IpedsConnection(EmsiBaseConnection):
 
         return df
 
-    def get_institutions_geo_df(self, geo_level: str, geo_code: str) -> pd.DataFrame:
+    def get_institutions_geo_df(
+        self,
+        geo_level: str,
+        geo_code: str,
+    ) -> pd.DataFrame:
         """
         Return a list of institutions operating in the specified FIPS/ZIP code.
 
@@ -207,12 +217,16 @@ class IpedsConnection(EmsiBaseConnection):
         Returns:
             TYPE: Description
         """
-        data = self.get_institutions_search(payload)
+        data = self.post_institutions_search(payload).json()
         df = pd.DataFrame(data["rows"])
 
         return df
 
-    def get_institutions_all_df(self, offset: int = 0, limit: int = 0) -> pd.DataFrame:
+    def get_institutions_all_df(
+        self,
+        offset: int = 0,
+        limit: int = 0,
+    ) -> pd.DataFrame:
         """
         Lists all institutions with pagination.
 
@@ -244,10 +258,10 @@ class IpedsConnection(EmsiBaseConnection):
             temp_df = pd.DataFrame(
                 {
                     "cip": [record["code"] for _ in record["corresponding"]],
-                    "soc": [x for x in record["corresponding"]]
-                }
+                    "soc": [x for x in record["corresponding"]],
+                },
             )
-            df = df.append(temp_df, ignore_index = True)
+            df = df.append(temp_df, ignore_index=True)
 
         return df
 
@@ -262,15 +276,15 @@ class IpedsConnection(EmsiBaseConnection):
             TYPE: Description
         """
 
-        data = self.post_soc_cip(socs)
+        data = self.post_soc_cip(socs).json()
         df = pd.DataFrame()
         for record in data["mapping"]:
             temp_df = pd.DataFrame(
                 {
                     "soc": [record["code"] for _ in record["corresponding"]],
-                    "cip": [x for x in record["corresponding"]]
-                }
+                    "cip": [x for x in record["corresponding"]],
+                },
             )
-            df = df.append(temp_df, ignore_index = True)
+            df = df.append(temp_df, ignore_index=True)
 
         return df

@@ -1,5 +1,7 @@
 """Summary
 """
+from __future__ import annotations
+
 from .base import EmsiBaseConnection
 
 
@@ -17,8 +19,7 @@ class UsOccupationEarningsConnection(EmsiBaseConnection):
     """
 
     def __init__(self) -> None:
-        """Summary
-        """
+        """Summary"""
 
         super().__init__()
         self.base_url = "https://earnings.emsicloud.com/"
@@ -45,7 +46,7 @@ class UsOccupationEarningsConnection(EmsiBaseConnection):
         Returns:
             list: Description
         """
-        return self.download_data("v1/us/{}/years".format(datarun)).json()
+        return self.download_data(f"v1/us/{datarun}/years").json()
 
     def post_percentile_wages(self, datarun: str, payload: dict) -> dict:
         """Summary
@@ -57,7 +58,10 @@ class UsOccupationEarningsConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        return self.download_data("v1/us/{}/percentile_wages".format(datarun), payload).json()
+        return self.download_data(
+            f"v1/us/{datarun}/percentile_wages",
+            payload,
+        ).json()
 
     def post_employment_at_wage(self, datarun: str, payload: dict) -> dict:
         """Summary
@@ -69,9 +73,16 @@ class UsOccupationEarningsConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        return self.download_data("v1/us/{}/employment_at_wage".format(datarun), payload).json()
+        return self.download_data(
+            f"v1/us/{datarun}/employment_at_wage",
+            payload,
+        ).json()
 
-    def postemployment_at_wage_by_occ(self, datarun: str, payload: dict) -> dict:
+    def postemployment_at_wage_by_occ(
+        self,
+        datarun: str,
+        payload: dict,
+    ) -> dict:
         """Summary
 
         Args:
@@ -81,4 +92,7 @@ class UsOccupationEarningsConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        return self.download_data("v1/us/{}/employment_at_wage_by_occ".format(datarun), payload).json()
+        return self.download_data(
+            f"v1/us/{datarun}/employment_at_wage_by_occ",
+            payload,
+        ).json()

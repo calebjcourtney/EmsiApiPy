@@ -1,6 +1,8 @@
 """
 Summary
 """
+from __future__ import annotations
+
 from .base import EmsiBaseConnection
 
 
@@ -16,8 +18,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
     """
 
     def __init__(self) -> None:
-        """Summary
-        """
+        """Summary"""
         super().__init__()
         self.base_url = "https://emsiservices.com/skills/"
         self.scope = "emsi_open"
@@ -37,7 +38,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         """
         return self.download_data("versions").json()
 
-    def get_version_metadata(self, version = "latest") -> list:
+    def get_version_metadata(self, version="latest") -> list:
         """Summary
 
         Returns:
@@ -48,7 +49,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         """
         return self.download_data(f"versions/{version}").json()
 
-    def get_version_changes(self, version = "latest") -> dict:
+    def get_version_changes(self, version="latest") -> dict:
         """Summary
 
         Args:
@@ -62,7 +63,13 @@ class SkillsClassificationConnection(EmsiBaseConnection):
 
         return data
 
-    def get_list_all_skills(self, version: str = "latest", q: str = None, typeIds: str = None, fields: str = None) -> list:
+    def get_list_all_skills(
+        self,
+        version: str = "latest",
+        q: str | None = None,
+        typeIds: str | None = None,
+        fields: str | None = None,
+    ) -> dict:
         """Summary
 
         Args:
@@ -78,7 +85,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         base_querystring = {
             "q": q,
             "typeIds": typeIds,
-            "fields": fields
+            "fields": fields,
         }
 
         querystring = {}
@@ -88,12 +95,21 @@ class SkillsClassificationConnection(EmsiBaseConnection):
                 querystring[key] = value
 
         if len(querystring) > 0:
-            return self.download_data("versions/{}/skills".format(version), querystring = querystring).json()
+            return self.download_data(
+                f"versions/{version}/skills",
+                querystring=querystring,
+            ).json()
 
         else:
-            return self.download_data("versions/{}/skills".format(version)).json()
+            return self.download_data(f"versions/{version}/skills").json()
 
-    def post_list_requested_skills(self, payload: dict, version: str = "latest", typeIds = None, fields = None) -> dict:
+    def post_list_requested_skills(
+        self,
+        payload: dict,
+        version: str = "latest",
+        typeIds=None,
+        fields=None,
+    ) -> dict:
         """Summary
 
         Args:
@@ -108,7 +124,7 @@ class SkillsClassificationConnection(EmsiBaseConnection):
 
         base_querystring = {
             "typeIds": typeIds,
-            "fields": fields
+            "fields": fields,
         }
 
         querystring: dict = {}
@@ -117,10 +133,17 @@ class SkillsClassificationConnection(EmsiBaseConnection):
                 querystring[key] = value
 
         if len(querystring) > 0:
-            return self.download_data("versions/{}/skills".format(version), payload = payload, querystring = querystring).json()
+            return self.download_data(
+                f"versions/{version}/skills",
+                payload=payload,
+                querystring=querystring,
+            ).json()
 
         else:
-            return self.download_data("versions/{}/skills".format(version), payload = payload).json()
+            return self.download_data(
+                f"versions/{version}/skills",
+                payload=payload,
+            ).json()
 
     def get_skill_by_id(self, skill_id: str, version: str = "latest") -> dict:
         """Summary
@@ -132,9 +155,17 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         Returns:
             dict: Description
         """
-        return self.download_data("versions/{}/skills/{}".format(version, skill_id)).json()
+        return self.download_data(
+            f"versions/{version}/skills/{skill_id}",
+        ).json()
 
-    def post_find_related_skills(self, skill_ids: list, limit = 10, fields = ["id", "name", "type", "infoUrl"], version: str = "latest"):
+    def post_find_related_skills(
+        self,
+        skill_ids: list,
+        limit=10,
+        fields=["id", "name", "type", "infoUrl"],
+        version: str = "latest",
+    ):
         """Summary
 
         Args:
@@ -149,11 +180,19 @@ class SkillsClassificationConnection(EmsiBaseConnection):
         payload = {
             "ids": skill_ids,
             "limit": limit,
-            "fields": fields
+            "fields": fields,
         }
-        return self.download_data("versions/{}/related".format(version), payload = payload).json()
+        return self.download_data(
+            f"versions/{version}/related",
+            payload=payload,
+        ).json()
 
-    def post_extract(self, description: str, version: str = 'latest', confidenceThreshold: float = 0.5) -> dict:
+    def post_extract(
+        self,
+        description: str,
+        version: str = "latest",
+        confidenceThreshold: float = 0.5,
+    ) -> dict:
         """Summary
 
         Args:
@@ -165,12 +204,17 @@ class SkillsClassificationConnection(EmsiBaseConnection):
             dict: Description
         """
         return self.download_data(
-            "versions/{}/extract".format(version),
-            payload = {"text": description},
-            querystring = {"confidenceThreshold": confidenceThreshold}
+            f"versions/{version}/extract",
+            payload={"text": description},
+            querystring={"confidenceThreshold": confidenceThreshold},
         ).json()
 
-    def post_extract_with_source(self, description: str, version: str = 'latest', includeNormalizedText: bool = False) -> dict:
+    def post_extract_with_source(
+        self,
+        description: str,
+        version: str = "latest",
+        includeNormalizedText: bool = False,
+    ) -> dict:
         """Summary
 
         Args:
@@ -185,9 +229,9 @@ class SkillsClassificationConnection(EmsiBaseConnection):
             confidenceThreshold (float, optional): Description
         """
         return self.download_data(
-            "versions/{}/extract/trace".format(version),
-            payload = {
+            f"versions/{version}/extract/trace",
+            payload={
                 "text": description,
-                "includeNormalizedText": includeNormalizedText
+                "includeNormalizedText": includeNormalizedText,
             },
         ).json()

@@ -46,11 +46,14 @@ print(data_df.head())
 # 3    Arkansas  1.297678e+11
 # 4  California  3.013869e+12
 """
+from __future__ import annotations
 
-import requests
-from datetime import datetime, timedelta
-import pandas as pd
 import time
+from datetime import datetime
+from datetime import timedelta
+
+import pandas as pd
+import requests
 
 from .base import EmsiBaseConnection
 
@@ -104,7 +107,11 @@ class CoreLMIConnection(EmsiBaseConnection):
         self.name = "Core_LMI"
 
     def download_data(
-        self, api_endpoint: str, payload: dict = None, smart_limit: bool = False
+        self,
+        api_endpoint: str,
+        payload: dict | None = None,
+        querystring: dict | None = None,
+        smart_limit: bool = False,
     ) -> requests.Response:
         """Needs more work for downloading the data from Agnitio, since it does not automatically handle the rate liimit from the API
 
@@ -168,12 +175,15 @@ class CoreLMIConnection(EmsiBaseConnection):
         Returns:
             list: list of dataset versions available
         """
-        response = self.download_data("meta/dataset/{}/{}".format(dataset, datarun))
+        response = self.download_data(f"meta/dataset/{dataset}/{datarun}")
 
         return response.json()
 
     def get_meta_dataset_dimension(
-        self, dataset: str, dimension: str, datarun: str
+        self,
+        dataset: str,
+        dimension: str,
+        datarun: str,
     ) -> dict:
         """
         Finally, you can view the hierarchy of a particular dimension of a dataset by adding dataset/<name>/<version>/<dimension> to the path:
@@ -187,12 +197,17 @@ class CoreLMIConnection(EmsiBaseConnection):
             dict: hierarchichal representation of the dimension of data for the particular dataset
         """
         response = self.download_data(
-            "meta/dataset/{}/{}/{}".format(dataset, datarun, dimension)
+            f"meta/dataset/{dataset}/{datarun}/{dimension}",
         )
 
         return response.json()
 
-    def post_retrieve_data(self, dataset: str, payload: dict, datarun: str) -> dict:
+    def post_retrieve_data(
+        self,
+        dataset: str,
+        payload: dict,
+        datarun: str,
+    ) -> dict:
         """
         Agnitio data queries are performed by assembling a JSON description of the query and POSTing it to the specific dataset you wish to query.
 
@@ -204,12 +219,15 @@ class CoreLMIConnection(EmsiBaseConnection):
         Returns:
             dict: full data returned from the API
         """
-        response = self.download_data("{}/{}".format(dataset, datarun), payload)
+        response = self.download_data(f"{dataset}/{datarun}", payload)
 
         return response.json()
 
     def get_dimension_hierarchy_df(
-        self, dataset: str, dimension: str, datarun: str
+        self,
+        dataset: str,
+        dimension: str,
+        datarun: str,
     ) -> pd.DataFrame:
         """
         Finally, you can view the hierarchy of a particular dimension of a dataset by adding dataset/<name>/<version>/<dimension> to the path:
@@ -228,7 +246,10 @@ class CoreLMIConnection(EmsiBaseConnection):
         return df
 
     def post_retrieve_df(
-        self, dataset: str, payload: dict, datarun: str
+        self,
+        dataset: str,
+        payload: dict,
+        datarun: str,
     ) -> pd.DataFrame:
         """
         Agnitio data queries are performed by assembling a JSON description of the query and POSTing it to the specific dataset you wish to query.

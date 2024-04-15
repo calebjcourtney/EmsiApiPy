@@ -2,11 +2,15 @@
 This service takes text describing a job and normalizes it into a standardized job title from Emsi's job title taxonomy.
 https://api.emsidata.com/apis/titles
 """
+from __future__ import annotations
+
+from typing import Any
+from typing import Dict
 
 from .base import EmsiBaseConnection
 
 
-class EmsiTitlesConnection(EmsiBaseConnection):
+class TitlesConnection(EmsiBaseConnection):
     """
     This API exposes the complete collection of Emsi titles which includes curated occupation and skill mappings for each title and normalization functionality to transform raw job titles to Emsi titles.
 
@@ -66,11 +70,11 @@ class EmsiTitlesConnection(EmsiBaseConnection):
 
     def get_list_all_titles(
         self,
-        q: str = None,
-        fields=["id", "name"],
+        q: str | None = None,
+        fields: list = ["id", "name"],
         version: str = "latest",
-        limit: int = None,
-        page: int = None,
+        limit: int | None = None,
+        page: int | None = None,
     ) -> list:
         """
         Returns a list of all titles in {version} sorted by title name
@@ -84,7 +88,7 @@ class EmsiTitlesConnection(EmsiBaseConnection):
             version (str, optional): The titles classification version.
             limit (None, optional): Limit the number of titles returned in the response.
         """
-        querystring = {"fields": ",".join(fields)}
+        querystring: dict[str, Any] = {"fields": ",".join(fields)}
 
         if q is not None:
             querystring["q"] = q
@@ -96,7 +100,8 @@ class EmsiTitlesConnection(EmsiBaseConnection):
             querystring["page"] = page
 
         response = self.download_data(
-            f"versions/{version}/titles", querystring=querystring
+            f"versions/{version}/titles",
+            querystring=querystring,
         )
 
         return response.json()["data"]
@@ -119,7 +124,10 @@ class EmsiTitlesConnection(EmsiBaseConnection):
             version (str, optional): The titles classification version.
         """
         payload = {"ids": titles, "fields": fields}
-        response = self.download_data(f"versions/{version}/titles", payload=payload)
+        response = self.download_data(
+            f"versions/{version}/titles",
+            payload=payload,
+        )
         return response.json()["data"]
 
     def get_title_by_id(self, title_id: str, version: str = "latest") -> str:
@@ -140,8 +148,8 @@ class EmsiTitlesConnection(EmsiBaseConnection):
         self,
         title: str,
         version: str = "latest",
-        confidenceThreshold=0.5,
-        fields=["id", "name", "pluralName"],
+        confidenceThreshold: float = 0.5,
+        fields: list = ["id", "name", "pluralName"],
     ) -> dict:
         """Normalize a raw job title string to the best matching Emsi title.
 
@@ -161,7 +169,10 @@ class EmsiTitlesConnection(EmsiBaseConnection):
             "fields": fields,
             "confidenceThreshold": confidenceThreshold,
         }
-        response = self.download_data(f"versions/{version}/normalize", payload=payload)
+        response = self.download_data(
+            f"versions/{version}/normalize",
+            payload=payload,
+        )
 
         return response.json()["data"]
 
@@ -193,7 +204,10 @@ class EmsiTitlesConnection(EmsiBaseConnection):
             "limit": limit,
             "fields": fields,
         }
-        response = self.download_data(f"versions/{version}/normalize/inspect", payload)
+        response = self.download_data(
+            f"versions/{version}/normalize/inspect",
+            payload,
+        )
 
         return response.json()["data"]
 
@@ -202,7 +216,7 @@ class EmsiTitlesConnection(EmsiBaseConnection):
         titles: list,
         version: str = "latest",
         confidenceThreshold: float = 0.5,
-        fields=["id", "name", "pluralName"],
+        fields: list = ["id", "name", "pluralName"],
     ) -> list:
         """
         Normalize multiple raw job title strings to a list of best matching Emsi titles.
@@ -222,7 +236,8 @@ class EmsiTitlesConnection(EmsiBaseConnection):
             "fields": fields,
         }
         response = self.download_data(
-            f"versions/{version}/normalize/bulk", payload=payload
+            f"versions/{version}/normalize/bulk",
+            payload=payload,
         )
 
         return response.json()["data"]

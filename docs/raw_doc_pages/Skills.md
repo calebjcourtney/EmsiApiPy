@@ -1,4 +1,4 @@
-# Emsi Skills API 
+# Emsi Skills API
 #### v2.6.1
 
 > Transitioning from v1 of the Skills API? See our [v2 upgrade notes](/updates/upgrade-to-skills-v2) for changes in the new version.
@@ -3481,4 +3481,3 @@ Unsupported Content Type.
 </div>
 
 </div>
-
