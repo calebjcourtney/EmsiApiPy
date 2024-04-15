@@ -1,9 +1,12 @@
 """Summary
 """
-from datetime import datetime, timedelta
+from __future__ import annotations
 
-import requests
+from datetime import datetime
+from datetime import timedelta
+
 import pandas as pd
+import requests
 
 try:
     from ..permissions import DEFAULT
@@ -20,7 +23,7 @@ class Token:
         return datetime.now() > self.creation + timedelta(minutes=59)
 
 
-class EmsiBaseConnection(object):
+class EmsiBaseConnection:
     """docstring for EmsiBaseConnection
 
     Attributes:
@@ -29,6 +32,10 @@ class EmsiBaseConnection(object):
         password (str): the client_secret for accessing the API
         scope (str): the scope for requesting an auth token from the API
     """
+
+    scope = ""
+    base_url = ""
+    name = ""
 
     def __init__(self) -> None:
         """
@@ -61,14 +68,18 @@ class EmsiBaseConnection(object):
             print(response.status_code)
 
             raise ValueError(
-                "Looks like you don't have access to this dataset with those credentials"
+                "Looks like you don't have access to this dataset with those credentials",
             )
 
         # self.token = response.json()['access_token']
 
         self.token = Token(response.json()["access_token"])
 
-    def get_data(self, url: str, querystring: dict = None) -> requests.Response:
+    def get_data(
+        self,
+        url: str,
+        querystring: dict | None = None,
+    ) -> requests.Response:
         """
         Makes a GET request to the API, given the URL and any querystring parameters.
 
@@ -81,11 +92,16 @@ class EmsiBaseConnection(object):
         """
         headers = {
             "content-type": "application/json",
-            "authorization": "Bearer {}".format(self.token.token),
+            "authorization": f"Bearer {self.token.token}",
         }
 
         # added timeout = None - some meta requests from Core LMI are taking a long time to fulfill
-        response = requests.get(url, headers=headers, params=querystring, timeout=None)
+        response = requests.get(
+            url,
+            headers=headers,
+            params=querystring,
+            timeout=None,
+        )
 
         # if response.status_code == 401:
         #     self.get_new_token()
@@ -94,7 +110,10 @@ class EmsiBaseConnection(object):
         return response
 
     def post_data(
-        self, url: str, payload: dict, querystring: dict = None
+        self,
+        url: str,
+        payload: dict,
+        querystring: dict | None = None,
     ) -> requests.Response:
         """
         Makes a POST request to the API, given the url and payload (querystring optional)
@@ -109,17 +128,23 @@ class EmsiBaseConnection(object):
         """
         headers = {
             "content-type": "application/json",
-            "authorization": "Bearer {}".format(self.token.token),
+            "authorization": f"Bearer {self.token.token}",
         }
 
         # allows for users to pass in a string as the payload (yes, even though it is documented as a dict)
         if isinstance(payload, str):
             response = requests.post(
-                url, headers=headers, data=payload, params=querystring
+                url,
+                headers=headers,
+                data=payload,
+                params=querystring,
             )
         else:
             response = requests.post(
-                url, headers=headers, json=payload, params=querystring
+                url,
+                headers=headers,
+                json=payload,
+                params=querystring,
             )
 
         # if response.status_code == 401:
@@ -129,7 +154,10 @@ class EmsiBaseConnection(object):
         return response
 
     def download_data(
-        self, api_endpoint: str, payload: dict = None, querystring: dict = None
+        self,
+        api_endpoint: str,
+        payload: dict | None = None,
+        querystring: dict | None = None,
     ) -> requests.Response:
         """
         Handles constructing the api_endpoint with the base url
@@ -209,7 +237,11 @@ class JobPostingsConnection(EmsiBaseConnection):
     def __init__(self) -> None:
         super().__init__()
 
-    def post_totals(self, payload: dict, querystring: dict = None) -> dict:
+    def post_totals(
+        self,
+        payload: dict,
+        querystring: dict | None = None,
+    ) -> dict:
         """
         Get summary metrics on all postings matching the filters.
 
@@ -221,12 +253,18 @@ class JobPostingsConnection(EmsiBaseConnection):
             dict: the data response from the API
         """
         response = self.download_data(
-            "totals", payload=payload, querystring=querystring
+            "totals",
+            payload=payload,
+            querystring=querystring,
         )
 
         return response.json()["data"]["totals"]
 
-    def post_timeseries(self, payload: dict, querystring: dict = None) -> dict:
+    def post_timeseries(
+        self,
+        payload: dict,
+        querystring: dict | None = None,
+    ) -> dict:
         """
         Get summary metrics just like the /totals endpoint but broken out by month or day depending on the format of the requested time-frame.
         When requesting a daily timeseries only up to 90 days may be requested at a time.
@@ -241,7 +279,9 @@ class JobPostingsConnection(EmsiBaseConnection):
             dict: the data response from the API
         """
         response = self.download_data(
-            "timeseries", payload=payload, querystring=querystring
+            "timeseries",
+            payload=payload,
+            querystring=querystring,
         )
 
         return response.json()["data"]
@@ -257,7 +297,10 @@ class JobPostingsConnection(EmsiBaseConnection):
         return response.json()["data"]
 
     def post_rankings_timeseries(
-        self, facet: str, payload: dict, querystring: dict = None
+        self,
+        facet: str,
+        payload: dict,
+        querystring: dict | None = None,
     ) -> dict:
         """Summary
 
@@ -270,7 +313,7 @@ class JobPostingsConnection(EmsiBaseConnection):
             dict: the data response from the API
         """
         response = self.download_data(
-            "rankings/{}/timeseries".format(facet),
+            f"rankings/{facet}/timeseries",
             payload=payload,
             querystring=querystring,
         )
@@ -282,7 +325,10 @@ class JobPostingsConnection(EmsiBaseConnection):
             return response.json()["data"]
 
     def post_rankings(
-        self, facet: str, payload: dict, querystring: dict = None
+        self,
+        facet: str,
+        payload: dict,
+        querystring: dict | None = None,
     ) -> dict:
         """
         Group and rank postings by {ranking_facet} with a monthly or daily timeseries for each ranked group.
@@ -296,13 +342,19 @@ class JobPostingsConnection(EmsiBaseConnection):
             dict: the data response from the API
         """
         response = self.download_data(
-            "rankings/{}".format(facet), payload=payload, querystring=querystring
+            f"rankings/{facet}",
+            payload=payload,
+            querystring=querystring,
         )
 
         return response.json()
 
     def post_nested_rankings(
-        self, facet: str, nested_facet: str, payload: dict, querystring: dict = None
+        self,
+        facet: str,
+        nested_facet: str,
+        payload: dict,
+        querystring: dict | None = None,
     ) -> dict:
         """
         Get a nested ranking (e.g. top companies, then top skills per company).
@@ -317,14 +369,18 @@ class JobPostingsConnection(EmsiBaseConnection):
             dict: the data response from the API
         """
         response = self.download_data(
-            "rankings/{}/rankings/{}".format(facet, nested_facet),
+            f"rankings/{facet}/rankings/{nested_facet}",
             payload=payload,
             querystring=querystring,
         )
 
         return response.json()
 
-    def post_postings(self, payload: dict, querystring: dict = None) -> dict:
+    def post_postings(
+        self,
+        payload: dict,
+        querystring: dict | None = None,
+    ) -> dict:
         """
         Get data for individual postings that match your requested filters.
         Note that not all fields are present for all postings, and some may be null or "Unknown".
@@ -338,12 +394,18 @@ class JobPostingsConnection(EmsiBaseConnection):
             dict: the data response from the API
         """
         response = self.download_data(
-            "postings", payload=payload, querystring=querystring
+            "postings",
+            payload=payload,
+            querystring=querystring,
         )
 
         return response.json()["data"]
 
-    def get_postings(self, posting_id: str, querystring: dict = None) -> dict:
+    def get_postings(
+        self,
+        posting_id: str,
+        querystring: dict | None = None,
+    ) -> dict:
         """
         Get a single posting by its id.
 
@@ -361,7 +423,10 @@ class JobPostingsConnection(EmsiBaseConnection):
         return response.json()["data"]
 
     def post_distributions(
-        self, facet: str, payload: dict, querystring: dict = None
+        self,
+        facet: str,
+        payload: dict,
+        querystring: dict | None = None,
     ) -> dict:
         """
         Get a data distribution by percentiles or fixed interval for a selected facet.
@@ -375,12 +440,14 @@ class JobPostingsConnection(EmsiBaseConnection):
             dict: the data response from the API
         """
         response = self.download_data(
-            "distributions", payload=payload, querystring=querystring
+            "distributions",
+            payload=payload,
+            querystring=querystring,
         )
 
         return response.json()["data"]
 
-    def get_distributions(self, querystring: dict = None) -> list:
+    def get_distributions(self, querystring: dict | None = None) -> list:
         """
         Get a list of available distribution facets.
 
@@ -392,13 +459,16 @@ class JobPostingsConnection(EmsiBaseConnection):
         """
         response = self.download_data(
             f"postings/distributions",
-            querystring=querystring
+            querystring=querystring,
         )
 
         return response.json()["data"]
 
     def get_taxonomies(
-        self, facet: str = None, q: str = None, querystring: dict = None
+        self,
+        facet: str | None = None,
+        q: str | None = None,
+        querystring: dict | None = None,
     ) -> dict:
         """
         Get a list of current available taxonomy facets.
@@ -415,18 +485,24 @@ class JobPostingsConnection(EmsiBaseConnection):
         if facet is None:
             response = self.download_data("taxonomies")
         else:
-            api_endpoint = "taxonomies/{}".format(facet)
+            api_endpoint = f"taxonomies/{facet}"
             if querystring is None:
                 querystring = {"q": q}
             else:
                 querystring["q"] = q
 
-            response = self.download_data(api_endpoint, querystring=querystring)
+            response = self.download_data(
+                api_endpoint,
+                querystring=querystring,
+            )
 
         return response.json()["data"]
 
     def post_taxonomies(
-        self, facet: str, payload: dict, querystring: dict = None
+        self,
+        facet: str,
+        payload: dict,
+        querystring: dict | None = None,
     ) -> dict:
         """
         Look up taxonomy items by ID.
@@ -440,7 +516,7 @@ class JobPostingsConnection(EmsiBaseConnection):
             dict: the data response from the API
         """
         response = self.download_data(
-            "taxonomies/{}/lookup".format(facet),
+            f"taxonomies/{facet}/lookup",
             payload=payload,
             querystring=querystring,
         )
@@ -448,7 +524,10 @@ class JobPostingsConnection(EmsiBaseConnection):
         return response.json()["data"]
 
     def post_rankings_df(
-        self, facet: str, payload: dict, querystring: dict = None
+        self,
+        facet: str,
+        payload: dict,
+        querystring: dict | None = None,
     ) -> pd.DataFrame:
         """Summary
 
@@ -460,7 +539,11 @@ class JobPostingsConnection(EmsiBaseConnection):
         Returns:
             pd.DataFrame: A pandas dataframe of the rankings data
         """
-        response = self.post_rankings(facet, payload=payload, querystring=querystring)
+        response = self.post_rankings(
+            facet,
+            payload=payload,
+            querystring=querystring,
+        )
 
         df = pd.DataFrame(response["data"]["ranking"]["buckets"])
         df.rename(columns={"name": facet}, inplace=True)
@@ -468,7 +551,11 @@ class JobPostingsConnection(EmsiBaseConnection):
         return df
 
     def post_nested_rankings_df(
-        self, facet: str, nested_facet: str, payload: dict, querystring: dict = None
+        self,
+        facet: str,
+        nested_facet: str,
+        payload: dict,
+        querystring: dict | None = None,
     ) -> pd.DataFrame:
         """Summary
 
@@ -482,7 +569,10 @@ class JobPostingsConnection(EmsiBaseConnection):
             pd.DataFrame: A pandas dataframe of the nested rankings data
         """
         response = self.post_nested_rankings(
-            facet, nested_facet, payload=payload, querystring=querystring
+            facet,
+            nested_facet,
+            payload=payload,
+            querystring=querystring,
         )
 
         df = pd.DataFrame()
@@ -514,7 +604,11 @@ class ProfilesConnection(EmsiBaseConnection):
     def __init__(self) -> None:
         super().__init__()
 
-    def post_totals(self, payload: dict, querystring: dict = None) -> dict:
+    def post_totals(
+        self,
+        payload: dict,
+        querystring: dict | None = None,
+    ) -> dict:
         """Get summary metrics on all profiles matching the filters.
 
         Args:
@@ -524,12 +618,18 @@ class ProfilesConnection(EmsiBaseConnection):
             dict: the data response from the API
         """
         response = self.download_data(
-            "totals", payload=payload, querystring=querystring
+            "totals",
+            payload=payload,
+            querystring=querystring,
         )
 
         return response.json()["data"]["totals"]
 
-    def post_recency(self, payload: dict, querystring: dict = None) -> dict:
+    def post_recency(
+        self,
+        payload: dict,
+        querystring: dict | None = None,
+    ) -> dict:
         """Group filtered profile metrics by year, based on profile recency (when they were last updated).
 
         Args:
@@ -539,7 +639,9 @@ class ProfilesConnection(EmsiBaseConnection):
             dict: the data response from the API
         """
         response = self.download_data(
-            "recency", payload=payload, querystring=querystring
+            "recency",
+            payload=payload,
+            querystring=querystring,
         )
 
         return response.json()["data"]["recency"]
@@ -555,7 +657,10 @@ class ProfilesConnection(EmsiBaseConnection):
         return response.json()["data"]
 
     def post_rankings(
-        self, facet: str, payload: dict, querystring: dict = None
+        self,
+        facet: str,
+        payload: dict,
+        querystring: dict | None = None,
     ) -> dict:
         """Rank profiles by a given facet
 
@@ -567,13 +672,18 @@ class ProfilesConnection(EmsiBaseConnection):
             dict: the data response from the API
         """
         response = self.download_data(
-            "rankings/{}".format(facet), payload=payload, querystring=querystring
+            f"rankings/{facet}",
+            payload=payload,
+            querystring=querystring,
         )
 
         return response.json()
 
     def get_taxonomies(
-        self, facet: str = None, q: str = None, querystring: dict = None
+        self,
+        facet: str | None = None,
+        q: str | None = None,
+        querystring: dict | None = None,
     ) -> dict:
         """
         Search taxonomies using either whole keywords (relevance search) or partial keywords (autocomplete), or list taxonomy items.
@@ -590,18 +700,24 @@ class ProfilesConnection(EmsiBaseConnection):
         if facet is None:
             response = self.download_data("taxonomies")
         else:
-            api_endpoint = "taxonomies/{}".format(facet)
+            api_endpoint = f"taxonomies/{facet}"
             if querystring is None:
                 querystring = {"q": q}
             else:
                 querystring["q"] = q
 
-            response = self.download_data(api_endpoint, querystring=querystring)
+            response = self.download_data(
+                api_endpoint,
+                querystring=querystring,
+            )
 
         return response.json()["data"]
 
     def post_taxonomies(
-        self, facet: str, payload: dict, querystring: dict = None
+        self,
+        facet: str,
+        payload: dict,
+        querystring: dict | None = None,
     ) -> dict:
         """Lookup taxonomy items by ID.
 
@@ -614,7 +730,7 @@ class ProfilesConnection(EmsiBaseConnection):
             dict: the data response from the API
         """
         response = self.download_data(
-            "taxonomies/{}/lookup".format(facet),
+            f"taxonomies/{facet}/lookup",
             payload=payload,
             querystring=querystring,
         )
@@ -622,7 +738,10 @@ class ProfilesConnection(EmsiBaseConnection):
         return response.json()["data"]
 
     def post_rankings_df(
-        self, facet: str, payload: dict, querystring: dict = None
+        self,
+        facet: str,
+        payload: dict,
+        querystring: dict | None = None,
     ) -> pd.DataFrame:
         """Summary
 
@@ -634,7 +753,11 @@ class ProfilesConnection(EmsiBaseConnection):
         Returns:
             pd.DataFrame: Description
         """
-        response = self.post_rankings(facet, payload=payload, querystring=querystring)
+        response = self.post_rankings(
+            facet,
+            payload=payload,
+            querystring=querystring,
+        )
         df = pd.DataFrame(response["data"]["ranking"]["buckets"])
         df.rename(columns={"name": facet}, inplace=True)
 

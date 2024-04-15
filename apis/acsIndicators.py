@@ -4,6 +4,7 @@ Since it will be removed, no additional work will be done on this integration to
 
 https://api.emsidata.com/apis/emsi-acs-indicators
 """
+from __future__ import annotations
 
 from .base import EmsiBaseConnection
 
@@ -27,7 +28,7 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
 
         self.name = "ACS"
 
-    def get_metrics(self, metric_name: str = None) -> dict:
+    def get_metrics(self, metric_name: str | None = None) -> dict:
         """
         Summary
 
@@ -40,7 +41,7 @@ class ACSIndicatorsConnection(EmsiBaseConnection):
         if metric_name is None:
             response = self.download_data("meta/metrics")
         else:
-            response = self.download_data("meta/metrics/{}".format(metric_name))
+            response = self.download_data(f"meta/metrics/{metric_name}")
 
         return response.json()["data"]
 

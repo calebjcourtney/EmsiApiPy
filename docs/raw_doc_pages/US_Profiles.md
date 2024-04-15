@@ -1,4 +1,4 @@
-# Aggregate Profiles 
+# Aggregate Profiles
 #### v1.15.2
 ##### Information on past releases can be found in the [Changelog](/updates/aggregate-profile-data-api-changelog).
 
@@ -15629,4 +15629,3 @@ The facet you requested wasn't found.
 
 
 </div>
-

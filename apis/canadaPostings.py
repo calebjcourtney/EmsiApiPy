@@ -1,6 +1,8 @@
 """
 https://api.emsidata.com/apis/canada-job-postings
 """
+from __future__ import annotations
+
 from .base import JobPostingsConnection
 
 

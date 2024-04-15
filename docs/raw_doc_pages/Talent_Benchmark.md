@@ -1,4 +1,4 @@
-# Talent Benchmark 
+# Talent Benchmark
 #### v1.4.0
 ##### Information on past releases can be found in the [Changelog](/updates/talent-benchmark-changelog).
 
@@ -4494,4 +4494,3 @@ Could not normalize title 'invalid'.
 </div>
 
 </div>
-

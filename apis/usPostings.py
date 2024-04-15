@@ -1,5 +1,7 @@
 """Summary
 """
+from __future__ import annotations
+
 from .base import JobPostingsConnection
 
 
@@ -13,8 +15,7 @@ class UnitedStatesPostingsConnection(JobPostingsConnection):
     """
 
     def __init__(self) -> None:
-        """Summary
-        """
+        """Summary"""
         super().__init__()
         self.base_url = "https://emsiservices.com/jpa/"
         self.scope = "postings:us"

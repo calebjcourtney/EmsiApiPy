@@ -1,0 +1,83 @@
+---
+default_language_version:
+  node: 13.8.0
+  python: python3.10
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.5.0
+    hooks:
+      - id: check-toml
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-added-large-files
+      - id: check-symlinks
+      - id: check-yaml
+        args: [--unsafe]
+      - id: debug-statements
+      - id: detect-private-key
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.26.3
+    hooks:
+      - id: yamllint
+        args: [-d, relaxed]
+
+  - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+    rev: 0.1.1
+    hooks:
+      - id: yamlfmt
+        args: [--mapping, '2', --sequence, '4', --offset, '2']
+  - repo: https://github.com/asottile/reorder_python_imports
+    rev: v2.3.5
+    hooks:
+      - id: reorder-python-imports
+        args:
+          - --application-directories=api
+
+  - repo: https://github.com/psf/black
+    rev: 20.8b1
+    hooks:
+      - id: black
+        additional_dependencies: [click==8.0.3]
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 3.9.2
+    hooks:
+      - id: flake8
+        additional_dependencies: &flake8-deps
+          - flake8-formatter-abspath==1.0.1
+          - flake8-fixme==1.1.1
+          - flake8-isort==4.0.0
+          - flake8-unused-arguments==0.0.6
+          - flake8-use-fstring==1.1
+
+  - repo: https://github.com/PyCQA/pylint
+    rev: v2.9.6
+    hooks:
+      - id: pylint
+        exclude: migrations
+        args:
+          - --extension-pkg-whitelist=math
+          - --extension-pkg-whitelist=requests
+          - --extension-pkg-whitelist=pandas
+
+  - repo: https://github.com/asottile/yesqa
+    rev: v1.2.3
+    hooks:
+      - id: yesqa
+        additional_dependencies: *flake8-deps
+
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.7.0
+    hooks:
+      - id: bandit
+        args: [-iii, -ll]
+
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.3.0
+    hooks:
+    -   id: mypy
+        additional_dependencies: [types-all]

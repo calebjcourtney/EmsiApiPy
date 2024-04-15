@@ -3,7 +3,7 @@
 ## Introduction
 This API provides metadata about educational institutions reporting via IPEDS, and a translation layer between CIP and SOC codes.
 
-Information and search functionality for institutions are exposed via the 
+Information and search functionality for institutions are exposed via the
 [institution](#institution-endpoints) family of endpoints.
 A SOC-CIP mapping is provided via the [soccip endpoints](#soc-cip-mapping-endpoints).
 
@@ -28,7 +28,7 @@ This endpoint checks the health of the service.  If the service is healthy, retu
 ## Institution Endpoints
 
 ### `POST` /institutions
-Fetch information for one or more institutions.  The institution IDs are 
+Fetch information for one or more institutions.  The institution IDs are
 IPEDS Unit IDs.
 
 #### Code Examples

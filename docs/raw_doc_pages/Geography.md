@@ -1,4 +1,4 @@
-# Geography API (GIS) 
+# Geography API (GIS)
 #### v1.13.2
 ##### Information on past releases can be found in the [Changelog](/updates/geography-changelog).
 

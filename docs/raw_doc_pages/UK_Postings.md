@@ -1,4 +1,4 @@
-# UK Job Postings 
+# UK Job Postings
 #### v2.18.0
 ##### Information on past releases can be found in the [Changelog](/updates/uk-job-postings-changelog).
 
@@ -16783,4 +16783,3 @@ The facet you requested wasn't found.
 
 
 </div>
-

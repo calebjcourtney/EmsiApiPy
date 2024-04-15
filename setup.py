@@ -1,13 +1,15 @@
+from __future__ import annotations
+
 import setuptools
 
-with open("README.md", "r", encoding="utf-8") as fh:
+with open("README.md", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="EmsiApiPy",
     version="0.0.1",
     author="Caleb Courtney",
-    author_email=None,
+    author_email="None",
     description="Package for connecting to the Emsi APIs",
     long_description=long_description,
     long_description_content_type="text/markdown",

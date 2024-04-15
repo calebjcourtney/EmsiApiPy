@@ -1,4 +1,4 @@
-# Titles API 
+# Titles API
 #### v1.11.0
 
 ##### Information on past releases can be found in the [Changelog](/updates/titles-api-changelog).
@@ -3234,4 +3234,3 @@ Unsupported Content Type.
 </div>
 
 </div>
-

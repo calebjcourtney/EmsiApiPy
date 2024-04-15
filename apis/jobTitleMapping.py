@@ -2,6 +2,7 @@
 This service takes text describing a job and normalizes it into a standardized job title from Emsi's job title taxonomy.
 https://api.emsidata.com/apis/emsi-job-title-normalization
 """
+from __future__ import annotations
 
 from .base import EmsiBaseConnection
 
@@ -16,8 +17,7 @@ class JobTitleMappingConnection(EmsiBaseConnection):
     """
 
     def __init__(self) -> None:
-        """Create the connection
-        """
+        """Create the connection"""
         super().__init__()
         self.base_url = "https://emsiservices.com/jtm/"
         self.scope = "jtm"
@@ -26,12 +26,21 @@ class JobTitleMappingConnection(EmsiBaseConnection):
 
         self.name = "Job_Title_Mapping"
 
-    def post_titles(self, titles: list, querystring: dict = None) -> list:
-        """
-        """
-        return self.download_data("titles", payload = {"titles": titles}, querystring = querystring).json()
+    def post_titles(
+        self,
+        titles: list,
+        querystring: dict | None = None,
+    ) -> list:
+        """ """
+        return self.download_data(
+            "titles",
+            payload={"titles": titles},
+            querystring=querystring,
+        ).json()
 
-    def get_title(self, title: str, querystring: dict = None) -> list:
-        """
-        """
-        return self.download_data(f"titles/{title}", querystring = querystring).json()
+    def get_title(self, title: str, querystring: dict | None = None) -> list:
+        """ """
+        return self.download_data(
+            f"titles/{title}",
+            querystring=querystring,
+        ).json()
