@@ -38,7 +38,7 @@ class EmsiBaseConnection:
         """
         Parses the username and password from the permissions
         """
-        self.username, self.password = DEFAULT["username"], DEFAULT["password"]
+        self._username, self._password = DEFAULT["username"], DEFAULT["password"]
 
     def get_new_token(self) -> None:
         """Creates a new access token for connecting to the API
@@ -51,8 +51,8 @@ class EmsiBaseConnection:
         payload = {
             "grant_type": "client_credentials",
             "scope": self.scope,
-            "client_id": self.username,
-            "client_secret": self.password,
+            "client_id": self._username,
+            "client_secret": self._password,
         }
 
         headers = {"content-type": "application/x-www-form-urlencoded"}
@@ -98,10 +98,6 @@ class EmsiBaseConnection:
             timeout=None,
         )
 
-        # if response.status_code == 401:
-        #     self.get_new_token()
-        #     return self.get_data(url, querystring)
-
         return response
 
     def post_data(
@@ -142,10 +138,6 @@ class EmsiBaseConnection:
                 params=querystring,
             )
 
-        # if response.status_code == 401:
-        #     self.get_new_token()
-        #     return self.post_data(url, payload, querystring)
-
         return response
 
     def download_data(
@@ -160,7 +152,7 @@ class EmsiBaseConnection:
         If the payload is not None, we make a POST request instead.
 
         Args:
-            api_endpoint (TYPE): the API url endpoint to query from
+            api_endpoint (str): the API url endpoint to query from
             payload (dict or str, optional): a json object to be sent to the payload
             querystring (dict, optional): any additional url parameters to pass to the API
 
