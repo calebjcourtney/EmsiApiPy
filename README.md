@@ -46,7 +46,7 @@ Be sure to rename the file to `permissions.py`. This is what the library will lo
 Make sure that the EmsiApiPy folder is accessible from your [`PYTHONPATH`](https://bic-berkeley.github.io/psych-214-fall-2016/using_pythonpath.html). You will know you've set it up correctly if you can run `import EmsiApiPy` from within your python environment.
 
 ## Testing
-Tests can be run with `./tests/run_tests.sh`. Please be aware that this is testing all of the API connections available. If you don't have access to one of the APIs, then the tests will fail. It might be worth editing the `run_tests.sh` file to ensure that you are only running tests for the APIs that you want to access.
+Tests can be run with `poetry run pytest`. This does not actually query the API connection, using a mock connection instead. This library does not validate the data coming back from the live API.
 
 
 ## Documentation
