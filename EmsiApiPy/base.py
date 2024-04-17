@@ -336,6 +336,34 @@ class JobPostingsConnection(EmsiBaseConnection):
 
         return response.json()
 
+    def post_rankings_distributions(
+        self,
+        facet: str,
+        distribution_facet: str,
+        payload: dict,
+        querystring: dict | None = None,
+    ) -> dict:
+        """
+        Group and rank postings by `facet` with a `distribution_facet` for each ranked item.
+
+        Args:
+            facet (str): The facet used as the ranking.
+            distribution_facet (str): The facet used as the domain of the distribution.
+            payload (dict): json object for sending to the API as the body of the request
+            querystring (dict, optional): additional url parameters to pass to the API (e.g. {"title_version": "emsi"})
+
+        Returns:
+            dict: the data response from the API
+        """
+        response = self.download_data(
+            f"rankings/{facet}/distributions/{distribution_facet}",
+            payload=payload,
+            querystring=querystring,
+        )
+
+        return response.json()["data"]
+
+
     def post_nested_rankings(
         self,
         facet: str,
@@ -427,7 +455,7 @@ class JobPostingsConnection(EmsiBaseConnection):
             dict: the data response from the API
         """
         response = self.download_data(
-            "distributions",
+            f"distributions/{facet}",
             payload=payload,
             querystring=querystring,
         )
@@ -445,7 +473,7 @@ class JobPostingsConnection(EmsiBaseConnection):
             dict: Data for the specified job posting
         """
         response = self.download_data(
-            f"postings/distributions",
+            f"distributions",
             querystring=querystring,
         )
 
