@@ -4,7 +4,7 @@ https://api.emsidata.com/apis/emsi-job-title-normalization
 """
 from __future__ import annotations
 
-from .base import EmsiBaseConnection
+from base import EmsiBaseConnection
 
 
 class JobTitleMappingConnection(EmsiBaseConnection):

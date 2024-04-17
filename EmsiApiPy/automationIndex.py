@@ -6,7 +6,7 @@ https://api.emsidata.com/apis/automation-index
 """
 from __future__ import annotations
 
-from .base import EmsiBaseConnection
+from base import EmsiBaseConnection
 
 
 class AutomationIndexConnection(EmsiBaseConnection):

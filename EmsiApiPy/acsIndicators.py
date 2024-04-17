@@ -6,7 +6,7 @@ https://api.emsidata.com/apis/emsi-acs-indicators
 """
 from __future__ import annotations
 
-from .base import EmsiBaseConnection
+from base import EmsiBaseConnection
 
 
 class ACSIndicatorsConnection(EmsiBaseConnection):

@@ -2,11 +2,11 @@
 """
 from __future__ import annotations
 
-from .base import JobPostingsConnection
+from base import JobPostingsConnection
 
 
-class UnitedStatesPostingsConnection(JobPostingsConnection):
-    """docstring for CanadaPostingsConnection
+class UKPostingsConnection(JobPostingsConnection):
+    """docstring for UKPostingsConnection
 
     Attributes:
         base_url (str): Description
@@ -17,9 +17,9 @@ class UnitedStatesPostingsConnection(JobPostingsConnection):
     def __init__(self) -> None:
         """Summary"""
         super().__init__()
-        self.base_url = "https://emsiservices.com/jpa/"
-        self.scope = "postings:us"
+        self.base_url = "https://emsiservices.com/uk-jpa/"
+        self.scope = "postings:uk"
 
         self.get_new_token()
 
-        self.name = "US_Postings"
+        self.name = "UK_Postings"

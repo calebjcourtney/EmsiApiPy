@@ -619,7 +619,7 @@ conn.post_diversity_benchmark_data(
 """
 from __future__ import annotations
 
-from .base import EmsiBaseConnection
+from base import EmsiBaseConnection
 
 
 class TalentBenchmarkConnection(EmsiBaseConnection):

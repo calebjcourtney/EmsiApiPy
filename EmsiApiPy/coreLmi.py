@@ -55,7 +55,7 @@ from datetime import timedelta
 import pandas as pd
 import requests
 
-from .base import EmsiBaseConnection
+from base import EmsiBaseConnection
 
 
 class Limiter:

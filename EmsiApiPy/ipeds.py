@@ -8,7 +8,7 @@ from __future__ import annotations
 import pandas as pd
 import requests
 
-from .base import EmsiBaseConnection
+from base import EmsiBaseConnection
 
 
 class IpedsConnection(EmsiBaseConnection):

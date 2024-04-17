@@ -4,20 +4,17 @@ from __future__ import annotations
 
 from datetime import datetime
 from datetime import timedelta
+from typing import NamedTuple
 
 import pandas as pd
 import requests
 
-try:
-    from ..permissions import DEFAULT
-except ValueError:  # need this for testing
-    from permissions import DEFAULT
+from permissions import DEFAULT
 
 
-class Token:
-    def __init__(self, token):
-        self.token = token
-        self.creation = datetime.now()
+class Token(NamedTuple):
+    token: str
+    creation: datetime = datetime.now()
 
     def is_expired(self):
         return datetime.now() > self.creation + timedelta(minutes=59)
@@ -70,8 +67,6 @@ class EmsiBaseConnection:
             raise ValueError(
                 "Looks like you don't have access to this dataset with those credentials",
             )
-
-        # self.token = response.json()['access_token']
 
         self.token = Token(response.json()["access_token"])
 

@@ -7,7 +7,7 @@ Profiles are collected from various sources and processed/enriched to provide in
 """
 from __future__ import annotations
 
-from .base import ProfilesConnection
+from base import ProfilesConnection
 
 
 class GlobalProfilesConnection(ProfilesConnection):

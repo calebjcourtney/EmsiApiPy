@@ -10,7 +10,7 @@ occupation, skills, and geography.
 """
 from __future__ import annotations
 
-from .base import ProfilesConnection
+from base import ProfilesConnection
 
 
 class UKProfiles(ProfilesConnection):

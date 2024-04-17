@@ -2,7 +2,7 @@
 """
 from __future__ import annotations
 
-from .base import EmsiBaseConnection
+from base import EmsiBaseConnection
 
 
 class UsOccupationEarningsConnection(EmsiBaseConnection):

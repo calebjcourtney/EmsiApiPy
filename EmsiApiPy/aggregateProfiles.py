@@ -3,7 +3,7 @@ The following is taken from Emsi's documentation, available here: https://api.em
 """
 from __future__ import annotations
 
-from .base import ProfilesConnection
+from base import ProfilesConnection
 
 
 class AggregateProfilesConnection(ProfilesConnection):
