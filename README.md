@@ -10,13 +10,15 @@ This library is designed as a helpful resource for connecting to [Emsi's APIs](h
 4. [Documentation Links](#APIs Covered)
 
 ## Installation
-Clone the repository. Install the required packages in `requirements.txt` into a [python virtual environment](https://www.geeksforgeeks.org/python-virtual-environment/). Here's an example using [virtualenv](https://virtualenv.pypa.io/en/latest/), which is what the source code has been tested in .
+This project requires Python 3.11. Clone the repository and install dependencies with [Poetry](https://python-poetry.org/docs/#installation). Poetry creates and manages a virtual environment automatically.
 
 ```bash
-virtualenv - p python3 venv
-source venv/bin/activate
-pip install - r requirements.txt
+poetry env use 3.11
+poetry install
+poetry shell
 ```
+
+To run commands without activating the shell, prefix them with `poetry run` (for example, `poetry run python your_script.py`).
 
 ## Setup
 There is a file in the repository named `permissions.py.sample`. When the repo is cloned, it will look like this:

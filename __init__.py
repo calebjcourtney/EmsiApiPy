@@ -1,5 +1,5 @@
 # Check if users have all the dependencies required
-# If they installed from the requirements.txt file correctly, this should not raise an error
+# If dependencies were installed correctly (e.g. via poetry install), this should not raise an error
 from __future__ import annotations
 
 from .apis.acsIndicators import ACSIndicatorsConnection
